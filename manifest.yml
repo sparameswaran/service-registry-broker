@@ -1,0 +1,8 @@
+---
+applications:
+- name: service-registry-broker
+  memory: 1G
+  instances: 1
+  path: target/service-registry-broker-0.0.1-SNAPSHOT.jar
+  services: [ reg-broker-sql ]
+  buildpack: java_buildpack

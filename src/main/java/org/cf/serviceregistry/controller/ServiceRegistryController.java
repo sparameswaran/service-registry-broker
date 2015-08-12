@@ -1,10 +1,15 @@
 package org.cf.serviceregistry.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cf.servicebroker.model.Credentials;
+import org.cf.servicebroker.model.Plan;
+import org.cf.servicebroker.model.Service;
+import org.cf.servicebroker.repository.ServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.Cloud;
-import org.springframework.cloud.app.ApplicationInstanceInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,18 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.cf.servicebroker.model.*;
-import org.cf.servicebroker.repository.*;
-
-import java.util.*;
 
 @RestController
 public class ServiceRegistryController {
 
 	Log log = LogFactory.getLog(ServiceRegistryController.class);
-	
-	@Autowired
-	Cloud cloud;
 	
 	@Autowired
 	ServiceRepository serviceRepo;
