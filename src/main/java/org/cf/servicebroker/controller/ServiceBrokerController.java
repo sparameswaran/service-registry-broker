@@ -37,7 +37,7 @@ public class ServiceBrokerController {
 	@Autowired
 	ServiceBindingRepository serviceBindingRepo;
 	
-	
+		
 	
 	@RequestMapping("/v2/catalog")
 	public Map<String, Iterable<Service>> catalog() {
