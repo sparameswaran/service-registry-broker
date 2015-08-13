@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-import org.cf.servicebroker.model.Service;
+import org.cf.serviceregistry.servicebroker.model.Service;
 import org.hibernate.dialect.MySQL5Dialect;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.context.annotation.Bean;

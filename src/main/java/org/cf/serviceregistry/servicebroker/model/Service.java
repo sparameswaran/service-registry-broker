@@ -1,4 +1,4 @@
-package org.cf.servicebroker.model;
+package org.cf.serviceregistry.servicebroker.model;
 
 import javax.persistence.*;
 import java.util.Set;

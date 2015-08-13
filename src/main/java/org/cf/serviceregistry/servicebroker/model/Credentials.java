@@ -1,4 +1,4 @@
-package org.cf.servicebroker.model;
+package org.cf.serviceregistry.servicebroker.model;
 
 import javax.persistence.*;
 
@@ -11,7 +11,7 @@ public class Credentials {
 
 	@Id
 	private String id;
-	
+
 	public String getId() {
 		return id;
 	}

@@ -1,15 +1,22 @@
-package org.cf.servicebroker.model;
+package org.cf.serviceregistry.servicebroker.model;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name="plans")
+@JsonIgnoreProperties({"credentials"})
 public class Plan {
 
 	@Id
@@ -21,10 +28,17 @@ public class Plan {
 	@Column(nullable=false)
 	private String description;
 
-	@OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
-	@JoinColumn(name = "plan_id")
+	@OneToOne(orphanRemoval = true)
+	@JoinColumn(name = "plan_cred_id")
 	private Credentials credentials;
-	
+
+	public Credentials getCredentials() {
+		return credentials;
+	}
+
+	public void setCredentials(Credentials credentials) {
+		this.credentials = credentials;
+	}
 
 	public String getId() {
 		return id;
@@ -48,16 +62,5 @@ public class Plan {
 
 	public void setDescription(String descrp) {
 		this.description = descrp;
-	}
-
-	
-	public Credentials getCredentials() {
-		return credentials;
-	}
-
-	public void setCredentials(Credentials credentials) {
-		this.credentials = credentials;
-	}
-
-	
+	}	
 }

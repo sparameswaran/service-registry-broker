@@ -5,9 +5,9 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.Map;
 
-import org.cf.servicebroker.model.Service;
 import org.cf.serviceregistry.ServiceRegistryBrokerApp;
 import org.cf.serviceregistry.controller.ServiceRegistryController;
+import org.cf.serviceregistry.servicebroker.model.Service;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;

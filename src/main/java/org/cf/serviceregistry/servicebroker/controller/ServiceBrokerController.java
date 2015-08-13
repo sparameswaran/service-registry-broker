@@ -1,4 +1,4 @@
-package org.cf.servicebroker.controller;
+package org.cf.serviceregistry.servicebroker.controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,13 +6,16 @@ import java.util.UUID;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.cf.servicebroker.model.Credentials;
-import org.cf.servicebroker.model.Service;
-import org.cf.servicebroker.model.ServiceBinding;
-import org.cf.servicebroker.model.ServiceInstance;
+import org.cf.servicebroker.repository.CredentialsRepository;
+import org.cf.servicebroker.repository.PlanRepository;
 import org.cf.servicebroker.repository.ServiceBindingRepository;
 import org.cf.servicebroker.repository.ServiceInstanceRepository;
 import org.cf.servicebroker.repository.ServiceRepository;
+import org.cf.serviceregistry.servicebroker.model.Credentials;
+import org.cf.serviceregistry.servicebroker.model.Plan;
+import org.cf.serviceregistry.servicebroker.model.Service;
+import org.cf.serviceregistry.servicebroker.model.ServiceBinding;
+import org.cf.serviceregistry.servicebroker.model.ServiceInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +39,12 @@ public class ServiceBrokerController {
 
 	@Autowired
 	ServiceBindingRepository serviceBindingRepo;
+	
+	@Autowired
+	PlanRepository planRepo;
+	
+	@Autowired
+	CredentialsRepository credentialRepo;
 
 	@RequestMapping("/v2/catalog")
 	public Map<String, Iterable<Service>> catalog() {
@@ -84,6 +93,12 @@ public class ServiceBrokerController {
 		// + instanceId + ", and binding id: " + id + " and body: " +
 		// serviceBinding);
 
+		ServiceInstance serviceInstance = serviceInstanceRepo.findOne(instanceId);
+		
+		Service underlyingService = serviceRepo.findOne(serviceInstance.getServiceId());
+		Plan underlyingPlan = planRepo.findOne(serviceInstance.getPlanId());
+		
+		
 		serviceBinding.setId(id);
 		serviceBinding.setInstanceId(instanceId);
 
@@ -98,11 +113,8 @@ public class ServiceBrokerController {
 				return new ResponseEntity<Object>("{}", HttpStatus.CONFLICT);
 			}
 		} else {
-			Credentials creds = new Credentials();
-			creds.setId(UUID.randomUUID().toString());
-			creds.setUri("http://" + myUri() + "/Sample/" + instanceId);
-			creds.setUsername("testuser");
-			creds.setPassword("testpaswd");
+			
+			Credentials creds = underlyingPlan.getCredentials();
 			serviceBinding.setCredentials(creds);
 			serviceBindingRepo.save(serviceBinding);
 			return new ResponseEntity<Object>(wrapCredentials(creds),

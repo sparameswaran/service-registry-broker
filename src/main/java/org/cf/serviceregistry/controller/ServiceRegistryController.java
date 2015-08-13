@@ -5,10 +5,10 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.cf.servicebroker.model.Credentials;
-import org.cf.servicebroker.model.Plan;
-import org.cf.servicebroker.model.Service;
 import org.cf.servicebroker.repository.ServiceRepository;
+import org.cf.serviceregistry.servicebroker.model.Credentials;
+import org.cf.serviceregistry.servicebroker.model.Plan;
+import org.cf.serviceregistry.servicebroker.model.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
