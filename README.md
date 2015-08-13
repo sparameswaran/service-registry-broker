@@ -6,14 +6,14 @@ There needs to be a backend service at some endpoint.
 
 Steps to deploy the service-registry-broker:
 
-1) Deploy the backend or simulated service. A sample simulated service is available at [document-service] (https://github.com/cf-platform-eng/document-service)
-2) Edit the input.sql under src/main/resources folder to populate some prebuilt services and associated plans, credentials, endpoints etc.
-3) Run maven to build
-4) Push the app to CF.
-5) Registry the app as a service broker (this requires admin privileges on the CF instance).
-6) Expose the services/plans within a specific org or publicly accessible.
-7) Create the service based on the plan
-8) Deploy the client app that would bind to the service and consume the service.
+* Deploy the backend or simulated service. A sample simulated service is available at [document-service] (https://github.com/cf-platform-eng/document-service)
+* Edit the input.sql under src/main/resources folder to populate some prebuilt services and associated plans, credentials, endpoints etc.
+* Run maven to build
+* Push the app to CF.
+* Registry the app as a service broker (this requires admin privileges on the CF instance).
+* Expose the services/plans within a specific org or publicly accessible.
+* Create the service based on the plan
+* Deploy the client app that would bind to the service and consume the service.
 A sample client app is available on github at [sample-doc-retrieve-gateway client] (https://github.com/cf-platform-eng/sample-doc-retrieve-gateway/)
 
 Sample:
