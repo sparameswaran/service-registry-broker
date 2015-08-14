@@ -1,36 +1,39 @@
 package org.cf.serviceregistry.servicebroker.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
-@Table(name="service_instances")
+@Table(name = "service_instances")
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE)
 public class ServiceInstance {
 
 	@Id
 	private String id;
-	
+
 	@JsonSerialize
-	@JsonProperty("service_id")	
+	@JsonProperty("service_id")
 	@Column(nullable = false)
 	private String serviceId;
-	
+
 	@JsonSerialize
-	@JsonProperty("plan_id")	
+	@JsonProperty("plan_id")
 	@Column(nullable = false)
 	private String planId;
-	
+
 	@JsonSerialize
-	@JsonProperty("organization_guid")	
+	@JsonProperty("organization_guid")
 	@Column(nullable = false)
 	private String orgGuid;
-	
+
 	@JsonSerialize
-	@JsonProperty("space_guid")	
+	@JsonProperty("space_guid")
 	@Column(nullable = false)
 	private String spaceGuid;
 
@@ -76,29 +79,34 @@ public class ServiceInstance {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if ( obj == null || getClass() != obj.getClass())
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
 			return false;
-		ServiceInstance that = (ServiceInstance)obj;
-		
-		if (!id.equals(that.id)) return false;
-		if (!planId.equals(that.planId)) return false;
-		if (!serviceId.equals(that.serviceId)) return false;
-		if (!orgGuid.equals(that.orgGuid)) return false;
-		if (!spaceGuid.equals(that.spaceGuid)) return false;
+		ServiceInstance that = (ServiceInstance) obj;
+
+		if (!id.equals(that.id))
+			return false;
+		if (!planId.equals(that.planId))
+			return false;
+		if (!serviceId.equals(that.serviceId))
+			return false;
+		if (!orgGuid.equals(that.orgGuid))
+			return false;
+		if (!spaceGuid.equals(that.spaceGuid))
+			return false;
 
 		return true;
 	}
-	
+
 	@Override
-    public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + serviceId.hashCode();
-        result = 31 * result + planId.hashCode();
-        result = 31 * result + orgGuid.hashCode();
-        result = 31 * result + spaceGuid.hashCode();
-        return result;
-    }
-	
-	
+	public int hashCode() {
+		int result = id.hashCode();
+		result = 31 * result + serviceId.hashCode();
+		result = 31 * result + planId.hashCode();
+		result = 31 * result + orgGuid.hashCode();
+		result = 31 * result + spaceGuid.hashCode();
+		return result;
+	}
+
 }

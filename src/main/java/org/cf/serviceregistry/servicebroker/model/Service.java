@@ -1,27 +1,33 @@
 package org.cf.serviceregistry.servicebroker.model;
 
-import javax.persistence.*;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
-@Table(name="services")
+@Table(name = "services")
 public class Service {
 
 	@Id
 	private String id;
-	
+
 	@Column(nullable = false)
 	private String name;
-	
+
 	@Column(nullable = false)
 	private String description;
-	
+
 	@Column(nullable = false)
 	private boolean bindable;
-	
+
 	@OneToMany(orphanRemoval = true)
-	@JoinColumn( name = "service_id")
+	@JoinColumn(name = "service_id")
 	private Set<Plan> plans = new HashSet<Plan>();
 
 	public String getId() {
@@ -63,9 +69,9 @@ public class Service {
 	public void setPlans(Set<Plan> plans) {
 		this.plans = plans;
 	}
-	
+
 	public void addPlan(Plan plan) {
 		this.plans.add(plan);
 	}
-	
+
 }

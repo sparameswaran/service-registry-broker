@@ -2,7 +2,6 @@ package org.cf.serviceregistry.servicebroker.controller;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -59,9 +58,6 @@ public class ServiceBrokerController {
 
 		serviceInstance.setId(id);
 
-		// log.info("Got /v2/service_instances call with payload : " +
-		// serviceInstance);
-
 		boolean exists = serviceInstanceRepo.exists(id);
 		if (exists) {
 			ServiceInstance existing = serviceInstanceRepo.findOne(id);
@@ -89,13 +85,9 @@ public class ServiceBrokerController {
 							+ instanceId + " not found\"}",
 					HttpStatus.BAD_REQUEST);
 
-		// log.info("Got /v2/service_instances/id/... call with payload against service instance: "
-		// + instanceId + ", and binding id: " + id + " and body: " +
-		// serviceBinding);
-
 		ServiceInstance serviceInstance = serviceInstanceRepo.findOne(instanceId);
 		
-		Service underlyingService = serviceRepo.findOne(serviceInstance.getServiceId());
+		serviceRepo.findOne(serviceInstance.getServiceId());
 		Plan underlyingPlan = planRepo.findOne(serviceInstance.getPlanId());
 		
 		
@@ -152,15 +144,6 @@ public class ServiceBrokerController {
 		} else {
 			return new ResponseEntity<>("{}", HttpStatus.GONE);
 		}
-	}
-
-	private String myUri() {
-		// ApplicationInstanceInfo appInstanceInfo =
-		// cloud.getApplicationInstanceInfo();
-		// List<Object> uris = (List<Object>)
-		// appInstanceInfo.getProperties().get("uri");
-		// return uris.get(0).toString();
-		return "TestServiceBroker";
 	}
 
 	private Map<String, Object> wrapCredentials(Credentials credentials) {
