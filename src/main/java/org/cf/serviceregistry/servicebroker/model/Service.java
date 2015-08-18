@@ -24,7 +24,7 @@ public class Service {
 	private String description;
 
 	@Column(nullable = false)
-	private boolean bindable;
+	private boolean bindable = true;
 
 	@OneToMany(orphanRemoval = true)
 	@JoinColumn(name = "service_id")
