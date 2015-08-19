@@ -1,7 +1,12 @@
 package org.cf.serviceregistry.servicebroker.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -11,6 +16,24 @@ public class Credentials {
 
 	@Id
 	private String id;
+	
+	// any "other" tags/key-value pairs    
+	@ElementCollection(fetch = FetchType.LAZY)
+	@MapKeyColumn(name="name")
+    @Column(name="value")
+    @CollectionTable(name="other_attributes", joinColumns=@JoinColumn(name="other_attrib_id"))
+	protected Map<String,String> other = new HashMap<String,String>();
+
+    // "any getter" needed for serialization    
+    @JsonAnyGetter
+    public Map<String,String> any() {
+    	return other;
+    }
+
+    @JsonAnySetter
+    public void set(String name, String value) {
+    	other.put(name, value);
+    }
 
 	public String getId() {
 		return id;
@@ -43,39 +66,6 @@ public class Credentials {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-	public String getCertName() {
-		return certName;
-	}
-
-	public void setCertName(String certName) {
-		this.certName = certName;
-	}
-
-	public String getCertLocation() {
-		return certLocation;
-	}
-
-	public void setCertLocation(String certLocation) {
-		this.certLocation = certLocation;
-	}
-
-	public String getCertFormat() {
-		return certFormat;
-	}
-
-	public void setCertFormat(String certFormat) {
-		this.certFormat = certFormat;
-	}
-
-	@Column(nullable = true)
-	private String certLocation;
-
-	@Column(nullable = true)
-	private String certFormat;
-
-	@Column(nullable = true)
-	private String certName;
 
 	@Column(nullable = false)
 	private String uri;

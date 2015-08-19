@@ -33,3 +33,62 @@ cf create-service EDMSRetreiveInterface basic EDMSRetreiveInterface-basic
 # Now push a sample app that can bind to the newly created service
 # cf bind-service sample-registry-client EDMSRetreiveInterface-basic
 ```
+
+
+# Using the Service Registry REST interface
+
+* To add a new set of services with embedded plans:
+```
+# Bulk insert a set of services with nested plans
+curl -v -u <user>:<password> http://service-registry-uri/serviceDefns -d @<JsonPayloadFile>.json -H "Content-type: application/json" -X POST
+Example:
+curl -v -u testuser:testuser http://test-service-registry.xyz.com/serviceDefns/ -d @./add-services.json -H "Content-type: application/json" -X POST
+```
+
+* To add a new plan under an existing service:
+```
+curl -v -u <user>:<password> http://service-registry-uri/serviceDefns/<ServiceId>/<NewPlanId> -d @<JsonPayloadFile>.json -H "Content-type: application/json" -X PUT
+Example:
+# To create a new plan with id 'test-plan' under service with id **`test-service`**  
+curl -v -u testuser:testuser http://test-service-registry.xyz.com/serviceDefns/1/test-plan -d @./add-plan.json -H "Content-type: application/json" -X PUT
+```
+
+* To associate a credential to an existing plan (within a service):
+```
+curl -v -u <user>:<password> http://service-registry-uri/serviceDefns/<ServiceId>/<PlanId>/<NewCredsId> -d @<JsonPayloadFile>.json -H "Content-type: application/json" -X PUT
+Example: 
+# To create a new credentials with id 'test-cred' under service with id **`test-service`**  and plan id **`test-plan`** 
+curl -v -u testuser:testuser http://test-service-registry.xyz.com/serviceDefns/test-service/test-plan/test-cred -d @./add-cred.json -H "Content-type: application/json" -X PUT
+```
+
+# Notes
+
+* To lock down access to the broker using a specific set of credentials, define following properties via the application.properties 
+```
+   security.user.name=<UserName>
+   security.user.password=<UserPassword>
+```
+
+or the cf env during app push (or via manifest.yml)
+
+```
+   cf set-env <appName> SECURITY_USER_NAME <UserName>
+   cf set-env <appName> SECURITIY_USER_PASSWORD <UserPassword>
+```
+
+* There can be multiple set of services, each with unlimited plans.
+
+* Each plan in any service would be associated with one and only credentials row.
+The Plan can be space or env specific and allow the service instance to use the set of credentials associated with the plan.
+
+* Administrator can open up or lock down access to the plans using orgs and spaces.
+Refer to [Service Plans Access control] (https://docs.cloudfoundry.org/services/access-control.html#enable-access)
+
+* The Hibernate jpa can delete the table data and update the schemas each time the app instance is started with the update option (check application.properties).
+To avoid loss of data, remove the auto creation from application.properties and manually create the tables using the service-registry.ddl file.
+Or go with `update` auto option and then once the tables are created with right data set, switch off the auto table creation to `none`
+Either make the change in the application.properties or via env variable passed via manifest.yml
+
+* Credentials
+Atleast one attribute needs to be passed in during creation of credentials : **`uri`**. username, password and other attributes can be null.
+There can be any number of additional attributes (like username, password, certFile, certLocation, certType, otherTags...) that can be passed in during creation of the credentials entry. Check the add-creds.json file for some sample input. These would be then passed along to the apps consuming the instantiated services.

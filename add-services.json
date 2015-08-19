@@ -1,0 +1,20 @@
+[
+{
+    "bindable": true,
+    "description": "EDMSContentRetrievalSystem",
+    "id": "310",
+    "name": "EDMSRetreiveInterface",
+    "plans": [
+        {
+            "description": "Basic Plan throttled to 5 connections per second",
+            "id": "3plan10",
+            "name": "basic"
+        },
+        {
+            "description": "Premium Plan throttled to 25 connections per second",
+            "id": "3plan20",
+            "name": "premium"
+        }
+    ]
+}
+]

@@ -1,0 +1,9 @@
+{
+  "uri": "http://test-uri.10.10.10.10:8080",
+  "username": "testuser",
+  "password": "testuser",
+  "certLocation" : "http://certLocation....",
+  "certFormat" : "pem",
+  "additionaltag1" : "additionalval1",
+  "additionaltag2" : "additionalval2"
+}
