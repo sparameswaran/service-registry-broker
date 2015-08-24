@@ -38,7 +38,7 @@ public class ServiceBinding {
 	@Column(nullable = false)
 	private String appGuid;
 
-	@OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
+	@OneToOne// (orphanRemoval = true, cascade = CascadeType.ALL)
 	@JoinColumn(name = "service_binding_id")
 	private Credentials credentials;
 

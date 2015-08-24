@@ -12,6 +12,7 @@ import org.cf.servicebroker.repository.ServiceInstanceRepository;
 import org.cf.servicebroker.repository.ServiceRepository;
 import org.cf.serviceregistry.servicebroker.model.Credentials;
 import org.cf.serviceregistry.servicebroker.model.Plan;
+import org.cf.serviceregistry.servicebroker.model.PlanPk;
 import org.cf.serviceregistry.servicebroker.model.Service;
 import org.cf.serviceregistry.servicebroker.model.ServiceBinding;
 import org.cf.serviceregistry.servicebroker.model.ServiceInstance;
@@ -88,7 +89,12 @@ public class ServiceBrokerController {
 		ServiceInstance serviceInstance = serviceInstanceRepo.findOne(instanceId);
 		
 		serviceRepo.findOne(serviceInstance.getServiceId());
-		Plan underlyingPlan = planRepo.findOne(serviceInstance.getPlanId());
+		
+		PlanPk planPk = new PlanPk();
+		planPk.setPlanId(serviceInstance.getPlanId());
+		planPk.setServiceId(serviceInstance.getServiceId());
+		
+		Plan underlyingPlan = planRepo.findOne(planPk);
 		
 		
 		serviceBinding.setId(id);

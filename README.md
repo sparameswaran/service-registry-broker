@@ -1,18 +1,24 @@
-# service-registry-broker
+# Service Registry Broker
 
-This is a sample of a service broker exposing service registry functionality to applications using it. Information about backend service can be registered and then made available to other apps that bind to the exposed service plans. Registration of a service can include multiple plans and associated credentials per plan (like bronze plan will allow only 5 connections to a dev instance endpoint, while gold will allow 50 connections to a prod instance endpoint). The data gets persisted in DB. Once a service is created based on the plan, the apps bound to the service would get the associated endpoint and any credentials information in the form of a VCAP_SERVICES env variable. The client/consumer app needs to parse the VCAP_SERVICES env variable to arrive at the endpoint of its related service.
+This is a sample of a [Cloud Foundry Service Broker] (https://docs.cloudfoundry.org/services/api.html) exposing service registry functionality to applications running on Cloud Foundry. 
 
-There needs to be a backend service at some endpoint.
+Information about backend services can be registered and then made available to other apps that bind to the exposed service instances on CF. Registration configuration of a service on the registry can include multiple plans and associated credentials per plan (like bronze plan will allow only 5 connections to a dev instance endpoint, while gold will allow 50 connections to a prod instance endpoint). The data about the services, plans and credentials is persisted in a Database (by default uses MySQL service binding when deployed on CF). 
 
-Steps to deploy the service-registry-broker:
+Once a service is created based on the plan, any client app bound to the underlying service would information about the associated endpoint and any credentials information in the form of a VCAP_SERVICES env variable when pushed to CF. The client/consumer app needs to parse the VCAP_SERVICES env variable or use the appropriate spring cloud connectors to use the endpoint configuration and invoke the related service.
 
-* Deploy the backend or simulated service. A sample simulated service is available at [document-service] (https://github.com/cf-platform-eng/document-service)
+The Service Broker does not create any new set of service instances, or spin off new apps or containers or vms. The backend services are expected to be up and running at some endpoint as specified in the credentials. The Service Registry Broker also does not manage or monitor the health or lifecycle of underlying services and only acts as a bridging layer to provide information about the service to any consuming application, unlike Eureka or other services.
+
+The Service Registry exposes a REST api interface to create/read/update/delete services, plans and credentials.
+
+# Steps to deploy the service-registry-broker:
+
+* Deploy the backend or any test/simulation service. A sample simulation service is available at [document-service] (https://github.com/cf-platform-eng/document-service)
 * Edit the input.sql under src/main/resources folder to populate some prebuilt services and associated plans, credentials, endpoints etc.
-* Run maven to build
-* Push the app to CF.
-* Registry the app as a service broker (this requires admin privileges on the CF instance).
+* Run maven to build.
+* Push the app to CF using manifest.yml. Edit the manifest to bind to a MySQL Service instance.
+* Register the app as a service broker (this requires admin privileges on the CF instance) against Cloud Foundry.
 * Expose the services/plans within a specific org or publicly accessible.
-* Create the service based on the plan
+* Create the service based on the plan.
 * Deploy the client app that would bind to the service and consume the service.
 A sample client app is available on github at [sample-doc-retrieve-gateway client] (https://github.com/cf-platform-eng/sample-doc-retrieve-gateway/)
 
@@ -20,45 +26,87 @@ Sample:
 ```
 # Edit the domain endpoint within input.sql file 
 # Change the reference to correct CF App Domain
-mvn clean install
-cf push test-service-registry -m 512m -p target/service-registry-broker-0.0.1-SNAPSHOT.jar -b java_buildpack
+# Push the service registry broker app to CF.
 
-cf services
-# Edit the domain endpoint
-cf create-service-broker service-registry-broker testuser testuser http://test-service-registry.<CF_APP_DOMAIN>
-cf enable-service-access EDMSRetreiveInterface
+# Then enable service-access for the service against the org/space or for everyone.
 cf enable-service-access PolicyInterface
+
+# Create a service based on a service defn and plan
 cf create-service EDMSRetreiveInterface basic EDMSRetreiveInterface-basic
 
-# Now push a sample app that can bind to the newly created service
+# Now push a sample client app that can bind to the newly created service
 # cf bind-service sample-registry-client EDMSRetreiveInterface-basic
 ```
 
 
 # Using the Service Registry REST interface
-
-* To add a new set of services with embedded plans:
-```
-# Bulk insert a set of services with nested plans
-curl -v -u <user>:<password> http://service-registry-uri/serviceDefns -d @<JsonPayloadFile>.json -H "Content-type: application/json" -X POST
+* List Services
+To list services, use GET against /services
 Example:
-curl -v -u testuser:testuser http://test-service-registry.xyz.com/serviceDefns/ -d @./add-services.json -H "Content-type: application/json" -X POST
+```
+curl -v -u <user>:<password> http://service-registry-uri/services 
+```
+To list a specific service, use GET against /services/<ServiceName>
+Example:
+```
+curl -v -u <user>:<password> http://service-registry-uri/services/MyService
+```
+
+* Bulk insert a set of services with nested plans
+```
+curl -v -u <user>:<password> http://service-registry-uri/services -d @<JsonPayloadFile>.json -H "Content-type: application/json" -X POST
+```
+Example:
+```
+curl -v -u testuser:testuser http://test-service-registry.xyz.com/services/ -d @./add-services.json -H "Content-type: application/json" -X POST
 ```
 
 * To add a new plan under an existing service:
+To create a new plan, use PUT operation against /services/<ServiceName>/plans
 ```
-curl -v -u <user>:<password> http://service-registry-uri/serviceDefns/<ServiceId>/<NewPlanId> -d @<JsonPayloadFile>.json -H "Content-type: application/json" -X PUT
+curl -v -u <user>:<password> http://service-registry-uri/services/<ServiceId>/plans/<NewPlanId> -d @<JsonPayloadFile>.json -H "Content-type: application/json" -X PUT
+```
 Example:
-# To create a new plan with id 'test-plan' under service with id **`test-service`**  
-curl -v -u testuser:testuser http://test-service-registry.xyz.com/serviceDefns/1/test-plan -d @./add-plan.json -H "Content-type: application/json" -X PUT
+```
+# Creates a new plan under service with name **`test-service`**  
+curl -v -u testuser:testuser http://test-service-registry.xyz.com/services/test-service/plans -d @./add-plan.json -H "Content-type: application/json" -X PUT
+```
+
+* List Plans
+To list plans, use GET against /services/<ServiceName>/plans
+Example:
+```
+curl -v -u <user>:<password> http://service-registry-uri/services/MyService/plans
+```
+
+To list a specific plan detail, use GET against /services/<ServiceName>/plans/<PlanName>
+Example:
+```
+curl -v -u <user>:<password> http://service-registry-uri/services/MyService/plans/MyPlan
 ```
 
 * To associate a credential to an existing plan (within a service):
 ```
-curl -v -u <user>:<password> http://service-registry-uri/serviceDefns/<ServiceId>/<PlanId>/<NewCredsId> -d @<JsonPayloadFile>.json -H "Content-type: application/json" -X PUT
+curl -v -u <user>:<password> http://service-registry-uri/services/<ServiceName>/plans/<PlanName>/creds -d @<JsonPayloadFile>.json -H "Content-type: application/json" -X PUT
+```
 Example: 
-# To create a new credentials with id 'test-cred' under service with id **`test-service`**  and plan id **`test-plan`** 
-curl -v -u testuser:testuser http://test-service-registry.xyz.com/serviceDefns/test-service/test-plan/test-cred -d @./add-cred.json -H "Content-type: application/json" -X PUT
+```
+# To create a new credentials for plan **`test-plan`** under service with name **`test-service`**  
+curl -v -u testuser:testuser http://test-service-registry.xyz.com/services/test-service/plans/test-plan/creds -d @./add-cred.json -H "Content-type: application/json" -X PUT
+```
+
+* To delete a resource, use DELETE option against the resource
+Example:
+```
+# Delete a service
+curl -v -u testuser:testuser http://test-service-registry.xyz.com/services/test-service -X DELETE
+
+# Delete a plan
+# This wont delete the underlying credential as it may be in use...
+curl -v -u testuser:testuser http://test-service-registry.xyz.com/services/test-service/plans/test-plan -X DELETE
+
+# Delete credential associated with a plan
+curl -v -u testuser:testuser http://test-service-registry.xyz.com/services/test-service/plans/test-plan/creds  -X DELETE
 ```
 
 # Notes

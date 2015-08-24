@@ -14,14 +14,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties({ "id" })
 public class Credentials {
 
+	
 	@Id
-	private String id;
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    private int id;
 	
 	// any "other" tags/key-value pairs    
 	@ElementCollection(fetch = FetchType.LAZY)
 	@MapKeyColumn(name="name")
     @Column(name="value")
-    @CollectionTable(name="other_attributes", joinColumns=@JoinColumn(name="other_attrib_id"))
+    @CollectionTable(name="creds_other_attributes", joinColumns=@JoinColumn(name="creds_other_attrib_id"))
 	protected Map<String,String> other = new HashMap<String,String>();
 
     // "any getter" needed for serialization    
@@ -35,12 +37,12 @@ public class Credentials {
     	other.put(name, value);
     }
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public int getId() {
+		return id;
 	}
 
 	public String getUri() {
