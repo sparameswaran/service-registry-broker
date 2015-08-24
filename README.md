@@ -38,6 +38,13 @@ cf create-service EDMSRetreiveInterface basic EDMSRetreiveInterface-basic
 # cf bind-service sample-registry-client EDMSRetreiveInterface-basic
 ```
 
+# Updating the catalog
+
+After a new service has been registered or after updates on the service registry, update the catalog with the Cloud Foundry controller using update-service-broker api call.
+
+```
+cf update-service-broker service-registry-broker testuser somethingsecure http://service-registry-broker.xyz.com/
+```
 
 # Using the Service Registry REST interface
 * List Services

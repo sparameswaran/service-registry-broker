@@ -38,11 +38,11 @@ public class ServiceRepositoryTest {
 		Service s = new Service();
 		s.setBindable(true);
 		s.setDescription("delete me");
-		s.setId("123");
+		s.setName("123");
 		s.setName("test");
 
-		ResponseEntity<String> resp = serviceRegistryController.create(
-				s.getId(), s);
+		ResponseEntity<String> resp = serviceRegistryController.createService(
+				s);
 		assertNotNull(resp);
 		assertEquals(HttpStatus.OK, resp.getStatusCode());
 	}
