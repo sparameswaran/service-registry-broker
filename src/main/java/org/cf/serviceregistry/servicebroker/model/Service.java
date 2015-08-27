@@ -2,6 +2,7 @@ package org.cf.serviceregistry.servicebroker.model;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -26,7 +27,7 @@ public class Service {
 
 	@Id
 	private String name;
-
+	
 	@Column(nullable = false)
 	private String description;
 
@@ -47,6 +48,14 @@ public class Service {
 
 	public void setMetadata(ServiceMetadata serviceMetadata) {
 		this.metadata = serviceMetadata;
+	}
+
+	public String getId() {
+		return UUID.nameUUIDFromBytes(this.getName().getBytes()).toString();
+	}
+
+	public void setId(String id) {
+		
 	}
 
 	public String getName() {

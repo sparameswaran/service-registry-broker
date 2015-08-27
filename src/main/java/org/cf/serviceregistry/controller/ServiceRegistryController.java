@@ -49,12 +49,12 @@ public class ServiceRegistryController {
 		
 	ResponseEntity<String> createPlan(Plan newPlan) {
 		
-		boolean planExists = planRepo.exists(newPlan.getId());
+		boolean planExists = planRepo.exists(newPlan.getPkId());
 		if (planExists) {
 			// We want a new plan specifically for a given service, no overlaps allowed.
 			return new ResponseEntity<>(
 					"{\"description\": \"Plan with id: "
-						+ newPlan.getId()					
+						+ newPlan.getPkId()					
 						+ " already exists\"}",
 						HttpStatus.CONFLICT);		
 		}
@@ -94,7 +94,7 @@ public class ServiceRegistryController {
 			if (plans != null) {
 				
 				for (Plan newPlan: plans) {
-					PlanPk newPlanPk = newPlan.getId();
+					PlanPk newPlanPk = newPlan.getPkId();
 					log.info("New Plan PK: " + newPlanPk);
 					
 					newPlanPk.setServiceId(serviceId);
@@ -242,7 +242,7 @@ public class ServiceRegistryController {
 			planPk.setServiceId(serviceId);
 			planPk.setPlanId(servicePlanInstance.getName());
 
-			servicePlanInstance.setId(planPk);
+			servicePlanInstance.setPkId(planPk);
 			Service serviceDefn = serviceRepo.findOne(serviceId);
 			//Plan existingPlan = planRepo.findOne(planPk);
 			
@@ -275,7 +275,7 @@ public class ServiceRegistryController {
 			planPk.setServiceId(serviceId);
 			
 			Plan unwantedPlan = new Plan();
-			unwantedPlan.setId(planPk);
+			unwantedPlan.setPkId(planPk);
 			Service serviceDefn = serviceRepo.findOne(serviceId);
 			unwantedPlan = planRepo.findOne(planPk);
 			

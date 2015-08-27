@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
@@ -33,11 +34,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Table(name = "plans")
 @JsonInclude(Include.NON_NULL)
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_EMPTY)
-@JsonIgnoreProperties({ "credentials", "service", "id", "serviceId"})
+@JsonIgnoreProperties({ "credentials", "service", "pkId", "serviceId"})
 public class Plan {
 
 	@EmbeddedId
-	private PlanPk id = new PlanPk();
+	private PlanPk pkId = new PlanPk();
 
 	@JsonBackReference
 	@ManyToOne
@@ -63,38 +64,75 @@ public class Plan {
 		return isFree.booleanValue();
 	}
 
+	/*
 	public void setFree(Boolean isFree) {
 		if (isFree == null)
 			isFree = Boolean.TRUE;
 		this.isFree = isFree;
 	}
+	*/
 
 	public void setIsFree(Boolean free) {
-		setFree(free);
+		if (isFree == null)
+			isFree = Boolean.TRUE;
+		this.isFree = isFree;
 	}
 
-	public void setId (PlanPk pk) { 
-		id = pk; 
+	public String getId() {
+		return UUID.nameUUIDFromBytes((this.service.getName() + ":" + this.getName()).getBytes()).toString();
 	}
 
-	public PlanPk getId () { return id; }
+	public void setId(String id) {
+		
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((pkId == null) ? 0 : pkId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Plan other = (Plan) obj;
+		if (pkId == null) {
+			if (other.pkId != null)
+				return false;
+		} else if (!pkId.equals(other.pkId))
+			return false;
+		return true;
+	}
+
+	public void setPkId (PlanPk pk) { 
+		pkId = pk; 
+	}
+
+	public PlanPk getPkId () { return pkId; }
 
 	public Service getService () { return service; }
 	
 	public String getName () { 
-		return id.getPlanId(); 
+		return pkId.getPlanId(); 
 	}
 
 	public void setName (String name) { 
-		id.setPlanId(name); 
+		pkId.setPlanId(name); 
 	}
 	
 	public String getServiceId () { 
-		return id.getServiceId(); 
+		return pkId.getServiceId(); 
 	}
 	
 	public void setServiceId(String serviceId) { 
-		id.setServiceId(serviceId); 
+		pkId.setServiceId(serviceId); 
 	}
 	
 	public Credentials getCredentials() {
@@ -123,7 +161,7 @@ public class Plan {
 
 	@Override
 	public String toString() {
-		return "Plan [id=" + id + ", description="
+		return "Plan [pkId=" + pkId + ", description="
 				+ description + "]";
 	}
 	

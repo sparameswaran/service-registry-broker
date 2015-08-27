@@ -38,6 +38,54 @@ public class ServiceMetadata {
 	@Column(nullable = true)
     private URI documentationUrl;
 
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+	public URI getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(URI imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
+	public String getLongDescription() {
+		return longDescription;
+	}
+
+	public void setLongDescription(String longDescription) {
+		this.longDescription = longDescription;
+	}
+
+	public String getProviderDisplayName() {
+		return providerDisplayName;
+	}
+
+	public void setProviderDisplayName(String providerDisplayName) {
+		this.providerDisplayName = providerDisplayName;
+	}
+
+	public URI getDocumentationUrl() {
+		return documentationUrl;
+	}
+
+	public void setDocumentationUrl(URI documentationUrl) {
+		this.documentationUrl = documentationUrl;
+	}
+
+	public URI getSupportUrl() {
+		return supportUrl;
+	}
+
+	public void setSupportUrl(URI supportUrl) {
+		this.supportUrl = supportUrl;
+	}
+
 	@Column(nullable = true)
     private URI supportUrl;
 
