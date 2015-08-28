@@ -9,9 +9,11 @@ import javax.sql.DataSource;
 import org.cf.serviceregistry.servicebroker.model.Service;
 import org.hibernate.dialect.MySQL5Dialect;
 import org.hibernate.jpa.HibernatePersistenceProvider;
+import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -19,8 +21,9 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 @Configuration
 @Profile("cloud")
 @EnableJpaRepositories("org.cf.servicebroker.repository")
-public class CloudConfig {
+public class CloudConfig implements EnvironmentAware{
 
+	Environment env;
 	
 	@Bean(name = "entityManagerFactory")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(
@@ -29,6 +32,11 @@ public class CloudConfig {
 				MySQL5Dialect.class.getName());
 	}
 
+	@Override
+    public void setEnvironment(Environment environment) {
+        this.env = environment;
+    }
+	
 	@Bean(name = "transactionManager")
 	public JpaTransactionManager transactionManager(
 			EntityManagerFactory entityManagerFactory) {
@@ -38,7 +46,14 @@ public class CloudConfig {
 	protected LocalContainerEntityManagerFactoryBean createEntityManagerFactoryBean(
 			DataSource dataSource, String dialectClassName) {
 		Map<String, String> properties = new HashMap<String, String>();
-		//properties.put(org.hibernate.cfg.Environment.HBM2DDL_AUTO, "create");
+		
+		String hbm2ddl_auto_option = env.getProperty("hibernate.hbm2ddl.auto");
+		
+		// Go with create if nothing defined in env.
+		if (hbm2ddl_auto_option == null)
+			hbm2ddl_auto_option = "create";
+		
+		properties.put(org.hibernate.cfg.Environment.HBM2DDL_AUTO, hbm2ddl_auto_option);
 		properties.put(org.hibernate.cfg.Environment.DIALECT, dialectClassName);
 		properties.put(org.hibernate.cfg.Environment.SHOW_SQL, "true");
 		properties.put(org.hibernate.cfg.Environment.HBM2DDL_IMPORT_FILES,

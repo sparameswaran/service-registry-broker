@@ -14,10 +14,18 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties({ "id" })
 public class Credentials {
 
-	
 	@Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int id;
+	
+	@Column(nullable = true)
+	private String uri;
+
+	@Column(nullable = true)
+	private String username;
+
+	@Column(nullable = true)
+	private String password;
 	
 	// any "other" tags/key-value pairs    
 	@ElementCollection(fetch = FetchType.LAZY)
@@ -68,14 +76,12 @@ public class Credentials {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
+	@Override
+	public String toString() {
+		return "Credentials [id=" + id + ", other=" + other + ", uri=" + uri
+				+ ", username=" + username + ", password=" + password + "]";
+	}
 
-	@Column(nullable = false)
-	private String uri;
-
-	@Column(nullable = true)
-	private String username;
-
-	@Column(nullable = true)
-	private String password;
 
 }

@@ -23,30 +23,43 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
 @Table(name = "plans")
 @JsonInclude(Include.NON_NULL)
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_EMPTY)
-@JsonIgnoreProperties({ "credentials", "service", "pkId", "serviceId"})
+@JsonIgnoreProperties({ "service", "serviceId"})
 public class Plan {
+	
+	private static final Log log = LogFactory.getLog(Plan.class);
 
-	@EmbeddedId
-	private PlanPk pkId = new PlanPk();
+	@Id
+	private String id;
 
+	private String name;
+	
 	@JsonBackReference
 	@ManyToOne
-	@JoinColumn(name="service_id", insertable = false, updatable = false)
+	@JoinColumn(name="service_id", insertable = true, updatable = false)
+	// Mark insertable false for compound keys, shared primary key, cascaded key
 	private Service service;
 
 	@Column(nullable = false)
 	private String description;
+	
+	@Column(nullable = false)
+	private String serviceName;
 	
 	@JsonProperty("isFree")
 	@Column(nullable = true)
@@ -64,81 +77,67 @@ public class Plan {
 		return isFree.booleanValue();
 	}
 
-	/*
-	public void setFree(Boolean isFree) {
-		if (isFree == null)
-			isFree = Boolean.TRUE;
-		this.isFree = isFree;
-	}
-	*/
-
 	public void setIsFree(Boolean free) {
 		if (isFree == null)
 			isFree = Boolean.TRUE;
 		this.isFree = isFree;
 	}
-
-	public String getId() {
-		return UUID.nameUUIDFromBytes((this.service.getName() + ":" + this.getName()).getBytes()).toString();
+	
+	public String generateId() {		
+		return UUID.nameUUIDFromBytes((this.getServiceName() + ":" + this.getName()).getBytes()).toString();
 	}
-
-	public void setId(String id) {
+	
+	public synchronized void generateAndSetId() {
+		if (this.id == null)
+			this.id = generateId();
+	}
+	
+	public synchronized void setId(String pk) {
+		System.out.println("Calling setId on Plan with arg:" + pk);
+		System.out.println("Currently pLan has name: " + name + ", id: " + id + " and service : " + getService() );
 		
+		if ((this.id == null) && (pk != null))
+			this.id = pk; 
+		else
+			generateAndSetId();
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((pkId == null) ? 0 : pkId.hashCode());
-		return result;
+	public synchronized String getId () { 
+		if (id == null)
+			generateAndSetId();
+		return id; 
 	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Plan other = (Plan) obj;
-		if (pkId == null) {
-			if (other.pkId != null)
-				return false;
-		} else if (!pkId.equals(other.pkId))
-			return false;
-		return true;
-	}
-
-	public void setPkId (PlanPk pk) { 
-		pkId = pk; 
-	}
-
-	public PlanPk getPkId () { return pkId; }
 
 	public Service getService () { return service; }
 	
+	public void setService (Service  service) { 
+		this.service = service; 
+	}
+	
 	public String getName () { 
-		return pkId.getPlanId(); 
+		return name; 
 	}
 
 	public void setName (String name) { 
-		pkId.setPlanId(name); 
+		this.name = name; 
 	}
 	
-	public String getServiceId () { 
-		return pkId.getServiceId(); 
+	public String getServiceName () { 
+		return serviceName; 
 	}
 	
-	public void setServiceId(String serviceId) { 
-		pkId.setServiceId(serviceId); 
+	public void setServiceName(String servicename) { 
+		this.serviceName = servicename; 
 	}
 	
+	// Dont expose credentials during serialization or request for service/plans
+	@JsonIgnore
 	public Credentials getCredentials() {
 		return credentials;
 	}
 
+	// Read any credentials during deserialization or POST of payloads
+	@JsonProperty
 	public void setCredentials(Credentials credentials) {
 		this.credentials = credentials;
 	}
@@ -161,8 +160,42 @@ public class Plan {
 
 	@Override
 	public String toString() {
-		return "Plan [pkId=" + pkId + ", description="
-				+ description + "]";
+		return "Plan [name=" + name + ", id=" + id + ", description="
+				+ description + ", serviceName=" + serviceName 
+				+ ", metadata=" + metadata + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Plan other = (Plan) obj;
+		
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 	
 	

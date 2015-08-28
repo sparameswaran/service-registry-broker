@@ -2,12 +2,12 @@
 [
 {
     "bindable": true,
-    "description": "TestContentRetrievalSystem",
-    "name": "TestContentRetreiveInterface",
+    "description": "TestCredsContentRetrievalSystem",
+    "name": "TestCredsContentRetreiveInterface",
     "metadata": {
-          "displayName": "Test Content",
+          "displayName": "TestCreds Content",
           "imageUrl": "https://d1fto35gcfffzn.cloudfront.net/images/brandimages/P_WhiteOnTeal_RGB300.png",
-          "longDescription": "Pull Test content from content management system",
+          "longDescription": "Pull TestCreds content from content management system",
           "providerDisplayName": "Pivotal CloudFoundry Platform Eng",
           "supportUrl": "http://support.pivotal.io"
          }, 
@@ -17,7 +17,16 @@
               "name": "basic",
             "isFree": "true",
             "metadata": {
-              "bullets": [ "Test Content", "Free service" ]
+              "bullets": [ "TestCreds Content", "Free service" ]
+            },
+            "credentials": {
+              "uri": "http://test-uri.10.10.10.10:8080",
+              "username": "testuser",
+              "password": "testuser",
+              "certLocation" : "http://certLocation....",
+              "certFormat" : "pem",
+              "additionaltag1" : "additionalval1",
+              "additionaltag2" : "additionalval2"
             }
         },
         {
@@ -25,7 +34,16 @@
             "name": "premium",
             "isFree": "false",
             "metadata": {
-              "bullets": [ "Test Content", "Premium service" ]
+              "bullets": [ "TestCreds Content", "Premium service" ]
+            },
+            "credentials": {
+              "uri": "http://test-uri.20.20.20.20:8080",
+              "username": "testuser",
+              "password": "testuser",
+              "certLocation" : "http://certLocation....",
+              "certFormat" : "pem",
+              "additionaltag1" : "additionalval1",
+              "additionaltag2" : "additionalval2"
             }
         }
     ]
