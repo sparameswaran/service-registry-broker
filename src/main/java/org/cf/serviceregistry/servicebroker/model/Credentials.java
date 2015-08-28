@@ -33,7 +33,7 @@ public class Credentials {
     @Column(name="value")
     @CollectionTable(name="creds_other_attributes", joinColumns=@JoinColumn(name="creds_other_attrib_id"))
 	protected Map<String,String> other = new HashMap<String,String>();
-
+		
     // "any getter" needed for serialization    
     @JsonAnyGetter
     public Map<String,String> any() {

@@ -49,9 +49,9 @@ public class CloudConfig implements EnvironmentAware{
 		
 		String hbm2ddl_auto_option = env.getProperty("hibernate.hbm2ddl.auto");
 		
-		// Go with create if nothing defined in env.
+		// Dont drop or create tables if nothing defined in env.
 		if (hbm2ddl_auto_option == null)
-			hbm2ddl_auto_option = "create";
+			hbm2ddl_auto_option = "none";
 		
 		properties.put(org.hibernate.cfg.Environment.HBM2DDL_AUTO, hbm2ddl_auto_option);
 		properties.put(org.hibernate.cfg.Environment.DIALECT, dialectClassName);

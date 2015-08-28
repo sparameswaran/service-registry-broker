@@ -86,8 +86,7 @@ public class ServiceRegistryController {
 		//log.info("Got /services call with payload : "
 		//		+ serviceEndpointInstance);
 
-		Optional<Service> services = serviceRepo.findByServiceName(serviceName);
-		
+		Optional<Service> services = serviceRepo.findByServiceName(serviceName);		
 		if (services.isPresent()) {
 			
 			return new ResponseEntity<>(
@@ -95,39 +94,34 @@ public class ServiceRegistryController {
 						+ serviceName					
 						+ " already exists\"}",
 						HttpStatus.CONFLICT);		
-		} else {
+		} 
 			
-			serviceEndpointInstance.generateAndSetId();
-			//log.info("After setting service Id, service id: " + serviceEndpointInstance.getId());
-			
-			Set<Plan> plans = serviceEndpointInstance.getPlans();
-			
-			if (plans != null) {
+		serviceEndpointInstance.generateAndSetId();
+		//log.info("After setting service Id, service id: " + serviceEndpointInstance.getId());
+		
+		Set<Plan> plans = serviceEndpointInstance.getPlans();		
+		if (plans != null) {			
+			for (Plan newPlan: plans) {				
+				newPlan.setService(serviceEndpointInstance);
+				newPlan.setServiceName(serviceEndpointInstance.getName());
+				newPlan.generateAndSetId();					
+				//log.info("Associated Plan: " + newPlan);
 				
-				for (Plan newPlan: plans) {
-					
-					newPlan.setService(serviceEndpointInstance);
-					newPlan.setServiceName(serviceEndpointInstance.getName());
-					newPlan.generateAndSetId();					
-					//log.info("Associated Plan: " + newPlan);
-					
-					// Save the Credentials ahead of the Service or Plan
-					Credentials newCreds = newPlan.getCredentials();					
-					
-					if (newCreds != null) {
-						credentialsRepo.save(newCreds);
-					}
-					
-					//log.info("After setting service Id, New Plan Id: " + newPlan.getId() + " and associated service is: " + newPlan.getService());
-					
+				// Save the Credentials ahead of the Service or Plan
+				Credentials newCreds = newPlan.getCredentials();					
+				ResponseEntity<String> responseStatus = createCredentials(newCreds);
+				if (responseStatus.getStatusCode() != HttpStatus.OK) {
+					return new ResponseEntity<>("{\"description\": \"Problem persisting credentials!! \"}",
+					HttpStatus.INTERNAL_SERVER_ERROR);
 				}
+				
+				//log.info("After setting service Id, New Plan Id: " + newPlan.getId() 
+				// 		+ " and associated service is: " + newPlan.getService());				
 			}
-
 			serviceRepo.save(serviceEndpointInstance);			
 		}
 
-		log.debug("Service Instance created: " + serviceEndpointInstance);
-		
+		log.debug("Service Instance created: " + serviceEndpointInstance);		
 		return new ResponseEntity<>("{}", HttpStatus.OK);
 	}
 	
@@ -155,7 +149,6 @@ public class ServiceRegistryController {
 			}
 		}
 		return new ResponseEntity<>("{}", HttpStatus.OK);
-
 	}
 	
 	@RequestMapping(value = "/services/{serviceName}", method = RequestMethod.GET)
@@ -166,13 +159,12 @@ public class ServiceRegistryController {
 
 			Service existingService = services.get();
 			return new ResponseEntity<Object>(existingService, HttpStatus.OK);			
-		} else {
-			
-			return new ResponseEntity<Object>(
-					"{\"description\": \"Service with name: "
-							+ serviceName + " not found\"}",
-					HttpStatus.BAD_REQUEST);
-		}
+		} 
+		
+		return new ResponseEntity<Object>(
+				"{\"description\": \"Service with name: "
+						+ serviceName + " not found\"}",
+				HttpStatus.BAD_REQUEST);		
 	}
 
 	@RequestMapping(value = "/services/{serviceName}", 
@@ -181,17 +173,16 @@ public class ServiceRegistryController {
 			@PathVariable("serviceName") String serviceName) {
 		
 		Optional<Service> services = serviceRepo.findByServiceName(serviceName);
-		if (services.isPresent()) {
-			
-			Service existingService = services.get();
-			
-			// Clean up associated plans
-			planRepo.delete(existingService.getPlans());
-			serviceRepo.delete(serviceName);
-			return new ResponseEntity<>("{}", HttpStatus.OK);
-		} else {
+		if (!services.isPresent()) {
 			return new ResponseEntity<>("{}", HttpStatus.GONE);
 		}
+			
+		Service existingService = services.get();
+		
+		// Clean up associated plans
+		planRepo.delete(existingService.getPlans());
+		serviceRepo.delete(serviceName);
+		return new ResponseEntity<>("{}", HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/services/{serviceName}/plans", 
@@ -200,20 +191,18 @@ public class ServiceRegistryController {
 		@PathVariable("serviceName") String serviceName) {
 		
 		Optional<Service> services = serviceRepo.findByServiceName(serviceName);
-		if (services.isPresent()) {
-			Service existingService = services.get();
-			Set<Plan> servicePlanInstances = existingService.getPlans();
-			
-			Map<String, Iterable<Plan>> wrapper = new HashMap<>();
-			wrapper.put("plans", servicePlanInstances);
-			return new ResponseEntity<>(wrapper, HttpStatus.OK);			
-			
-		} else {
-			
+		if (!services.isPresent()) {
 			return new ResponseEntity<>("{\"description\": \"Service with name: "
 					+ serviceName + " not found\"}",
 			HttpStatus.BAD_REQUEST);
 		}
+		
+		Service existingService = services.get();
+		Set<Plan> servicePlanInstances = existingService.getPlans();
+		
+		Map<String, Iterable<Plan>> wrapper = new HashMap<>();
+		wrapper.put("plans", servicePlanInstances);
+		return new ResponseEntity<>(wrapper, HttpStatus.OK);		
 	}
 
 	
@@ -224,30 +213,29 @@ public class ServiceRegistryController {
 			@PathVariable("planName") String planName) {
 		
 		Optional<Service> services = serviceRepo.findByServiceName(serviceName);
-		if (services.isPresent()) {
-			Service existingService = services.get();
-			
-			Service serviceDefn = existingService;
-			
-			Plan servicePlanInstance = new Plan();
-			servicePlanInstance.setName(planName);
-			servicePlanInstance.setServiceName(serviceName);
-
-			servicePlanInstance = planRepo.findOne(servicePlanInstance.getId());
-			if (serviceDefn.getPlans().contains(servicePlanInstance) 
-					&& (servicePlanInstance != null)) {
-				return new ResponseEntity<Object>(servicePlanInstance, HttpStatus.OK);
-			}
-			
-			return new ResponseEntity<>("{\"description\": \"Plan with name: "
-						+ planName + " not found\"}",
-				HttpStatus.BAD_REQUEST);
-			
-		} else {
+		if (!services.isPresent()) {
 			return new ResponseEntity<>("{\"description\": \"Service with name: "
 					+ serviceName + " not found\"}",
 			HttpStatus.BAD_REQUEST);
 		}
+
+		Service existingService = services.get();
+		
+		Service serviceDefn = existingService;
+		
+		Plan servicePlanInstance = new Plan();
+		servicePlanInstance.setName(planName);
+		servicePlanInstance.setServiceName(serviceName);
+
+		servicePlanInstance = planRepo.findOne(servicePlanInstance.getId());
+		if (serviceDefn.getPlans().contains(servicePlanInstance) 
+				&& (servicePlanInstance != null)) {
+			return new ResponseEntity<Object>(servicePlanInstance, HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<>("{\"description\": \"Plan with name: "
+					+ planName + " not found\"}",
+					HttpStatus.BAD_REQUEST);			
 	}
 
 	@RequestMapping(value = "/services/{serviceName}/plans", 
@@ -256,26 +244,26 @@ public class ServiceRegistryController {
 			@PathVariable("serviceName") String serviceName,
 			@RequestBody Plan servicePlanInstance) {
 		Optional<Service> services = serviceRepo.findByServiceName(serviceName);
-		if (services.isPresent()) {
-			Service existingService = services.get();
-			
-			servicePlanInstance.setService(existingService);
-			servicePlanInstance.setServiceName(serviceName);
-			servicePlanInstance.generateAndSetId(); 
-			//Plan existingPlan = planRepo.findOne(planPk);
-			
-			existingService.addPlan(servicePlanInstance);
-
-			// Override what was earlier there
-			planRepo.save(servicePlanInstance);
-			serviceRepo.save(existingService);
-			
-			return new ResponseEntity<>("{}", HttpStatus.OK);
-		} else {
+		if (!services.isPresent()) {
 			return new ResponseEntity<>("{\"description\": \"Service with name: "
 					+ serviceName + " not found\"}",
 			HttpStatus.BAD_REQUEST);
 		}
+
+		Service existingService = services.get();
+			
+		servicePlanInstance.setService(existingService);
+		servicePlanInstance.setServiceName(serviceName);
+		servicePlanInstance.generateAndSetId(); 
+		//Plan existingPlan = planRepo.findOne(planPk);
+		
+		existingService.addPlan(servicePlanInstance);
+
+		// Override what was earlier there
+		planRepo.save(servicePlanInstance);
+		serviceRepo.save(existingService);
+		
+		return new ResponseEntity<>("{}", HttpStatus.OK);
 	}
 
 	
@@ -286,24 +274,29 @@ public class ServiceRegistryController {
 			@PathVariable("planName") String planName) {
 		
 		Optional<Service> services = serviceRepo.findByServiceName(serviceName);
-		if (services.isPresent()) {
-			Service existingService = services.get();
-			
-			Plan unwantedPlan = new Plan();
-			unwantedPlan.setName(planName);
-			unwantedPlan.setServiceName(serviceName);
+		if (!services.isPresent()) {
+			return new ResponseEntity<>("{\"description\": \"Service with name: "
+					+ serviceName + " not found\"}",
+			HttpStatus.BAD_REQUEST);
+		}
 
-			unwantedPlan = planRepo.findOne(unwantedPlan.getId());
-			
-			existingService.getPlans().remove(unwantedPlan);
-			
-			planRepo.delete(unwantedPlan.getId());
-			serviceRepo.save(existingService);
-			
-			return new ResponseEntity<>("{}", HttpStatus.OK);
-		} else {
+		Service existingService = services.get();
+		
+		Plan unwantedPlan = new Plan();
+		unwantedPlan.setName(planName);
+		unwantedPlan.setServiceName(serviceName);
+
+		unwantedPlan = planRepo.findOne(unwantedPlan.getId());
+		if (unwantedPlan == null) {
 			return new ResponseEntity<>("{}", HttpStatus.GONE);
 		}
+		
+		existingService.getPlans().remove(unwantedPlan);
+		
+		planRepo.delete(unwantedPlan.getId());
+		serviceRepo.save(existingService);
+		
+		return new ResponseEntity<>("{}", HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/services/{serviceName}/plans/{planName}/creds", 
@@ -313,35 +306,33 @@ public class ServiceRegistryController {
 		@PathVariable("planName") String planName) {
 		
 		Optional<Service> services = serviceRepo.findByServiceName(serviceName);
-		if (services.isPresent()) {
-			Service existingService = services.get();
-			
-			Plan existingPlan = new Plan();
-			existingPlan.setName(planName);
-			existingPlan.setServiceName(serviceName);
-
-			existingPlan = planRepo.findOne(existingPlan.getId());
-			
-			if (existingPlan == null ) {
-				return new ResponseEntity<>("{\"description\": \"Plan with name: "
-					+ planName + " not found or not associated with service defn with name: " 
-					+ serviceName + "\"}",
-					HttpStatus.BAD_REQUEST);
-			}
-			
-			Credentials credsInstance = existingPlan.getCredentials();
-			if (credsInstance != null) 
-				return new ResponseEntity<>(credsInstance, HttpStatus.OK);
-		
-				
-			return new ResponseEntity<>("{\"description\": \"Found no credentials!! \"}",
-					HttpStatus.BAD_REQUEST);
-			
-		} else {
+		if (!services.isPresent()) {
 			return new ResponseEntity<>("{\"description\": \"Service with name: "
 					+ serviceName + " not found\"}",
 			HttpStatus.BAD_REQUEST);
 		}
+
+		Service existingService = services.get();
+		
+		Plan existingPlan = new Plan();
+		existingPlan.setName(planName);
+		existingPlan.setServiceName(serviceName);
+
+		existingPlan = planRepo.findOne(existingPlan.getId());
+		
+		if (existingPlan == null ) {
+			return new ResponseEntity<>("{\"description\": \"Plan with name: "
+				+ planName + " not found or not associated with service defn with name: " 
+				+ serviceName + "\"}",
+				HttpStatus.BAD_REQUEST);
+		}
+		
+		Credentials credsInstance = existingPlan.getCredentials();
+		if (credsInstance != null) 
+			return new ResponseEntity<>(credsInstance, HttpStatus.OK);	
+			
+		return new ResponseEntity<>("{\"description\": \"Found no credentials!! \"}",
+				HttpStatus.BAD_REQUEST);
 	}
 
 	@RequestMapping(value = "/services/{serviceName}/plans/{planName}/creds", 
@@ -352,36 +343,35 @@ public class ServiceRegistryController {
 		@RequestBody Credentials servicePlanCredsInstance) {
 		
 		Optional<Service> services = serviceRepo.findByServiceName(serviceName);
-		if (services.isPresent()) {
-			
-			Service existingService = services.get();
-			Plan existingPlan = new Plan();
-			existingPlan.setName(planName);
-			existingPlan.setServiceName(serviceName);
-
-			existingPlan = planRepo.findOne(existingPlan.getId());
-			if (existingPlan == null ) {
-				return new ResponseEntity<>("{\"description\": \"Plan with name: "
-					+ planName + " not found or not associated with service defn with name: " 
-					+ serviceName + "\"}",
-					HttpStatus.BAD_REQUEST);
-			}
-			
-			ResponseEntity<String> responseStatus = createCredentials(servicePlanCredsInstance);
-		
-			if (responseStatus.getStatusCode() != HttpStatus.OK) {
-				return new ResponseEntity<>("{\"description\": \"Problem persisting credentials!! \"}",
-				HttpStatus.INTERNAL_SERVER_ERROR);
-			}
-			existingPlan.setCredentials(servicePlanCredsInstance);
-			planRepo.save(existingPlan);
-			
-			return new ResponseEntity<>("{}", HttpStatus.OK);
-		} else {
+		if (!services.isPresent()) {
 			return new ResponseEntity<>("{\"description\": \"Service with name: "
 					+ serviceName + " not found\"}",
 			HttpStatus.BAD_REQUEST);
 		}
+			
+		Service existingService = services.get();
+		Plan existingPlan = new Plan();
+		existingPlan.setName(planName);
+		existingPlan.setServiceName(serviceName);
+
+		existingPlan = planRepo.findOne(existingPlan.getId());
+		if (existingPlan == null ) {
+			return new ResponseEntity<>("{\"description\": \"Plan with name: "
+				+ planName + " not found or not associated with service defn with name: " 
+				+ serviceName + "\"}",
+				HttpStatus.BAD_REQUEST);
+		}
+		
+		ResponseEntity<String> responseStatus = createCredentials(servicePlanCredsInstance);
+	
+		if (responseStatus.getStatusCode() != HttpStatus.OK) {
+			return new ResponseEntity<>("{\"description\": \"Problem persisting credentials!! \"}",
+			HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		existingPlan.setCredentials(servicePlanCredsInstance);
+		planRepo.save(existingPlan);
+		
+		return new ResponseEntity<>("{}", HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/services/{serviceName}/plans/{planName}/creds", 
@@ -391,40 +381,39 @@ public class ServiceRegistryController {
 			@PathVariable("planName") String planName) {
 		
 		Optional<Service> services = serviceRepo.findByServiceName(serviceName);
-		if (services.isPresent()) {
-			Service existingService = services.get();
-			
-			Plan existingPlan = new Plan();
-			existingPlan.setName(planName);
-			existingPlan.setServiceName(serviceName);
-
-			existingPlan = planRepo.findOne(existingPlan.getId());
-			
-			if (existingPlan == null ) {
-				return new ResponseEntity<>("{\"description\": \"Plan with name "
-					+ planName + " not found or not associated with service defn with name " 
-					+ serviceName + "\"}",
-					HttpStatus.BAD_REQUEST);
-			}
-
-			Credentials existingCreds = existingPlan.getCredentials();
-			if (existingCreds == null) {
-				return new ResponseEntity<>("{}", HttpStatus.GONE);
-			}
-			
-			existingPlan.setCredentials(null);
-			
-			// Not sure if we should delete the credentials as 
-			// it might be still used by the ServiceBindingInstance
-			//credentialsRepo.delete(existingCreds);
-			
-			planRepo.save(existingPlan);
-			
-			return new ResponseEntity<>("{}", HttpStatus.OK);
-		} else {
+		if (!services.isPresent()) {
 			return new ResponseEntity<>("{\"description\": \"Service with name: "
 					+ serviceName + " not found\"}",
 			HttpStatus.BAD_REQUEST);
 		}
+
+		Service existingService = services.get();
+		
+		Plan existingPlan = new Plan();
+		existingPlan.setName(planName);
+		existingPlan.setServiceName(serviceName);
+
+		existingPlan = planRepo.findOne(existingPlan.getId());
+		
+		if (existingPlan == null ) {
+			return new ResponseEntity<>("{\"description\": \"Plan with name "
+				+ planName + " not found or not associated with service defn with name " 
+				+ serviceName + "\"}",
+				HttpStatus.BAD_REQUEST);
+		}
+
+		Credentials existingCreds = existingPlan.getCredentials();
+		if (existingCreds == null) {
+			return new ResponseEntity<>("{}", HttpStatus.GONE);
+		}
+		
+		existingPlan.setCredentials(null);
+		
+		// Not sure if we should delete the credentials as 
+		// it might be still used by the ServiceBindingInstance
+		//credentialsRepo.delete(existingCreds);		
+		planRepo.save(existingPlan);
+		
+		return new ResponseEntity<>("{}", HttpStatus.OK);
 	}
 }

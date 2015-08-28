@@ -66,7 +66,7 @@ public class Plan {
 	private Boolean isFree = Boolean.TRUE;
 
 	@OneToOne(orphanRemoval = true, cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "plan_cred_id")
+	@JoinColumn(name = "plan_cred_id", insertable=true,updatable=true,nullable=true,unique=true)
 	private Credentials credentials;
 	
 	@JsonProperty("metadata")
