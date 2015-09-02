@@ -51,7 +51,8 @@ public class Service {
 	private ServiceMetadata metadata;
 
 	public synchronized void generateAndSetId() {
-		id = UUID.nameUUIDFromBytes(this.getName().getBytes()).toString();
+		//id = UUID.nameUUIDFromBytes(this.getName().getBytes()).toString();
+		id = UUID.randomUUID().toString();
 	}
 	
 	public synchronized String getId() {
@@ -107,7 +108,6 @@ public class Service {
 	public synchronized void setPlans(Set<Plan> plans) {
 		this.plans = plans;
 		for(Plan plan: plans) {
-			plan.setServiceName(this.name);
 			plan.generateAndSetId();
 			plan.setService(this);
 		}
@@ -118,9 +118,6 @@ public class Service {
 			this.plans.add(plan);
 			plan.setService(this);
 		}
-	
-		plan.setServiceName(this.name);
-		plan.generateAndSetId();
 	}
 
 	public synchronized void removePlan(Plan plan) {

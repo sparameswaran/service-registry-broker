@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "credentials")
-@JsonIgnoreProperties({ "id" })
+@JsonIgnoreProperties({ "id", "handler", "hibernateLazyInitializer" })
 public class Credentials {
 
 	@Id
@@ -64,7 +64,30 @@ public class Credentials {
 	public String getUsername() {
 		return username;
 	}
-
+	
+	/*
+	public void copy(Credentials copyCredentials) {
+		
+		String uri = copyCredentials.getUri();
+		if (uri != null) {
+			this.uri = uri;
+		}
+		
+		String username = copyCredentials.getUsername();
+		if (username != null) {
+			this.username = username;
+			// Change the associated password also
+			this.password = copyCredentials.getPassword();
+		}
+		
+		this.other.clear();
+		
+		for(String key:copyCredentials.other.keySet()) {
+			other.put(key, copyCredentials.other.get(key) );
+		}
+	}
+	*/
+	
 	public void setUsername(String username) {
 		this.username = username;
 	}

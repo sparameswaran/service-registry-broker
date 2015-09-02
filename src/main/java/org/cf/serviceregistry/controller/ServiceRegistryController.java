@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,17 +12,14 @@ import org.cf.servicebroker.repository.PlanRepository;
 import org.cf.servicebroker.repository.ServiceRepository;
 import org.cf.serviceregistry.servicebroker.model.Credentials;
 import org.cf.serviceregistry.servicebroker.model.Plan;
-import org.cf.serviceregistry.servicebroker.model.PlanPk;
 import org.cf.serviceregistry.servicebroker.model.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -65,13 +61,12 @@ public class ServiceRegistryController {
 		Credentials newCreds = newPlan.getCredentials();
 		if (newCreds != null) {
 			//log.info("Credentials to be inserted: " + newCreds);
-			ResponseEntity credsCreateStatus = createCredentials(newCreds);
+			ResponseEntity<String> credsCreateStatus = createCredentials(newCreds);
 			if (credsCreateStatus.getStatusCode() != HttpStatus.OK) {
 				return credsCreateStatus;
 			}
 		}		
 		
-		newPlan.setServiceName(newPlan.getService().getName());
 		newPlan.generateAndSetId();	
 		
 		planRepo.save(newPlan);
@@ -103,7 +98,6 @@ public class ServiceRegistryController {
 		if (plans != null) {			
 			for (Plan newPlan: plans) {				
 				newPlan.setService(serviceEndpointInstance);
-				newPlan.setServiceName(serviceEndpointInstance.getName());
 				newPlan.generateAndSetId();					
 				//log.info("Associated Plan: " + newPlan);
 				
@@ -225,12 +219,11 @@ public class ServiceRegistryController {
 		
 		Plan servicePlanInstance = new Plan();
 		servicePlanInstance.setName(planName);
-		servicePlanInstance.setServiceName(serviceName);
-
-		servicePlanInstance = planRepo.findOne(servicePlanInstance.getId());
-		if (serviceDefn.getPlans().contains(servicePlanInstance) 
-				&& (servicePlanInstance != null)) {
-			return new ResponseEntity<Object>(servicePlanInstance, HttpStatus.OK);
+		
+		Optional<Plan> plans = planRepo.findByPlanNameAndServiceId(planName, existingService.getId());
+		
+		if (plans.isPresent()) {
+			return new ResponseEntity<Object>(plans.get(), HttpStatus.OK);
 		}
 		
 		return new ResponseEntity<>("{\"description\": \"Plan with name: "
@@ -251,18 +244,21 @@ public class ServiceRegistryController {
 		}
 
 		Service existingService = services.get();
-			
-		servicePlanInstance.setService(existingService);
-		servicePlanInstance.setServiceName(serviceName);
-		servicePlanInstance.generateAndSetId(); 
+		
 		//Plan existingPlan = planRepo.findOne(planPk);
+		Optional<Plan> plans = planRepo.findByPlanNameAndServiceId(servicePlanInstance.getName(), existingService.getId());
 		
-		existingService.addPlan(servicePlanInstance);
-
-		// Override what was earlier there
-		planRepo.save(servicePlanInstance);
-		serviceRepo.save(existingService);
-		
+		if (plans.isPresent()) {
+			Plan plan = plans.get();			
+			plan.copy(servicePlanInstance);
+			planRepo.save(plan);
+					
+		} else {		
+			servicePlanInstance.generateAndSetId();
+			existingService.addPlan(servicePlanInstance);
+			serviceRepo.save(existingService);
+		}
+	
 		return new ResponseEntity<>("{}", HttpStatus.OK);
 	}
 
@@ -281,16 +277,15 @@ public class ServiceRegistryController {
 		}
 
 		Service existingService = services.get();
-		
-		Plan unwantedPlan = new Plan();
-		unwantedPlan.setName(planName);
-		unwantedPlan.setServiceName(serviceName);
 
-		unwantedPlan = planRepo.findOne(unwantedPlan.getId());
-		if (unwantedPlan == null) {
+		//Plan existingPlan = planRepo.findOne(planPk);
+		Optional<Plan> plans = planRepo.findByPlanNameAndServiceId(planName, existingService.getId());
+
+		if (!plans.isPresent()) {
 			return new ResponseEntity<>("{}", HttpStatus.GONE);
 		}
-		
+
+		Plan unwantedPlan = plans.get();
 		existingService.getPlans().remove(unwantedPlan);
 		
 		planRepo.delete(unwantedPlan.getId());
@@ -313,20 +308,18 @@ public class ServiceRegistryController {
 		}
 
 		Service existingService = services.get();
-		
-		Plan existingPlan = new Plan();
-		existingPlan.setName(planName);
-		existingPlan.setServiceName(serviceName);
 
-		existingPlan = planRepo.findOne(existingPlan.getId());
-		
-		if (existingPlan == null ) {
+		//Plan existingPlan = planRepo.findOne(planPk);
+		Optional<Plan> plans = planRepo.findByPlanNameAndServiceId(planName, existingService.getId());
+
+		if (!plans.isPresent()) {
 			return new ResponseEntity<>("{\"description\": \"Plan with name: "
-				+ planName + " not found or not associated with service defn with name: " 
-				+ serviceName + "\"}",
-				HttpStatus.BAD_REQUEST);
+					+ planName + " not found or not associated with service defn with name: " 
+					+ serviceName + "\"}",
+					HttpStatus.BAD_REQUEST);
 		}
 		
+		Plan existingPlan = plans.get();
 		Credentials credsInstance = existingPlan.getCredentials();
 		if (credsInstance != null) 
 			return new ResponseEntity<>(credsInstance, HttpStatus.OK);	
@@ -350,18 +343,18 @@ public class ServiceRegistryController {
 		}
 			
 		Service existingService = services.get();
-		Plan existingPlan = new Plan();
-		existingPlan.setName(planName);
-		existingPlan.setServiceName(serviceName);
+		//Plan existingPlan = planRepo.findOne(planPk);
+		Optional<Plan> plans = planRepo.findByPlanNameAndServiceId(planName, existingService.getId());
 
-		existingPlan = planRepo.findOne(existingPlan.getId());
-		if (existingPlan == null ) {
+		if (!plans.isPresent()) {
 			return new ResponseEntity<>("{\"description\": \"Plan with name: "
-				+ planName + " not found or not associated with service defn with name: " 
-				+ serviceName + "\"}",
-				HttpStatus.BAD_REQUEST);
+					+ planName + " not found or not associated with service defn with name: " 
+					+ serviceName + "\"}",
+					HttpStatus.BAD_REQUEST);
 		}
 		
+		Plan existingPlan = plans.get();
+
 		ResponseEntity<String> responseStatus = createCredentials(servicePlanCredsInstance);
 	
 		if (responseStatus.getStatusCode() != HttpStatus.OK) {
@@ -389,19 +382,16 @@ public class ServiceRegistryController {
 
 		Service existingService = services.get();
 		
-		Plan existingPlan = new Plan();
-		existingPlan.setName(planName);
-		existingPlan.setServiceName(serviceName);
+		Optional<Plan> plans = planRepo.findByPlanNameAndServiceId(planName, existingService.getId());
 
-		existingPlan = planRepo.findOne(existingPlan.getId());
-		
-		if (existingPlan == null ) {
-			return new ResponseEntity<>("{\"description\": \"Plan with name "
-				+ planName + " not found or not associated with service defn with name " 
-				+ serviceName + "\"}",
-				HttpStatus.BAD_REQUEST);
+		if (!plans.isPresent()) {
+			return new ResponseEntity<>("{\"description\": \"Plan with name: "
+					+ planName + " not found or not associated with service defn with name: " 
+					+ serviceName + "\"}",
+					HttpStatus.BAD_REQUEST);
 		}
-
+		
+		Plan existingPlan = plans.get();
 		Credentials existingCreds = existingPlan.getCredentials();
 		if (existingCreds == null) {
 			return new ResponseEntity<>("{}", HttpStatus.GONE);

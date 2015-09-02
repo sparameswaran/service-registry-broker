@@ -58,14 +58,11 @@ public class Plan {
 	@Column(nullable = false)
 	private String description;
 	
-	@Column(nullable = false)
-	private String serviceName;
-	
 	@JsonProperty("isFree")
 	@Column(nullable = true)
 	private Boolean isFree = Boolean.TRUE;
 
-	@OneToOne(orphanRemoval = true, cascade = CascadeType.PERSIST)
+	@OneToOne(orphanRemoval = true, cascade = CascadeType.PERSIST, fetch=FetchType.LAZY, optional = true)
 	@JoinColumn(name = "plan_cred_id", insertable=true,updatable=true,nullable=true,unique=true)
 	private Credentials credentials;
 	
@@ -84,7 +81,8 @@ public class Plan {
 	}
 	
 	public String generateId() {		
-		return UUID.nameUUIDFromBytes((this.getServiceName() + ":" + this.getName()).getBytes()).toString();
+		//return UUID.nameUUIDFromBytes((this.getServiceName() + ":" + this.getName()).getBytes()).toString();
+		return UUID.randomUUID().toString();
 	}
 	
 	public synchronized void generateAndSetId() {
@@ -94,7 +92,7 @@ public class Plan {
 	
 	public synchronized void setId(String pk) {
 		System.out.println("Calling setId on Plan with arg:" + pk);
-		System.out.println("Currently pLan has name: " + name + ", id: " + id + " and service : " + getService() );
+		System.out.println("Currently pLan has name: " + name + ", id: " + id + " and service : " + getService().getName() );
 		
 		if ((this.id == null) && (pk != null))
 			this.id = pk; 
@@ -120,14 +118,6 @@ public class Plan {
 
 	public void setName (String name) { 
 		this.name = name; 
-	}
-	
-	public String getServiceName () { 
-		return serviceName; 
-	}
-	
-	public void setServiceName(String servicename) { 
-		this.serviceName = servicename; 
 	}
 	
 	// Dont expose credentials during serialization or request for service/plans
@@ -157,11 +147,30 @@ public class Plan {
 	public void setMetadata(PlanMetadata planMetadata) {
 		this.metadata = planMetadata;
 	}
+	
+	public void copy(Plan copyPlan) {
+		Credentials creds = copyPlan.getCredentials();
+		if (creds != null) {
+			this.credentials = creds;
+		}
+		
+		PlanMetadata metadata = copyPlan.getMetadata();
+		if (metadata != null) {
+			this.metadata = metadata;
+		}
+		
+		String descrp = copyPlan.getDescription();
+		if (descrp != null) {
+			this.description = descrp;
+		}
+		
+		this.isFree = copyPlan.isFree;		
+	}
 
 	@Override
 	public String toString() {
 		return "Plan [name=" + name + ", id=" + id + ", description="
-				+ description + ", serviceName=" + serviceName 
+				+ description + ", service=" + service.getName() 
 				+ ", metadata=" + metadata + "]";
 	}
 
