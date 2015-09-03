@@ -89,10 +89,7 @@ public class ServiceBrokerController {
 		ServiceInstance serviceInstance = serviceInstanceRepo.findOne(instanceId);
 		
 		serviceRepo.findOne(serviceInstance.getServiceId());
-		
-	
 		Plan underlyingPlan = planRepo.findOne(serviceInstance.getPlanId());
-		
 		
 		serviceBinding.setId(id);
 		serviceBinding.setInstanceId(instanceId);

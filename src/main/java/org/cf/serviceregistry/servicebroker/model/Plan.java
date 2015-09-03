@@ -39,7 +39,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Table(name = "plans")
 @JsonInclude(Include.NON_NULL)
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_EMPTY)
-@JsonIgnoreProperties({ "service", "serviceId"})
+@JsonIgnoreProperties({ "service", "serviceId" })
 public class Plan {
 	
 	private static final Log log = LogFactory.getLog(Plan.class);
@@ -58,7 +58,7 @@ public class Plan {
 	@Column(nullable = false)
 	private String description;
 	
-	@JsonProperty("isFree")
+	@JsonProperty("free")
 	@Column(nullable = true)
 	private Boolean isFree = Boolean.TRUE;
 
@@ -74,11 +74,11 @@ public class Plan {
 		return isFree.booleanValue();
 	}
 
-	public void setIsFree(Boolean free) {
+	public void setFree(boolean free) {
 		if (isFree == null)
-			isFree = Boolean.TRUE;
-		this.isFree = isFree;
-	}
+			isFree = true;
+		this.isFree = free;
+	}	
 	
 	public String generateId() {		
 		//return UUID.nameUUIDFromBytes((this.getServiceName() + ":" + this.getName()).getBytes()).toString();
@@ -91,9 +91,6 @@ public class Plan {
 	}
 	
 	public synchronized void setId(String pk) {
-		System.out.println("Calling setId on Plan with arg:" + pk);
-		System.out.println("Currently pLan has name: " + name + ", id: " + id + " and service : " + getService().getName() );
-		
 		if ((this.id == null) && (pk != null))
 			this.id = pk; 
 		else
@@ -170,7 +167,8 @@ public class Plan {
 	@Override
 	public String toString() {
 		return "Plan [name=" + name + ", id=" + id + ", description="
-				+ description + ", service=" + service.getName() 
+				+ description + ", free=" + isFree 
+				+ ", service=" + (service != null? service.getName(): " ")
 				+ ", metadata=" + metadata + "]";
 	}
 

@@ -1,4 +1,5 @@
         {
-            "description": "CUSTOMIZED Plan throttled to 5 connections per second",
+            "description": "CUSTOMIZED Plan throttled to 5 connections per second with change",
+            "free": false,
             "name": "CUSTOMIZED"
         }

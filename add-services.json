@@ -15,7 +15,7 @@
         {
             "description": "Basic Plan throttled to 5 connections per second",
               "name": "basic",
-            "isFree": "true",
+            "free": true,
             "metadata": {
               "bullets": [ "TestCreds Content", "Free service" ]
             },
@@ -32,7 +32,7 @@
         {
             "description": "Premium Plan throttled to 25 connections per second",
             "name": "premium",
-            "isFree": "false",
+            "free": false,
             "metadata": {
               "bullets": [ "TestCreds Content", "Premium service" ]
             },
@@ -40,8 +40,8 @@
               "uri": "http://test-uri.20.20.20.20:8080",
               "username": "testuser",
               "password": "testuser",
-              "certLocation" : "http://certLocation....",
               "certFormat" : "pem",
+              "certLocation" : "http://certLocation....",
               "additionaltag1" : "additionalval1",
               "additionaltag2" : "additionalval2"
             }

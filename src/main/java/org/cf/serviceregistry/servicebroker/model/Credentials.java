@@ -65,7 +65,6 @@ public class Credentials {
 		return username;
 	}
 	
-	/*
 	public void copy(Credentials copyCredentials) {
 		
 		String uri = copyCredentials.getUri();
@@ -86,7 +85,6 @@ public class Credentials {
 			other.put(key, copyCredentials.other.get(key) );
 		}
 	}
-	*/
 	
 	public void setUsername(String username) {
 		this.username = username;
