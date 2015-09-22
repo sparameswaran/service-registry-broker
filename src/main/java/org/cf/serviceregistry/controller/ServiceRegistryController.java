@@ -102,7 +102,10 @@ public class ServiceRegistryController {
 				//log.info("Associated Plan: " + newPlan);
 				
 				// Save the Credentials ahead of the Service or Plan
-				Credentials newCreds = newPlan.getCredentials();					
+				Credentials newCreds = newPlan.getCredentials();
+				if (newCreds == null)
+					continue;
+				
 				ResponseEntity<String> responseStatus = createCredentials(newCreds);
 				if (responseStatus.getStatusCode() != HttpStatus.OK) {
 					return new ResponseEntity<>("{\"description\": \"Problem persisting credentials!! \"}",

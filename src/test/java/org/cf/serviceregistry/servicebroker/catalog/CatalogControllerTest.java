@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.cf.serviceregistry.serviecbroker.catalog;
+package org.cf.serviceregistry.servicebroker.catalog;
 
 import org.cf.serviceregistry.AbstractControllerTest;
 import org.junit.Test;

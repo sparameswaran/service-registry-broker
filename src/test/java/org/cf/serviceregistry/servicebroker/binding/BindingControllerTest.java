@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.cf.serviceregistry.serviecbroker.binding;
+package org.cf.serviceregistry.servicebroker.binding;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -27,53 +27,45 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.cf.serviceregistry.AbstractControllerTest;
+import org.cf.serviceregistry.repository.CredentialsRepository;
+import org.cf.serviceregistry.repository.PlanRepository;
+import org.cf.serviceregistry.repository.ServiceBindingRepository;
+import org.cf.serviceregistry.repository.ServiceInstanceRepository;
+import org.cf.serviceregistry.repository.ServiceRepository;
 import org.cf.serviceregistry.servicebroker.model.Credentials;
 import org.cf.serviceregistry.servicebroker.model.Plan;
+import org.cf.serviceregistry.servicebroker.model.PlanMetadata;
 import org.cf.serviceregistry.servicebroker.model.Service;
+import org.cf.serviceregistry.servicebroker.model.ServiceBinding;
+import org.cf.serviceregistry.servicebroker.model.ServiceInstance;
+import org.cf.serviceregistry.servicebroker.model.ServiceMetadata;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-@Ignore
 public final class BindingControllerTest extends AbstractControllerTest {
 
-	@Before
-	public void loadService() throws Exception {
-	
-		ResultActions results = this.mockMvc.perform( put("/services").contentType(MediaType
-                .APPLICATION_JSON).content(servicePayload().getBytes()).header("X-Broker-Api-Version", "2.3"));
-		
-		results.andExpect(content().string("success: yes"));
-		
-		System.out.println("Post Service Status is " + status());
-   	 	System.out.println("Post Service content is " + content());
-   	 	
-   	 	Thread.sleep(300000);
-   	 	
-   	 	results = this.mockMvc.perform(put("/v2/service_instances/0").content(serviceInstancePayload()).contentType(MediaType
-             .APPLICATION_JSON));
-   	 	
-   	 	results = this.mockMvc.perform(get("/v2/catalog"));
-   	 	System.out.println("Catalog content is " + content());
-   	 
-	}
+	@Autowired
+	// Let the DatabaseInitializer load the test service and plan
+    protected DatabaseInitialiser databaseInitialiser;
 	
     @Test
     public void create() throws Exception {
-    	 ResultActions results = this.mockMvc.perform(put("/v2/service_instances/0/service_bindings/1").content(bindingInstancePayload()).contentType(MediaType
-                .APPLICATION_JSON));
-             
-                results.andExpect(status().isOk())
-                .andExpect(jsonPath("$.credentials.licenseKey").exists());
+    	 this.mockMvc.perform(put("/v2/service_instances/test-service-instance-id/service_bindings/test-service-binding-instance-id")
+    			.content(bindingInstancePayload())
+    			.contentType(MediaType.APPLICATION_JSON))
+    			.andExpect(status().isOk())
+    			.andExpect(jsonPath("$.credentials.uri").exists());
     }
 
     @Test
     public void testDelete() throws Exception {
-        this.mockMvc.perform(delete("/v2/service_instances/0/service_bindings/1")
+        this.mockMvc.perform(delete("/v2/service_instances/test-service-instance-id/service_bindings/test-service-binding-instance-id")
                 .param("service_id", "test-service-id").param("plan_id", "test-plan-id"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").exists());
@@ -99,31 +91,4 @@ public final class BindingControllerTest extends AbstractControllerTest {
         String payload = this.objectMapper.writeValueAsString(m);
         return payload;
     }
-
-    private String servicePayload() throws JsonProcessingException {
-        Map<String, String> m = new HashMap<>();
-        
-        Service svc = new Service();
-        svc.setName("test-name");
-        svc.setId("test-service-id");
-        svc.setDescription("test-description");
-        svc.setBindable(true);
-                
-        Plan plan = new Plan();        
-        plan.setName("test-name");
-        plan.setId("test-plan-id");
-        plan.setDescription("test-description");
-        plan.setFree(true);
-        
-        Credentials creds = new Credentials();
-        creds.setUri("http://test-uri");
-        plan.setCredentials(creds);
-        
-        svc.addPlan(plan);
-
-        String payload = this.objectMapper.writeValueAsString(new Service[] { svc });
-        System.out.println("Service Payload: " + payload);
-        return payload;
-    }
-
 }

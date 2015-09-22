@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.cf.serviceregistry.serviecbroker.catalog;
+package org.cf.serviceregistry.servicebroker.catalog;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;

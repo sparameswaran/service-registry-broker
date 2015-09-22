@@ -49,8 +49,8 @@ public class Plan {
 	@Column(nullable = true)
 	private Boolean isFree = Boolean.TRUE;
 
-	@OneToOne(orphanRemoval = true, cascade = CascadeType.PERSIST, fetch=FetchType.LAZY, optional = true)
-	@JoinColumn(name = "plan_cred_id", insertable=true,updatable=true,nullable=true,unique=true)
+	@OneToOne(orphanRemoval = true, cascade = CascadeType.ALL, fetch=FetchType.LAZY, optional = true)
+	@JoinColumn(name = "plan_cred_id", insertable=true, updatable=true, nullable=true, unique=true)
 	private Credentials credentials;
 	
 	@JsonProperty("metadata")
@@ -104,17 +104,13 @@ public class Plan {
 		this.name = name; 
 	}
 	
-	// Dont expose credentials during serialization or request for service/plans
 	@JsonIgnore
 	public Credentials getCredentials() {
-		System.out.println("Getting credentials from: " + credentials);
 		return credentials;
 	}
 
-	// Read any credentials during deserialization or POST of payloads
 	@JsonProperty
 	public void setCredentials(Credentials credentials) {
-		System.out.println("Setting credentials to: " + credentials);
 		this.credentials = credentials;
 	}
 

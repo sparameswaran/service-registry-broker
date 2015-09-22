@@ -22,7 +22,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = ServiceRegistryBrokerApp.class)
 @WebIntegrationTest(value = "server.port=9876")
-//@Ignore
 public class ServiceRepositoryTest {
 
 	@Autowired

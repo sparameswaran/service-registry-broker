@@ -1,5 +1,6 @@
 package org.cf.serviceregistry.servicebroker.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,21 +29,15 @@ public class PlanMetadata {
     private int id;
 
 	@ElementCollection (targetClass=String.class, fetch = FetchType.LAZY)
-	@JsonDeserialize(as = HashSet.class, contentAs = String.class)
-	private Set<String>bullets = new HashSet<String>();
+	@JsonDeserialize(as = ArrayList.class, contentAs = String.class)
+	private List<String>bullets = new ArrayList<String>();
 
-	public Set<String> getBullets() {
+	public List<String> getBullets() {
 		return bullets;
 	}
 
-	public synchronized void setBullets(Set<String> bullets) {
-		this.bullets = bullets;
-	}
-	
 	public synchronized void setBullets(List<String> bullets) {
-		for( String bullet: bullets ) {
-			this.bullets.add(bullet);
-		}
+		this.bullets = bullets;
 	}
 	
 	public synchronized void addBullet(String bullet) {

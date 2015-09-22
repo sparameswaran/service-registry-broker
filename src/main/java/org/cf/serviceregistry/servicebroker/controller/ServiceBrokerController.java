@@ -31,7 +31,13 @@ public class ServiceBrokerController {
 	Log log = LogFactory.getLog(ServiceBrokerController.class);
 
 	@Autowired
-	ServiceRepository serviceRepo;
+	ServiceRepository serviceRepoBen;
+
+	@Autowired
+	PlanRepository planRepo;
+	
+	@Autowired
+	CredentialsRepository credentialRepo;
 
 	@Autowired
 	ServiceInstanceRepository serviceInstanceRepo;
@@ -39,18 +45,12 @@ public class ServiceBrokerController {
 	@Autowired
 	ServiceBindingRepository serviceBindingRepo;
 	
-	@Autowired
-	PlanRepository planRepo;
-	
-	@Autowired
-	CredentialsRepository credentialRepo;
-
 	@RequestMapping("/v2/catalog")
 	public Map<String, Iterable<Service>> catalog() {
 		Map<String, Iterable<Service>> wrapper = new HashMap<>();
-		wrapper.put("services", serviceRepo.findAll());
+		wrapper.put("services", serviceRepoBen.findAll());
 
-		System.out.println("Catalog content;;;;;" + wrapper);
+		log.debug("Catalog content: " + wrapper);
 		return wrapper;
 	}
 
@@ -81,7 +81,7 @@ public class ServiceBrokerController {
 			@PathVariable("id") String id,
 			@RequestBody ServiceBinding serviceBinding) {
 
-		System.out.println("Incoming request : " + instanceId + ", id: " + id);
+		log.info("Incoming request for service id : " + instanceId + ", binding instance id: " + id);
 		if (!serviceInstanceRepo.exists(instanceId)) {
 			System.out.println("Instance does not exists..");
 			return new ResponseEntity<Object>(
@@ -91,13 +91,9 @@ public class ServiceBrokerController {
 
 		}
 		
-		ServiceInstance serviceInstance = serviceInstanceRepo.findOne(instanceId);
-		
-		Service underlyingService = serviceRepo.findOne(serviceInstance.getServiceId());
-		System.out.println("Underlying Service found: " + underlyingService);
-		
+		ServiceInstance serviceInstance = serviceInstanceRepo.findOne(instanceId);		
+		Service underlyingService = serviceRepoBen.findOne(serviceInstance.getServiceId());		
 		Plan underlyingPlan = planRepo.findOne(serviceInstance.getPlanId());
-		System.out.println("Underlying plan found: " + underlyingPlan);
 		
 		serviceBinding.setId(id);
 		serviceBinding.setInstanceId(instanceId);
@@ -143,10 +139,10 @@ public class ServiceBrokerController {
 	public ResponseEntity<String> delete(@PathVariable("id") String id,
 			@RequestParam("service_id") String serviceId,
 			@RequestParam("plan_id") String planId) {
-		boolean exists = serviceRepo.exists(id);
+		boolean exists = serviceRepoBen.exists(id);
 
 		if (exists) {
-			serviceRepo.delete(id);
+			serviceRepoBen.delete(id);
 			// Actualservice.delete(id);
 			return new ResponseEntity<>("{}", HttpStatus.OK);
 		} else {
