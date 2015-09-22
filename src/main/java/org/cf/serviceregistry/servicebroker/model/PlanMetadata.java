@@ -1,24 +1,17 @@
 package org.cf.serviceregistry.servicebroker.model;
 
 import java.util.HashSet;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -44,6 +37,12 @@ public class PlanMetadata {
 
 	public synchronized void setBullets(Set<String> bullets) {
 		this.bullets = bullets;
+	}
+	
+	public synchronized void setBullets(List<String> bullets) {
+		for( String bullet: bullets ) {
+			this.bullets.add(bullet);
+		}
 	}
 	
 	public synchronized void addBullet(String bullet) {

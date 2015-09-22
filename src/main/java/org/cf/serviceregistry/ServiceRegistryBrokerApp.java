@@ -18,6 +18,7 @@ public class ServiceRegistryBrokerApp {
 		SpringApplication.run(ServiceRegistryBrokerApp.class, args);
 	}
 	
+	/*
     @Bean
     FilterRegistrationBean brokerApiVersionFilter() {
         FilterRegistrationBean bean = new FilterRegistrationBean();
@@ -26,6 +27,7 @@ public class ServiceRegistryBrokerApp {
 
         return bean;
     }
+    */
     
     @Bean
     ObjectMapper objectMapper() {

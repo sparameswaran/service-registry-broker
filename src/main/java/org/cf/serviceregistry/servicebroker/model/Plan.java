@@ -1,25 +1,13 @@
 package org.cf.serviceregistry.servicebroker.model;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Embeddable;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -32,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
@@ -120,12 +107,14 @@ public class Plan {
 	// Dont expose credentials during serialization or request for service/plans
 	@JsonIgnore
 	public Credentials getCredentials() {
+		System.out.println("Getting credentials from: " + credentials);
 		return credentials;
 	}
 
 	// Read any credentials during deserialization or POST of payloads
 	@JsonProperty
 	public void setCredentials(Credentials credentials) {
+		System.out.println("Setting credentials to: " + credentials);
 		this.credentials = credentials;
 	}
 

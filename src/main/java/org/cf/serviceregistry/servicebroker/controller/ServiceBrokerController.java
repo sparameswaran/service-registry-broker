@@ -5,14 +5,13 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.cf.servicebroker.repository.CredentialsRepository;
-import org.cf.servicebroker.repository.PlanRepository;
-import org.cf.servicebroker.repository.ServiceBindingRepository;
-import org.cf.servicebroker.repository.ServiceInstanceRepository;
-import org.cf.servicebroker.repository.ServiceRepository;
+import org.cf.serviceregistry.repository.CredentialsRepository;
+import org.cf.serviceregistry.repository.PlanRepository;
+import org.cf.serviceregistry.repository.ServiceBindingRepository;
+import org.cf.serviceregistry.repository.ServiceInstanceRepository;
+import org.cf.serviceregistry.repository.ServiceRepository;
 import org.cf.serviceregistry.servicebroker.model.Credentials;
 import org.cf.serviceregistry.servicebroker.model.Plan;
-import org.cf.serviceregistry.servicebroker.model.PlanPk;
 import org.cf.serviceregistry.servicebroker.model.Service;
 import org.cf.serviceregistry.servicebroker.model.ServiceBinding;
 import org.cf.serviceregistry.servicebroker.model.ServiceInstance;
@@ -50,6 +49,8 @@ public class ServiceBrokerController {
 	public Map<String, Iterable<Service>> catalog() {
 		Map<String, Iterable<Service>> wrapper = new HashMap<>();
 		wrapper.put("services", serviceRepo.findAll());
+
+		System.out.println("Catalog content;;;;;" + wrapper);
 		return wrapper;
 	}
 
@@ -80,16 +81,23 @@ public class ServiceBrokerController {
 			@PathVariable("id") String id,
 			@RequestBody ServiceBinding serviceBinding) {
 
-		if (!serviceInstanceRepo.exists(instanceId))
+		System.out.println("Incoming request : " + instanceId + ", id: " + id);
+		if (!serviceInstanceRepo.exists(instanceId)) {
+			System.out.println("Instance does not exists..");
 			return new ResponseEntity<Object>(
 					"{\"description\": \"Service Instance with id "
 							+ instanceId + " not found\"}",
 					HttpStatus.BAD_REQUEST);
 
+		}
+		
 		ServiceInstance serviceInstance = serviceInstanceRepo.findOne(instanceId);
 		
-		serviceRepo.findOne(serviceInstance.getServiceId());
+		Service underlyingService = serviceRepo.findOne(serviceInstance.getServiceId());
+		System.out.println("Underlying Service found: " + underlyingService);
+		
 		Plan underlyingPlan = planRepo.findOne(serviceInstance.getPlanId());
+		System.out.println("Underlying plan found: " + underlyingPlan);
 		
 		serviceBinding.setId(id);
 		serviceBinding.setInstanceId(instanceId);

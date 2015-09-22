@@ -7,9 +7,9 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.cf.servicebroker.repository.CredentialsRepository;
-import org.cf.servicebroker.repository.PlanRepository;
-import org.cf.servicebroker.repository.ServiceRepository;
+import org.cf.serviceregistry.repository.CredentialsRepository;
+import org.cf.serviceregistry.repository.PlanRepository;
+import org.cf.serviceregistry.repository.ServiceRepository;
 import org.cf.serviceregistry.servicebroker.model.Credentials;
 import org.cf.serviceregistry.servicebroker.model.Plan;
 import org.cf.serviceregistry.servicebroker.model.Service;
@@ -130,8 +130,11 @@ public class ServiceRegistryController {
 	@RequestMapping(value = "/services", method = RequestMethod.POST)
 	public ResponseEntity<String> createServices(
 			@RequestBody Service[] serviceEndpointInstances) {
+		Thread.dumpStack();
+		System.out.println("Incoming payload: " + serviceEndpointInstances);
 		
 		for(Service serviceInstance: serviceEndpointInstances) {
+			System.out.println("New service: " + serviceInstance);
 			ResponseEntity<String> response = createService(serviceInstance);
 			log.info("Response Entity body for create service: " + response);
 			

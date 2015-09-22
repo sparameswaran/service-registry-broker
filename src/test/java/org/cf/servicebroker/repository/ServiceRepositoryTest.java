@@ -22,12 +22,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = ServiceRegistryBrokerApp.class)
 @WebIntegrationTest(value = "server.port=9876")
-@Ignore
+//@Ignore
 public class ServiceRepositoryTest {
 
 	@Autowired
 	ServiceRegistryController serviceRegistryController;
-
+	
 	TestRestTemplate restTemplate = new TestRestTemplate();
 
 	@Test
@@ -45,5 +45,7 @@ public class ServiceRepositoryTest {
 				s);
 		assertNotNull(resp);
 		assertEquals(HttpStatus.OK, resp.getStatusCode());
+		
+		System.out.println("Finished ServiceRepo test");
 	}
 }

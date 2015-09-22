@@ -50,24 +50,28 @@ public class Service {
 	@OneToOne(optional = true, orphanRemoval = true, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	private ServiceMetadata metadata;
 
+	public String generateId() {		
+		return UUID.randomUUID().toString();
+	}
+	
 	public synchronized void generateAndSetId() {
-		//id = UUID.nameUUIDFromBytes(this.getName().getBytes()).toString();
-		id = UUID.randomUUID().toString();
+		if (this.id == null)
+			this.id = generateId();
+	}
+	
+	public synchronized void setId(String pk) {
+		if ((this.id == null) && (pk != null))
+			this.id = pk; 
+		else
+			generateAndSetId();
 	}
 	
 	public synchronized String getId() {
 		if (id == null)
 			generateAndSetId();
-		 return id;
+		return id;
 	}
 
-	public synchronized void setId(String uuid) {
-		if ((this.id == null) && (uuid != null))
-			this.id = uuid;
-		else if (this.getName() != null)
-			generateAndSetId();
-	}
-	
 	public ServiceMetadata getMetadata() {
 		return metadata;
 	}
@@ -82,7 +86,6 @@ public class Service {
 
 	public void setName(String name) {
 		this.name = name;
-		id = UUID.nameUUIDFromBytes(name.getBytes()).toString();
 	}
 
 	public String getDescription() {
