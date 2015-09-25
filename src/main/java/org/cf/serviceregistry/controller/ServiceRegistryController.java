@@ -1,6 +1,7 @@
 package org.cf.serviceregistry.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -183,6 +185,35 @@ public class ServiceRegistryController {
 		planRepo.delete(existingService.getPlans());
 		serviceRepo.delete(serviceName);
 		return new ResponseEntity<>("{}", HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/search",
+			method = RequestMethod.GET)
+	public Map<String, Iterable<String>> servicesWithName(@RequestParam(value="name") String name) {
+		Map<String, Iterable<String>> wrapper = new HashMap<>();
+		List<String> serviceNames = serviceRepo.findServiceContainingName(name);
+		wrapper.put("serviceNames", serviceNames);
+		return wrapper;
+	}
+	
+	@RequestMapping(value = "/searchByProviderName",
+			method = RequestMethod.GET)
+	public Map<String, Iterable<String>> servicesWithProviderName(@RequestParam(value="name") String name) {
+		Map<String, Iterable<String>> wrapper = new HashMap<>();
+		List<String> serviceNames = serviceRepo.findServiceContainingProviderName(name);
+		wrapper.put("serviceNames", serviceNames);
+		return wrapper;
+	}
+	
+	@RequestMapping(value = "/getCredentialsForPlan",
+			method = RequestMethod.GET)
+	public Map<String, Credentials> getCredsForPlan(@RequestParam(value="planId") String planId) {
+		Map<String, Credentials> wrapper = new HashMap<>();
+		Integer credId = planRepo.getCredentialIdFromPlanId(planId);
+		if (credId != null) {
+			wrapper.put("credentials", credentialsRepo.findOne(credId));
+		}	
+		return wrapper;
 	}
 	
 	@RequestMapping(value = "/services/{serviceName}/plans", 
