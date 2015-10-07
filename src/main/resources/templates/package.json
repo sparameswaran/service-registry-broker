@@ -1,6 +1,6 @@
 {
-  "name": "pivotal-service-registry-broker",
-  "description": "Prototype of Pivotal Service Registry Broker",
+  "name": "pivotal-service-registry",
+  "description": "Prototype of Pivotal Service Registry",
   "main": "server.js",
   "engines": {
     "node": "v0.10.24",

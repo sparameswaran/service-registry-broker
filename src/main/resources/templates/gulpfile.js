@@ -53,6 +53,11 @@ gulp.task('buildPuiCss', function(done) {
   });
 });
 
+function handleError(err) {
+  console.log(err.toString());
+    this.emit('end');
+}
+
 gulp.task('react', function() {
   var b = browserify('./app/assets/components/application.jsx');
   b.transform(reactify);
@@ -61,7 +66,9 @@ gulp.task('react', function() {
     .pipe(source('./application.jsx'))
     .pipe(rename('application.js'))
     .pipe(gulp.dest('../public/js'))
-    .pipe(reload({stream:true}));
+    .pipe(reload({stream:true}))
+    .on('error', handleError);
+
 });
 
 gulp.task('clean', function(done) {
