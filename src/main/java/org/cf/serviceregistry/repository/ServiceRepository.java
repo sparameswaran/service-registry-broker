@@ -15,6 +15,9 @@ public interface ServiceRepository extends CrudRepository<Service, String> {
 	@Query("SELECT s FROM Service s where s.name = :name")
 	Optional<Service> findByServiceName(@Param("name") String name);
 	
+	@Query("SELECT s FROM Service s where s.name = :name OR s.id = :name")
+	Optional<Service> findByServiceIdOrName(@Param("name") String name);
+	
 	@Query("SELECT s.name FROM Service s where s.name LIKE CONCAT('%',:name,'%')")
 	List<String> findServiceContainingName(@Param("name") String startName);
 	

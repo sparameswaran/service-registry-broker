@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 
 @Component
 public interface CredentialsRepository extends
-		CrudRepository<Credentials, Integer> {
+		CrudRepository<Credentials, String> {
 
 }

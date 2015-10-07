@@ -2,8 +2,17 @@ package org.cf.serviceregistry.servicebroker.model;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
-import javax.persistence.*;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -15,8 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Credentials {
 
 	@Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private int id;
+    private String id;
 	
 	@Column(nullable = true)
 	private String uri;
@@ -45,12 +53,27 @@ public class Credentials {
     	other.put(name, value);
     }
 
-	public void setId(int id) {
-		this.id = id;
+	public String generateId() {		
+		//return UUID.nameUUIDFromBytes((this.getServiceName() + ":" + this.getName()).getBytes()).toString();
+		return UUID.randomUUID().toString();
 	}
 	
-	public int getId() {
-		return id;
+	public synchronized void generateAndSetId() {
+		if (this.id == null)
+			this.id = generateId();
+	}
+	
+	public synchronized void setId(String pk) {
+		if ((this.id == null) && (pk != null))
+			this.id = pk; 
+		else
+			generateAndSetId();
+	}
+
+	public synchronized String getId () { 
+		if (id == null)
+			generateAndSetId();
+		return id; 
 	}
 
 	public String getUri() {
@@ -65,7 +88,7 @@ public class Credentials {
 		return username;
 	}
 	
-	public void copy(Credentials copyCredentials) {
+	public void update(Credentials copyCredentials) {
 		
 		String uri = copyCredentials.getUri();
 		if (uri != null) {

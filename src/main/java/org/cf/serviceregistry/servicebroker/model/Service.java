@@ -107,6 +107,17 @@ public class Service {
 	public Set<Plan> getPlans() {
 		return plans;
 	}
+	
+	public Plan findPlan(String planId) {
+		if (planId == null)
+			return null;
+		
+		for(Plan plan: plans) {
+			if (plan.getId().equals(planId))
+				return plan;
+		}
+		return null;
+	}
 
 	public synchronized void setPlans(Set<Plan> plans) {
 		this.plans = plans;
@@ -130,7 +141,6 @@ public class Service {
 		}
 	}
 
-	
 	@Override
 	public String toString() {
 		return "Service [name=" + name + ", uuid=" +  id + ", description=" + description
@@ -155,11 +165,16 @@ public class Service {
 		if (getClass() != obj.getClass())
 			return false;
 		Service other = (Service) obj;
+		
+		/*
+		 * //Name can be changed but considered same as long as id matches
 		if (name == null) {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
+		*/
+		
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -167,5 +182,36 @@ public class Service {
 			return false;
 		return true;
 	}
+
+	public void update(Service from) {
+		if (from == null)
+			return;
+		
+		if (from.name != null) {
+			this.name = from.name;
+		}
+		
+		if (from.description != null) {
+			this.description = from.description;
+		}
+		
+		if (from.bindable != this.bindable ) {
+			this.bindable = from.bindable;
+		}
+		
+		if (from.metadata != null)
+			this.metadata.update(from.metadata);
+		
+		if (from.plans != null) {
+			for(Plan fromPlan: from.plans) {
+				Plan existingPlan = this.findPlan(fromPlan.getId());
+				if (fromPlan != null) {
+					existingPlan.update(fromPlan);
+				}
+			}
+		}
+	}
+	
+	
 
 }

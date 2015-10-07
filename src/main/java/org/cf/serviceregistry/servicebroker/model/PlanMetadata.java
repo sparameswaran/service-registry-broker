@@ -56,5 +56,14 @@ public class PlanMetadata {
 		this.id = id;
 	}
 	
+	public void update(PlanMetadata from) {
+		if (from == null)
+			return;
+		
+		if (from.bullets != null) {
+			this.bullets = from.bullets;
+		}
+	}
+	
 
 }

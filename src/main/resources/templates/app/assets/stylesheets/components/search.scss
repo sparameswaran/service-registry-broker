@@ -1,0 +1,15 @@
+.search {
+  border-bottom: 1px solid $dark-9;
+  padding: 15px 0 0 0;
+}
+
+.form-group-search {
+  margin-bottom: 0;
+}
+
+.form-control {
+  box-shadow: 0 0px 0 rgba(211,217,217,0.5);
+  &:focus, &:hover {
+    box-shadow: 0 0px 0 rgba(211,217,217,0.5);
+  }
+}

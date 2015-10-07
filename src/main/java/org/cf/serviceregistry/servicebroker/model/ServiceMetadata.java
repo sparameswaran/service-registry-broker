@@ -96,5 +96,30 @@ public class ServiceMetadata {
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	public void update(ServiceMetadata from) {
+		if (from == null)
+			return;
+		
+		if (from.displayName != null) {
+			this.displayName = from.displayName;
+		}
+		
+		if (from.providerDisplayName != null) {
+			this.providerDisplayName = from.providerDisplayName;
+		}
+		
+		if (from.imageUrl != null) {
+			this.imageUrl = from.imageUrl;
+		}
+		
+		if (from.documentationUrl != null) {
+			this.documentationUrl = from.documentationUrl;
+		}
+		
+		if (from.longDescription != null) {
+			this.longDescription = from.longDescription;
+		}
+	}
 
 }

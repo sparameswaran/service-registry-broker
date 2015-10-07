@@ -176,18 +176,36 @@ public class Plan {
 			return false;
 		Plan other = (Plan) obj;
 		
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+	
+	public void update(Plan from) {
+		if (from == null)
+			return;
+		
+		if (from.name != null) {
+			this.name = from.name;
+		}
+		
+		if (from.description != null) {
+			this.description = from.description;
+		}
+		
+		if (from.isFree != this.isFree ) {
+			this.isFree = from.isFree;
+		}
+		
+		if (from.metadata != null)
+			this.metadata.update(from.metadata);
+		
+		if (from.credentials != null)
+			this.credentials.update(from.credentials);
+		
 	}
 	
 	

@@ -1,0 +1,28 @@
+/* TODO */
+/* All the desings */
+
+.media-left {
+  svg {
+    vertical-align: middle;
+  }
+}
+
+.service-plan-collapse {
+  .panel-heading {
+    padding: 0 !important;
+  }
+  .panel-body {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  .panel-title {
+    color: #1B78B3 !important;
+  }
+}
+
+#plan-panel {
+  .panel-body {
+    padding: 0 !important;
+  }
+}
