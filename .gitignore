@@ -1,3 +1,6 @@
 /target/
 .classpath
 .settings
+/target/
+build/
+src/main/resources/templates/node_modules/
