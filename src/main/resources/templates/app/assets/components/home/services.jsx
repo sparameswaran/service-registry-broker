@@ -25,13 +25,7 @@ var Service = require('./service.jsx');
             <TileLayout columns={{xs: 1, sm: 2, md: 3}}>
 
                 <Service title="Big Database" />
-                <Service title="Policy Interface" />
-                <Service title="EDMSRetreiveInterface" />
-                <Service title="Content Retrieval" />
-                <Service title="Something Else" />
-                <Service title="Big Database" />
-                <Service title="Big Database" />
-                <Service title="Big Database" />
+                
 
             </TileLayout>
           </div>

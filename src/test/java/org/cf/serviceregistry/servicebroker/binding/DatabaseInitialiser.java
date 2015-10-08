@@ -23,45 +23,45 @@ public class DatabaseInitialiser  {
 
 	@Autowired
 	ServiceRepository serviceRepo;
-	
+
 	@Autowired
 	ServiceInstanceRepository serviceInstanceRepo;
-	
+
     private Service service() {
-        
+
         Service svc = new Service();
         svc.setName("test-service");
         svc.setId("test-service-id");
         svc.setDescription("test-description");
         svc.setBindable(true);
-        
+
         ServiceMetadata svcM = new ServiceMetadata();
         svcM.setDisplayName("test-service");
         svcM.setProviderDisplayName("test-provider");
         svcM.setId(0);
         svc.setMetadata(svcM);
-                
-        Plan plan = new Plan();        
+
+        Plan plan = new Plan();
         plan.setName("test-plan");
         plan.setId("test-plan-id");
         plan.setDescription("test-description");
         plan.setFree(true);
-        
+
         PlanMetadata planM = new PlanMetadata();
         planM.addBullet("basic");
         planM.setId(100);
-        
+
         plan.setMetadata(planM);
-        
+
         Credentials creds = new Credentials();
         creds.setUri("http://test-uri");
-        creds.setId(100);
-        plan.setCredentials(creds);       
-        
+        creds.setId("100");
+        plan.setCredentials(creds);
+
         svc.addPlan(plan);
         return svc;
     }
-    
+
     private ServiceInstance serviceInstance() {
     	ServiceInstance svcI = new ServiceInstance();
     	svcI.setOrgGuid("test-org-id");
@@ -69,10 +69,10 @@ public class DatabaseInitialiser  {
     	svcI.setId("test-service-instance-id");
     	svcI.setPlanId("test-plan-id");
     	svcI.setServiceId("test-service-id");
-    	
+
     	return svcI;
-    }    
-    
+    }
+
     private ServiceBinding serviceBinding() {
     	ServiceBinding svcB = new ServiceBinding();
     	svcB.setAppGuid("test-app-guid");
@@ -81,17 +81,17 @@ public class DatabaseInitialiser  {
     	svcB.setInstanceId("test-service-instance-id");
     	svcB.setPlanId("test-plan-id");
     	svcB.setServiceId("test-service-id");
-    	
+
     	return svcB;
-    }    
-    	
+    }
+
     @PostConstruct
     public void load() {
         // Initialise your database here: create schema, use DBUnit to load data, etc.
-		serviceRepo.save(service());		
+		serviceRepo.save(service());
 		serviceInstanceRepo.save(serviceInstance());
     }
-    
+
 
     @PreDestroy
     public void cleanup() {
