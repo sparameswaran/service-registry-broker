@@ -1,9 +1,11 @@
-registryServices = (function () {
+var $ = require('jquery');
 
-    var baseURL = "";
+(function () {
+
+    var baseURL = "http://service-registry-broker.classic.coke.cf-app.com/";
 
     // The public API
-    return {
+    var RegistryService = {
         findAllServices: function() {
             return $.ajax(baseURL + "/services");
         },
@@ -29,5 +31,7 @@ registryServices = (function () {
             return $.ajax(baseURL + "/credentials/" + credId);
         }
     };
+    
+    module.exports = RegistryService;
 
 }());

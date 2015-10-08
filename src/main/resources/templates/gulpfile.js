@@ -14,7 +14,7 @@ var pngquant = require('imagemin-pngquant');
 var drFrankenstyle = require('dr-frankenstyle');
 
 // Restart the server for changes
-gulp.task('default', ['assets', 'browser-sync'], function() {
+gulp.task('default', ['assets'], function() {
   gulp.watch(['app/assets/components/**/*.js', 'app/assets/components/**/*.jsx'], ['react']);
   gulp.watch(['app/assets/stylesheets/**/*.scss'], ['sass']);
   gulp.watch(['app/assets/images/**/*'], ['images']);
