@@ -28,6 +28,15 @@ public class ServiceRegistryBrokerApp {
     }
     
     @Bean
+    FilterRegistrationBean corsFilter() {
+        FilterRegistrationBean bean = new FilterRegistrationBean();
+        bean.setFilter(new SimpleCORSFilter());
+        bean.addUrlPatterns("/*");
+
+        return bean;
+    }
+    
+    @Bean
     ObjectMapper objectMapper() {
         return new ObjectMapper()
                 .setVisibility(PropertyAccessor.GETTER, JsonAutoDetect.Visibility.ANY)
