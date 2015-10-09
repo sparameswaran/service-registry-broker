@@ -53,7 +53,7 @@ Example:
 ```
 curl -v -u <user>:<password> http://service-registry-uri/services 
 ```
-To list a specific service, use GET against /services/<ServiceName>
+To list a specific service, use GET against /services/<ServiceNameOrId>
 Example:
 ```
 curl -v -u <user>:<password> http://service-registry-uri/services/MyService
@@ -69,9 +69,9 @@ curl -v -u testuser:testuser http://test-service-registry.xyz.com/services/ -d @
 ```
 
 * To add a new plan under an existing service:
-To create a new plan, use PUT operation against /services/<ServiceName>/plans
+To create a new plan, use PUT operation against /services/<ServiceNameOrId>/plans
 ```
-curl -v -u <user>:<password> http://service-registry-uri/services/<ServiceId>/plans/<NewPlanId> -d @<JsonPayloadFile>.json -H "Content-type: application/json" -X PUT
+curl -v -u <user>:<password> http://service-registry-uri/services/<ServiceId>/plans/ -d @<JsonPayloadFile>.json -H "Content-type: application/json" -X PUT
 ```
 Example:
 ```
@@ -80,13 +80,13 @@ curl -v -u testuser:testuser http://test-service-registry.xyz.com/services/test-
 ```
 
 * List Plans
-To list plans, use GET against /services/<ServiceName>/plans
+To list plans, use GET against /services/<ServiceNameOrId>/plans
 Example:
 ```
 curl -v -u <user>:<password> http://service-registry-uri/services/MyService/plans
 ```
 
-To list a specific plan detail, use GET against /services/<ServiceName>/plans/<PlanName>
+To list a specific plan detail, use GET against /services/<ServiceNameOrId>/plans/<PlanNameOrId>
 Example:
 ```
 curl -v -u <user>:<password> http://service-registry-uri/services/MyService/plans/MyPlan
@@ -94,7 +94,7 @@ curl -v -u <user>:<password> http://service-registry-uri/services/MyService/plan
 
 * To associate a credential to an existing plan (within a service):
 ```
-curl -v -u <user>:<password> http://service-registry-uri/services/<ServiceName>/plans/<PlanName>/creds -d @<JsonPayloadFile>.json -H "Content-type: application/json" -X PUT
+curl -v -u <user>:<password> http://service-registry-uri/services/<ServiceNameOrId>/plans/<PlanNameOrId>/creds -d @<JsonPayloadFile>.json -H "Content-type: application/json" -X PUT
 ```
 Example: 
 ```

@@ -127,27 +127,22 @@ public class ServiceRegistryController {
 	
 	@RequestMapping(value = "/searchService",
 			method = RequestMethod.GET)
-	public Map<String, Iterable<String>> servicesWithName(@RequestParam(value="name") String name) {
-		Map<String, Iterable<String>> wrapper = new HashMap<>();
+	public ResponseEntity<Object> servicesWithName(@RequestParam(value="name") String name) {
 		List<String> serviceNames = serviceRepo.findServiceContainingName(name);
-		wrapper.put("serviceNames", serviceNames);
-		return wrapper;
+		return new ResponseEntity<>(serviceNames, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/searchServiceByProvider",
 			method = RequestMethod.GET)
-	public Map<String, Iterable<String>> servicesWithProviderName(@RequestParam(value="name") String name) {
-		Map<String, Iterable<String>> wrapper = new HashMap<>();
+	public ResponseEntity<Object> servicesWithProviderName(@RequestParam(value="name") String name) {
 		List<String> serviceNames = serviceRepo.findServiceContainingProviderName(name);
-		wrapper.put("serviceNames", serviceNames);
-		return wrapper;
+		return new ResponseEntity<>(serviceNames, HttpStatus.OK);
 	}
 	
+
 	@RequestMapping("/services")
-	public Map<String, Iterable<Service>> services() {
-		Map<String, Iterable<Service>> wrapper = new HashMap<>();
-		wrapper.put("services", serviceRepo.findAll());
-		return wrapper;
+	public ResponseEntity<Object> services() {
+		return new ResponseEntity<>(serviceRepo.findAll(), HttpStatus.OK);	
 	}
 
 	// Bulk creation of service defns
@@ -237,11 +232,7 @@ public class ServiceRegistryController {
 		}
 		
 		Service existingService = services.get();
-		Set<Plan> servicePlanInstances = existingService.getPlans();
-		
-		Map<String, Iterable<Plan>> wrapper = new HashMap<>();
-		wrapper.put("plans", servicePlanInstances);
-		return new ResponseEntity<>(wrapper, HttpStatus.OK);		
+		return new ResponseEntity<>(existingService.getPlans(), HttpStatus.OK);		
 	}
 
 	
@@ -364,13 +355,15 @@ public class ServiceRegistryController {
 	
 	@RequestMapping(value = "/credentialsForPlan",
 			method = RequestMethod.GET)
-	public Map<String, Credentials> getCredsForPlan(@RequestParam(value="planId") String planId) {
-		Map<String, Credentials> wrapper = new HashMap<>();
+	public ResponseEntity<Object> getCredsForPlan(@RequestParam(value="planId") String planId) {
 		String credId = planRepo.getCredentialIdFromPlanId(planId);
-		if (credId != null) {
-			wrapper.put("credentials", credentialsRepo.findOne(credId));
+		if (credId == null) {
+			return new ResponseEntity<Object>(
+					"{\"description\": \"No Credential found for Plan with id: "
+							+ planId + "\" }",
+					HttpStatus.BAD_REQUEST);		
 		}	
-		return wrapper;
+		return new ResponseEntity<>(credentialsRepo.findOne(credId), HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/credentialsForPlan",

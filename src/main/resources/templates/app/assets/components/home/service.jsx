@@ -16,9 +16,10 @@ var TileLayout = require('pui-react-tile-layout');
     mixins: [Navigation],
 
     render: function() {
+      console.log("Inside service, this contains: " + this.props);
       return (
         <TileLayout.Item>
-          <ClickableAltPanel className="mvn" onClick={this.transitionTo.bind(this, '/service', null, null)}>
+          <ClickableAltPanel className="mvn" onClick={this.transitionTo.bind(this, '/service/' + this.props.id, null, null)}>
             <div className="media">
               <div className="media-left media-middle">
                 <svg x="0px" y="0px" width="35px" height="30px" viewBox="0 0 33 30" enable-background="new 0 0 33 30">
@@ -34,8 +35,8 @@ var TileLayout = require('pui-react-tile-layout');
                 </svg>
               </div>
               <div className="media-body">
-                <h4 className="media-heading em-default type-dark-1">{this.props.title}</h4>
-                <p className='mvn type-sm em-default type-dark-5'>Service description should be very short</p>
+                <h4 className="media-heading em-default type-dark-1">{this.props.name}</h4>
+                <p className='mvn type-sm em-default type-dark-5'>{this.props.description}</p>
               </div>
             </div>
           </ClickableAltPanel>

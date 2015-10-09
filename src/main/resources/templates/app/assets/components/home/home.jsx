@@ -15,15 +15,19 @@ var PageTitle = require('./pageTitle.jsx');
   var Home = React.createClass({
 
     render: function() {
+      console.log("This home contains: " , this.props.services);
       return (
         <div>
           <PageTitle />
-          <Services />
+          <Services services={this.props.services} />
+          
+          
         </div>
       );
     }
   });
 
+  
   module.exports = Home;
 
 }());

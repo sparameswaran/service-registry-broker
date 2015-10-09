@@ -20,23 +20,19 @@ var RegistryServices = require('../shared/registryServices.jsx');
   var Services = React.createClass({
 
 	getInitialState: function() {
+	console.log("Entering into Services page, state contains: " , this.props);
     return {
-      serviceObjects: []
+
+      services :  []
     };
   },
   
-    componentDidMount: function() {
-    
-	    RegistryServices.findAllServices().done(function(serviceObjects) {
-			this.setState({serviceObjects: serviceObjects})      	
-	    });
-	
-    }, 
-    
-    
+   
     render: function() { 
     console.log(this.state)
-	var services = _.map(this.state.serviceObjects, function(data) { return React.createElement(Service, data); } );
+    console.log("Inside render in Services page, props contains: " , this.props, " and state contains: " , this.state, " and service Entry is : " , this.serviceEntry);
+	var services = _.map(this.props.services, function(data) { console.log("Inside map against create Service Element, data : ", data);
+	 return React.createElement(Service, data); } );
        
       return (
         <div className="pvxl">

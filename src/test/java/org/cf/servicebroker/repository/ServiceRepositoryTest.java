@@ -31,8 +31,8 @@ public class ServiceRepositoryTest {
 
 	@Test
 	public void testFindService() {
-		Map<String, Iterable<Service>> m = serviceRegistryController.services();
-		assertNotNull(m);
+		ResponseEntity<Object> serviceSet = serviceRegistryController.services();
+		assertNotNull(serviceSet);
 
 		Service s = new Service();
 		s.setBindable(true);

@@ -13,6 +13,8 @@ var DefaultAltButton = require('pui-react-buttons').DefaultAltButton;
   var PageTitle = React.createClass({
 
     render: function() {
+    
+      console.log("Incoming page title ..., this.props contains: ", this.props);
       return (
         <div className="page-title bg-neutral-11 pvxl">
           <div className="container">
@@ -37,12 +39,12 @@ var DefaultAltButton = require('pui-react-buttons').DefaultAltButton;
                       <span className="em-default type-accent-4">Services</span>
                       <span className="em-default type-dark-4 label-alt mhl">/</span>
                     </p>
-                    <p className='h1 type-dark-1 mvn em-low'>{this.props.title}</p>
+                    <p className='h1 type-dark-1 mvn em-low'>{this.props.serviceEntry.name}  </p>
                     <p className="type-sm type-dark-2 mvn">
-                      <span>Policy Retrieval System</span> 
+                      <span>{this.props.serviceEntry.description}</span> 
                     </p>
                     <p className="type-sm type-dark-2 mvn">
-                      <span className="type-dark-6">by</span> <span className="type-dark-2 em-high">Service Provider</span> <span className="type-dark-5 em-default">(Service Provider Inc.)</span>
+                      <span className="type-dark-6">by</span> <span className="type-dark-2 em-high"> {this.props.serviceEntry.metadata.displayName}</span> <span className="type-dark-5 em-default">( {this.props.serviceEntry.metadata.providerDisplayName} )</span>
                     </p>
                   </div>
                 </div>

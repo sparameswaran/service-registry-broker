@@ -14,23 +14,39 @@ var Home = require('./home/home.jsx');
 var Header = require('./shared/header.jsx');
 var About = require('./about/about.jsx');
 var Service = require('./service/service.jsx');
+var RegistryServices = require('./shared/registryServices.jsx');
 
 var App = React.createClass({
-  render: function () {
+
+  getInitialState: function() {
+    return {
+      serviceObjects: []
+    };
+  },
+  
+    componentDidMount: function() {
+        RegistryServices.findAllServices().done(services =>
+	    
+			this.setState({allServiceObjects: services})      	
+	    );
+	
+    },
+   render: function () {
     return (
       <div>
         <Header></Header>
-        <RouteHandler/>
+        <RouteHandler services={this.state.allServiceObjects}/>
       </div>
     );
   }
 });
 
+
 var routes = (
   <Route name="app" path="/" handler={App}>
-    <DefaultRoute handler={Home}/>
+    <DefaultRoute handler={Home} />
     <Route name="/about" handler={About}/>
-    <Route name="/service" handler={Service}/>
+    <Route name="/service/:serviceId" handler={Service}/>
   </Route>
 );
 
