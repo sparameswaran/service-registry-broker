@@ -379,7 +379,7 @@ public class ServiceRegistryController {
 					HttpStatus.BAD_REQUEST);		
 		}
 		
-		log.info("Updating credentials for plan: " + associatedPlan.getName() 
+		log.info("Adding credentials for plan: " + associatedPlan.getName() 
 				+ "with new credentials attributes: "  + newCredsInstance);
 		
 		Credentials cred = associatedPlan.getCredentials();
@@ -394,6 +394,7 @@ public class ServiceRegistryController {
 				
 		ResponseEntity<String> credsCreateStatus = createCredentials(newCredsInstance);
 		associatedPlan.setCredentials(newCredsInstance);
+		planRepo.save(associatedPlan);
 		
 		return new ResponseEntity<Object>("{}", HttpStatus.OK);			
 	}
@@ -418,6 +419,8 @@ public class ServiceRegistryController {
 		if (cred != null) {
 			cred.update(updatedCredInstance);
 			credentialsRepo.save(cred);
+			associatedPlan.setCredentials(cred);
+			planRepo.save(associatedPlan);
 			System.out.println("Returning success...");
 			return new ResponseEntity<Object>("{}", HttpStatus.OK);			
 		} 
