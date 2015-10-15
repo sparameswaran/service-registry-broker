@@ -14,6 +14,7 @@ var Home = require('./home/home.jsx');
 var Header = require('./shared/header.jsx');
 var About = require('./about/about.jsx');
 var Service = require('./service/service.jsx');
+var AddServices = require('./edit/addServices.jsx');
 var RegistryServices = require('./shared/registryServices.jsx');
 
 var App = React.createClass({
@@ -46,6 +47,7 @@ var routes = (
   <Route name="app" path="/" handler={App}>
     <DefaultRoute handler={Home} />
     <Route name="/about" handler={About}/>
+    <Route name="/addServices" handler={AddServices}/>
     <Route name="/service/:serviceId" handler={Service}/>
   </Route>
 );
@@ -54,3 +56,5 @@ var routes = (
 Router.run(routes, function (Handler) {
   React.render(<Handler/>, document.getElementById('content'));
 });
+
+module.exports  = Router;

@@ -1,10 +1,11 @@
 package org.cf.serviceregistry.controller;
 
-import java.util.HashMap;
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,6 +18,7 @@ import org.cf.serviceregistry.servicebroker.model.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -123,6 +125,11 @@ public class ServiceRegistryController {
 
 		log.debug("Service Instance created: " + serviceEndpointInstance);		
 		return new ResponseEntity<>("{}", HttpStatus.OK);
+	}
+	
+	@ExceptionHandler({IllegalArgumentException.class, NullPointerException.class})
+	void handleBadRequests(HttpServletResponse response) throws IOException {
+	    response.sendError(HttpStatus.BAD_REQUEST.value());
 	}
 	
 	@RequestMapping(value = "/searchService",

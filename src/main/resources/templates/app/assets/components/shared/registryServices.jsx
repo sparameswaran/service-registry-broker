@@ -2,8 +2,8 @@ var $ = require('jquery');
 
 (function () {
 
-    //var baseURL = "http://localhost:8080";
-    var baseURL = "";
+    var baseURL = "http://localhost:8080";
+    //var baseURL = "";
 
     var user   = "testuser";
     var passwd = "testuser";
@@ -41,6 +41,27 @@ var $ = require('jquery');
         },
         findCredentialsById: function(credId) {
             return $.ajax(baseURL + "/credentials/" + credId);
+        },
+        postServices: function(servicesPayload) {
+            return $.ajax( { 
+            url: baseURL + "/services", 
+            type: "POST", 
+            headers: { 
+			        'Accept': 'application/json',
+			        'Content-Type': 'application/json' 
+			    },
+			dataType: 'json',    
+			data:  servicesPayload });
+        },
+        deleteService: function(serviceId) {
+            return $.ajax( { 
+            url: baseURL + "/services/" + serviceId, 
+            type: "DELETE", 
+            headers: { 
+			        'Accept': 'application/json',
+			        'Content-Type': 'application/json' 
+			    }
+			});
         }
     };
     

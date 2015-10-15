@@ -17,7 +17,13 @@
               "name": "basic",
             "free": true,
             "metadata": {
-              "bullets": [ "TestCreds Content", "Free service" ]
+              "bullets": [ "TestCreds Content", "Free service" ],
+              "cost": {
+                "amount": {
+                  "usd": 0
+                },
+                "unit": "MONTHLY"
+              }
             },
             "credentials": {
               "uri": "http://test-uri.10.10.10.10:8080",
@@ -34,7 +40,13 @@
             "name": "premium",
             "free": false,
             "metadata": {
-              "bullets": [ "TestCreds Content", "Premium service" ]
+              "bullets": [ "TestCreds Content", "Premium service" ],
+              "cost": {
+                "amount": {
+                  "usd": 0
+                },
+                "unit": "MONTHLY"
+              }
             },
             "credentials": {
               "uri": "http://test-uri.20.20.20.20:8080",

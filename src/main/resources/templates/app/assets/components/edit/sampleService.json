@@ -1,0 +1,124 @@
+[  {
+    "name": "......Service Name 1 .....",
+    "description": ".....Sample Description 1.....",
+    "bindable": true,
+    "metadata": {
+          "displayName": "..Short display name....",
+          "imageUrl": "http://urlToImage...",
+          "longDescription": "... Long description....",
+          "providerDisplayName": "...Eng team or Org .....",
+          "supportUrl": "http://CompanyUrl..."
+         },
+    "plans": [
+        {
+            "description": "... Description of Plan.....",
+            "name": "... Some sample plan name, ex: Basic, Dev, QA",
+            "free": true,
+            "metadata": {
+              "bullets": [ "Dev plan for some service", "Service Type", "Free service" ],
+              "cost": {
+                "amount": {
+                  "usd": 0
+                },
+                "unit": "MONTHLY"
+              }
+            },
+            "credentials": {
+              "uri": "http://dev-service.services1.xyz.com:8080",
+              "username": "testuser",
+              "password": "testpassword",
+              "certLocation" : "http://certLocation.xyz.com/......",
+              "certFormat" : "pem",
+              "additionaltag1" : "additionalval1",
+              "additionaltag2" : "additionalval2"
+            }
+        },
+        {
+            "description": ".... Description of Additional Plan....",
+            "name": "... Some sample plan name, ex: Premium, SIT, Prod",
+            "free": false,
+            "metadata": {
+              "bullets": [ "Prod Plan for some service", "Service Type", "Premium service" ],
+              "cost": {
+                "amount": {
+                  "usd": 0
+                },
+                "unit": "MONTHLY"
+              }
+            },
+            "credentials": {
+              "uri": "http://prod-service.services.xyz.com:8080",
+              "username": "testProdUser",
+              "password": "testProdPassword",
+              "wsdlLocation": "http://prod-testservice1.xyz.com/services/.......?WSDL",
+              "certFormat" : "pem",
+              "certLocation" : "http://certLocation....",
+              "additionaltag1" : "additionalval1",
+              "additionaltag2" : "additionalval2"
+            }
+        }
+    ]
+},
+{
+    "name": "......Service Name 2 .....",
+    "description": ".....Sample 2 Description.....",
+    "bindable": true,
+    "metadata": {
+          "displayName": "..Short display name....",
+          "imageUrl": "http://urlToImage...",
+          "longDescription": "... Long description....",
+          "providerDisplayName": "...Eng team or Org .....",
+          "supportUrl": "http://CompanyUrl..."
+         },
+    "plans": [
+        {
+            "description": "... Description of Plan.....",
+            "name": "... Some sample plan name, ex: Basic, Dev, QA",
+            "free": true,
+            "metadata": {
+              "bullets": [ "Dev plan for some service", "Service Type", "Free service" ],
+              "cost": {
+                "amount": {
+                  "usd": 0
+                },
+                "unit": "MONTHLY"
+              }
+            },
+            "credentials": {
+              "uri": "http://dev-service.services2.xyz.com:8080",
+              "username": "testuser",
+              "password": "testpassword",
+              "certLocation" : "http://certLocation.xyz.com/......",
+              "certFormat" : "pem",
+              "additionaltag1" : "additionalval1",
+              "additionaltag2" : "additionalval2"
+            }
+        },
+        {
+            "description": ".... Description of Additional Plan....",
+            "name": "... Some sample plan name, ex: Premium, SIT, Prod",
+            "free": false,
+            "metadata": {
+              "bullets": [ "Prod Plan for some service", "Service Type", "Premium service" ],
+              "cost": {
+                "amount": {
+                  "usd": 0
+                },
+                "unit": "MONTHLY"
+              }
+            },
+            "credentials": {
+               "uri": "http://prod-service.services.xyz.com:8080",
+              "username": "testProdUser",
+              "password": "testProdPassword",
+              "wsdlLocation": "http://prod-testservice2.xyz.com/services/.......?WSDL",
+              "certFormat" : "pem",
+              "certLocation" : "http://certLocation....",
+              "additionaltag1" : "additionalval1",
+              "additionaltag2" : "additionalval2"
+            }
+        }
+    ]
+} 
+
+]

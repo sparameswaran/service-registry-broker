@@ -5,6 +5,7 @@ var PageTitle = require('./pageTitle.jsx');
 var Plans = require('./plans.jsx');
 var _ = require('lodash');
 
+
 (function () {
   'use strict';
 
@@ -16,7 +17,8 @@ var _ = require('lodash');
 	//console.log("Entering into Individual Service page, state contains: " , this.props);
 	
     return {
-      serviceEntry: {}
+      serviceEntry: {},
+      editing: false
     };
   },
   

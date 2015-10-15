@@ -8,6 +8,7 @@ var ClickableAltPanel = require('pui-react-panels').ClickableAltPanel;
 var Flag = require('pui-react-media').Flag;
 var Image = require('pui-react-images');
 var TileLayout = require('pui-react-tile-layout');
+var Image = require('pui-react-images');
 
 (function () {
   'use strict';
@@ -16,7 +17,8 @@ var TileLayout = require('pui-react-tile-layout');
     mixins: [Navigation],
 
     render: function() {
-      console.log("Inside service, this contains: " + this.props);
+      console.log("Inside service, this contains: ", this.props);
+
       return (
         <TileLayout.Item>
           <ClickableAltPanel className="mvn" onClick={this.transitionTo.bind(this, '/service/' + this.props.id, null, null)}>
@@ -36,7 +38,7 @@ var TileLayout = require('pui-react-tile-layout');
               </div>
               <div className="media-body">
                 <h4 className="media-heading em-default type-dark-1">{this.props.name}</h4>
-                <p className='mvn type-sm em-default type-dark-5'>{this.props.description}</p>
+                <p className='mvn type-sm em-default type-dark-5'>{this.props.description}</p> 
               </div>
             </div>
           </ClickableAltPanel>

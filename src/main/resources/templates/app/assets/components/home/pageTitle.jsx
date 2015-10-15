@@ -5,6 +5,7 @@ var React = require('react');
 var MarketingH1 = require('pui-react-typography').MarketingH1;
 var MarketingH2 = require('pui-react-typography').MarketingH2;
 var SearchInput = require('pui-react-search-input').SearchInput;
+var DefaultButton = require('pui-react-buttons').DefaultButton;
 
 (function () {
   'use strict';
@@ -19,11 +20,12 @@ var SearchInput = require('pui-react-search-input').SearchInput;
               <div className="media-body media-middle">
                 <p className='h1 type-dark-1 mvn em-low'>Services</p>
               </div>
-              <div className="media-body media-middle">
-                <SearchInput placeholder="Search for services ..." />
+              <div className="media-body media-right">                            
+                <p> <SearchInput placeholder="Search for services ..." /> </p>
+                <a class="btn" href="/#/addServices">Add Services</a>
               </div>
             </div>
-          </div>
+          </div>      
         </div>
       );
     }

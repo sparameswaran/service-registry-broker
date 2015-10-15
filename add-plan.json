@@ -1,5 +1,14 @@
         {
             "description": "CUSTOMIZED Plan throttled to 5 connections per second with change",
             "free": false,
-            "name": "CUSTOMIZED"
+            "name": "CUSTOMIZED",
+            "metadata": {
+              "bullets": [ "TestCreds Content", "Free service" ],
+              "cost": {
+                "amount": {
+                  "usd": 0
+                },
+                "unit": "MONTHLY"
+              }
+            }
         }

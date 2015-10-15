@@ -6,18 +6,47 @@ var MarketingH1 = require('pui-react-typography').MarketingH1;
 var MarketingH2 = require('pui-react-typography').MarketingH2;
 var SearchInput = require('pui-react-search-input').SearchInput;
 var DefaultAltButton = require('pui-react-buttons').DefaultAltButton;
+var DefaultButton = require('pui-react-buttons').DefaultButton;
+var Modal = require('pui-react-modals').Modal;
+var ModalBody = require('pui-react-modals').ModalBody;
+var ModalFooter = require('pui-react-modals').ModalFooter;
+var Image = require('pui-react-images');
+var Router = require('react-router');
+var RegistryServices = require('../shared/registryServices.jsx');
 
 (function () {
   'use strict';
 
   var PageTitle = React.createClass({
 
-    render: function() {
+    //var deleteModal = React.createElement(MyModal);
+
+  _openDeleteModal: function(){
+    console.log("Got open modal event!...");
+    this.refs.modal.open();
+  },
+
+  _deleteModal: function() {
+    console.log("Got delete modal event!...");
+    RegistryServices.deleteService(this.props.serviceEntry.id);
+    this.refs.modal.close();
     
+    var router = Router.create({});
+    router.transitionTo('/').forceUpdate();
+  },
+  
+  _cancelModal: function() {
+    console.log("Got cancel modal event!...");
+    this.refs.modal.close();
+  },
+      
+    render: function() {
+       
       console.log("Incoming page title ..., this.props contains: ", this.props);
       return (
         <div className="page-title bg-neutral-11 pvxl">
-          <div className="container">
+          <div className="container">          
+          
             <div className="media">
               <div className="media-body media-middle">
                 <div className="media">
@@ -52,7 +81,16 @@ var DefaultAltButton = require('pui-react-buttons').DefaultAltButton;
               <div className="media-body media-middle txt-r">
                 <div className="btn-group" role="group" aria-label="...">
                   <button type="button" className="btn btn-default">Edit</button>
-                  <button type="button" className="btn btn-default type-error-4">Delete</button>
+                  
+                  <DefaultButton id='openDeleteButton' className="btn btn-default type-error-4" onClick={this._openDeleteModal}>Delete</DefaultButton>
+			        <Modal title='Delete Service!' isOpen={this._openModal} onRequestClose={this._cancelModal} ref='modal' className='optional-custom-class'>
+			          <ModalBody>  Confirm deletion of Service: { this.props.serviceEntry.name } </ModalBody>
+			          <ModalFooter>
+			            <DefaultButton id='cancelButton' onClick={this._cancelModal}>Cancel</DefaultButton>
+			            <DefaultButton id='deleteButton' onClick={this._deleteModal}>Delete</DefaultButton>
+			          </ModalFooter>
+			        </Modal>
+          		 
                 </div>
               </div>
             </div>
@@ -65,4 +103,5 @@ var DefaultAltButton = require('pui-react-buttons').DefaultAltButton;
   module.exports = PageTitle;
 
 }());
+
 

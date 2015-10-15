@@ -48,7 +48,7 @@ gulp.task('sass', function(){
 gulp.task('buildPuiCss', function(done) {
   del('buildDrF/**/*', function() {
     drFrankenstyle()
-      .pipe(gulp.dest('buildDrF'))
+      .pipe(gulp.dest('../public/css'))
       .on('end', done);
   });
 });

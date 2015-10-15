@@ -30,9 +30,19 @@ var RegistryServices = require('../shared/registryServices.jsx');
    
     render: function() { 
     console.log(this.state)
-    console.log("Inside render in Services page, props contains: " , this.props, " and state contains: " , this.state, " and service Entry is : " , this.serviceEntry);
+    console.log("Inside render in Services page, props contains: " , this.props, " and state contains: " , this.state);
+    
+    /*
+    if (this.refs.search) {
+          var filters = ['name'];
+          this.props.services = this.props.services.filter(this.refs.search.filter(filters));
+    }
+    */
+    
 	var services = _.map(this.props.services, function(data) { console.log("Inside map against create Service Element, data : ", data);
-	 return React.createElement(Service, data); } );
+	
+												return React.createElement(Service, data); 
+						} );
        
       return (
         <div className="pvxl">
