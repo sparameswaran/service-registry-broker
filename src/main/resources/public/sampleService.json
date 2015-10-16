@@ -1,0 +1,51 @@
+
+[
+{
+    "bindable": true,
+    "description": "TestCredsContentRetrievalSystem",
+    "name": "TestCredsContentRetreiveInterface",
+    "metadata": {
+          "displayName": "TestCreds Content",
+          "imageUrl": "https://d1fto35gcfffzn.cloudfront.net/images/brandimages/P_WhiteOnTeal_RGB300.png",
+          "longDescription": "Pull TestCreds content from content management system",
+          "providerDisplayName": "Pivotal CloudFoundry Platform Eng",
+          "supportUrl": "http://support.pivotal.io"
+         }, 
+    "plans": [
+        {
+            "description": "Basic Plan throttled to 5 connections per second",
+              "name": "basic",
+            "free": true,
+            "metadata": {
+              "bullets": [ "TestCreds Content", "Free service" ]
+            },
+            "credentials": {
+              "uri": "http://test-uri.10.10.10.10:8080",
+              "username": "testuser",
+              "password": "testuser",
+              "certLocation" : "http://certLocation....",
+              "certFormat" : "pem",
+              "additionaltag1" : "additionalval1",
+              "additionaltag2" : "additionalval2"
+            }
+        },
+        {
+            "description": "Premium Plan throttled to 25 connections per second",
+            "name": "premium",
+            "free": false,
+            "metadata": {
+              "bullets": [ "TestCreds Content", "Premium service" ]
+            },
+            "credentials": {
+              "uri": "http://test-uri.20.20.20.20:8080",
+              "username": "testuser",
+              "password": "testuser",
+              "certFormat" : "pem",
+              "certLocation" : "http://certLocation....",
+              "additionaltag1" : "additionalval1",
+              "additionaltag2" : "additionalval2"
+            }
+        }
+    ]
+}
+]

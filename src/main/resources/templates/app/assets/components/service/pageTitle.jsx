@@ -28,11 +28,13 @@ var RegistryServices = require('../shared/registryServices.jsx');
 
   _deleteModal: function() {
     console.log("Got delete modal event!...");
-    RegistryServices.deleteService(this.props.serviceEntry.id);
+    RegistryServices.deleteService(this.props.serviceEntry.id).done(() => {	    
+			     	console.log("Done deleting service with id: ", this.props.serviceEntry.id);
+	    });
     this.refs.modal.close();
     
     var router = Router.create({});
-    router.transitionTo('/').forceUpdate();
+    router.transitionTo('/');
   },
   
   _cancelModal: function() {
@@ -80,9 +82,8 @@ var RegistryServices = require('../shared/registryServices.jsx');
               </div>
               <div className="media-body media-middle txt-r">
                 <div className="btn-group" role="group" aria-label="...">
-                  <button type="button" className="btn btn-default">Edit</button>
                   
-                  <DefaultButton id='openDeleteButton' className="btn btn-default type-error-4" onClick={this._openDeleteModal}>Delete</DefaultButton>
+                  <DefaultButton id='openDeleteButton' className="btn btn-default type-error-4" onClick={this._openDeleteModal}>Delete Service</DefaultButton>
 			        <Modal title='Delete Service!' isOpen={this._openModal} onRequestClose={this._cancelModal} ref='modal' className='optional-custom-class'>
 			          <ModalBody>  Confirm deletion of Service: { this.props.serviceEntry.name } </ModalBody>
 			          <ModalFooter>

@@ -1,5 +1,7 @@
 /** @jsx React.DOM */
 var React = require('react');
+var Router = require('react-router');
+
 var sampleService = '/sampleService.json';
 var _ = 'lodash';
 var $ = require('jquery');
@@ -7,7 +9,7 @@ var $ = require('jquery');
 var RegistryServices = require('../shared/registryServices.jsx');
 
 
-var sampleData = require('./sampleService.json');
+var sampleData = require('./sampleServices.json');
 
 
 (function () {
@@ -32,11 +34,10 @@ var sampleData = require('./sampleService.json');
 	  
 	  handleSubmit: function(event) {
 	    console.log("Got handle submit with : ", this.state.rawValue);
-	    
-	    var servicesPayload = this.state.rawValue;
-	    
 	    RegistryServices.postServices(this.state.rawValue);
-	    
+	       
+	    var router = Router.create({});
+	    router.transitionTo('/');	    
 	  },
 	  
      updateJsonFormValue: function( nextValue ) {

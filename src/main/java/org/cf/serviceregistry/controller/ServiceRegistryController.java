@@ -300,8 +300,14 @@ public class ServiceRegistryController {
 					+ servicePlanInstance.getName() + " already exists, use PATCH to update\"}",
 			HttpStatus.BAD_REQUEST);
 		}
-			
+	
 		servicePlanInstance.generateAndSetId();
+		Credentials newCreds = servicePlanInstance.getCredentials();
+		if (newCreds != null) {
+			newCreds.generateAndSetId();
+			createCredentials(newCreds);
+		}
+			
 		existingService.addPlan(servicePlanInstance);
 		serviceRepo.save(existingService);
 	

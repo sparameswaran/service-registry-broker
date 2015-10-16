@@ -15,6 +15,7 @@ var Header = require('./shared/header.jsx');
 var About = require('./about/about.jsx');
 var Service = require('./service/service.jsx');
 var AddServices = require('./edit/addServices.jsx');
+var AddPlan = require('./edit/addPlan.jsx');
 var RegistryServices = require('./shared/registryServices.jsx');
 
 var App = React.createClass({
@@ -33,6 +34,7 @@ var App = React.createClass({
 	
     },
    render: function () {
+   	topLevelStateSetter = this.setState;
     return (
       <div>
         <Header></Header>
@@ -48,6 +50,7 @@ var routes = (
     <DefaultRoute handler={Home} />
     <Route name="/about" handler={About}/>
     <Route name="/addServices" handler={AddServices}/>
+    <Route name="/addPlan/:serviceId" handler={AddPlan}/>
     <Route name="/service/:serviceId" handler={Service}/>
   </Route>
 );

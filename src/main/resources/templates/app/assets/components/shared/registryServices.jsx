@@ -56,11 +56,43 @@ var $ = require('jquery');
         deleteService: function(serviceId) {
             return $.ajax( { 
             url: baseURL + "/services/" + serviceId, 
-            type: "DELETE", 
+            type: "DELETE",
+            async: false, 
             headers: { 
 			        'Accept': 'application/json',
 			        'Content-Type': 'application/json' 
-			    }
+			    },
+			success: function() {
+		        console.log("Finished deleting...");
+		    }
+			
+			});
+        },
+        addPlanToService: function(serviceId, planPayload) {
+            return $.ajax( { 
+            url: baseURL + '/services/' + serviceId + '/plans', 
+            type: "PUT",
+            async: false,  
+            headers: { 
+			        'Accept': 'application/json',
+			        'Content-Type': 'application/json' 
+			    },
+			dataType: 'json',    
+			data:  planPayload });
+        },
+        deletePlan: function(planId) {
+            return $.ajax( { 
+            url: baseURL + "/plans/" + planId, 
+            type: "DELETE",
+            async: false, 
+            headers: { 
+			        'Accept': 'application/json',
+			        'Content-Type': 'application/json' 
+			    },
+			success: function() {
+		        console.log("Finished deleting...");
+		    }
+			
 			});
         }
     };

@@ -21,7 +21,7 @@ var Image = require('pui-react-images');
 
       return (
         <TileLayout.Item>
-          <ClickableAltPanel className="mvn" onClick={this.transitionTo.bind(this, '/service/' + this.props.id, null, null)}>
+          <ClickableAltPanel className="mvn" onClick={this.transitionTo.bind(this, '/service/' + this.props.id, this.props.services, null)}>
             <div className="media">
               <div className="media-left media-middle">
                 <svg x="0px" y="0px" width="35px" height="30px" viewBox="0 0 33 30" enable-background="new 0 0 33 30">

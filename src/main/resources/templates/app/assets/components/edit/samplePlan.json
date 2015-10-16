@@ -1,0 +1,23 @@
+{
+    "description": "... Description of Plan.....",
+    "name": "... Some sample plan name, ex: Basic, Dev, QA",
+    "free": true,
+    "metadata": {
+      "bullets": [ "Dev plan for some service", "Service Type", "Free service" ],
+      "cost": {
+        "amount": {
+          "usd": 0
+        },
+        "unit": "MONTHLY"
+      }
+    },
+    "credentials": {
+      "uri": "http://dev-service.services1.xyz.com:8080",
+      "username": "testuser",
+      "password": "testpassword",
+      "certLocation" : "http://certLocation.xyz.com/......",
+      "certFormat" : "pem",
+      "additionaltag1" : "additionalval1",
+      "additionaltag2" : "additionalval2"
+    }
+}
