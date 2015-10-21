@@ -48,7 +48,8 @@ public class PlanMetadata {
 	}
 	
 	public synchronized void addBullet(String bullet) {
-		this.bullets.add(bullet);
+		if (bullet != "" && !this.bullets.contains(bullet))
+			this.bullets.add(bullet);
 	}
 	
 	public synchronized void removeBullet(String bullet) {

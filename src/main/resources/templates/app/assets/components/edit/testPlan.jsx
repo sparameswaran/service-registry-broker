@@ -5,70 +5,19 @@ var JsonEditor = require('react-json');
 var _ = 'lodash';
 var $ = require('jquery');
 
-var RegistryServices = require('../shared/registryServices.jsx');
-var sampleData = require('./samplePlan.json');
-
 
 (function () {
   'use strict';
   
  
-		var Bullets = React.createClass({
-		    addInputField: function(e) {
-		        e.preventDefault();
-		
-		        var inputs = this.state.inputs;
-		        inputs.push({name: null});
-		        this.setState({inputs : inputs});
-		    },
-		    removeInputField: function(index) {
-		        var inputs = this.state.inputs;
-		        inputs.splice(index, 1);
-		        this.setState({inputs : inputs});
-		    },
-		    handleSubmit: function (e) {
-		        e.preventDefault();
-		        // What do I do here?
-		    },
-		    getInitialState: function() {
-		        console.log("Inside initial state for bullets..");
-		        return {inputs : [ '']};
-		    },
-		    render: function (){
-		    
-		        console.log("Inside bullets rendering...");
-		        var inputs = this.state.inputs;
-		        return (
-		            // Setting up the form
-		            // Blah blah
-		           <div className="form-group">
-		               <div className="col-sm-6">
-		                   {inputs.map(function (input, index) {
-		                       var ref = "input_" + index;
-		                       return (
-		                           <div className="input-group" key={index}>
-		                                <input type="text" placeholder="Enter tag" value={input.name} ref={ref} input-field={ref} />
-		                                <span className="input-group-addon" onClick={this.removeInputField.bind(this, index)} id={ref} ><i className="fa fa-times"></i></span>
-		                           </div>
-		                       )
-		                   }.bind(this))}
-		                    <button className="btn btn-success btn-block" onClick={this.addInputField}>Add Input</button>
-		               </div>
-		           </div>
-		        );
-		    }
-		});
-      
- 
-  var AddPlan = React.createClass({
+
+  var  TestPlan = React.createClass({
 	
 	getInitialState: function() {
 	    var jsonPayload = {};
 	    var space = '\t';
 	    
-	    console.log("sample data contains: ", sampleData); 
-	    sampleData.bullets = [ ''];
-	    return { value: sampleData, bulletInputs : [''] , credsInputs : [ {url: '' }]}; 
+	    return { value: {}, bulletInputs : [''] , credsInputs : [ {url: '' }], units: 'MONTHLY', cost: 0.0, currency: 'usd'}; 
 	  },
 	  
 	  handleChange: function(event) {
@@ -162,10 +111,7 @@ var sampleData = require('./samplePlan.json');
 		
 	    console.log("Got handleSubmit data: ", JSON.stringify(data));
 	    
-	    RegistryServices.addPlanToService(this.props.params['serviceId'], JSON.stringify(data));
-	       
-	    var router = Router.create({});
-	    router.transitionTo('/');	    
+	    	    
 	  },
 	  
      updateJsonFormValue: function( nextValue ) {
@@ -182,18 +128,11 @@ var sampleData = require('./samplePlan.json');
         console.log("Updated data onUpdate: ", nextValue.target.value);
      },
 
-    componentDidMount: function() {
-      console.log("Inside componentDidMount in AddPlan page, this params : ", this.props.params);
-      console.log("Inside componentDidMount in AddPlan page, this.props contains: " , this.props, " and state contains: " , this.state);
-    }, 
-    
-	  render: function() {
+ 	  render: function() {
 	    var space = '  ';
 	    var value = this.state.value;
 	    
-	    if (typeof(value) == "undefined") 
-	    	value = sampleData;
-
+	    
 	    var rawValue = this.state.rawValue;
 
 	    if (typeof(rawValue) == "undefined") 
@@ -206,6 +145,10 @@ var sampleData = require('./samplePlan.json');
 	          
         var bulletInputs = this.state.bulletInputs;
         var credsInputs = this.state.credsInputs;
+        
+        var cost = this.state.cost;
+        var units = this.state.units;
+        var currency = this.state.currency;
         
       return (
 
@@ -244,6 +187,31 @@ var sampleData = require('./samplePlan.json');
 			            	Free Plan 
 			            </label>
 			            <br/>
+			            <label for="costs" >
+			            Costs 
+			            <div align="left">
+			            
+			                <div className="input-group col-sm-1" key="amount">
+			                Amount (in double)
+			                <input className="form-control" defaultValue='0.0' type="double" ref="cost" />			                
+			            	</div>
+			            	
+			            	<div className="input-group col-sm-1" key="currency">
+			            	<label> Currency (like usd) </label>
+			            	<input className="form-control" defaultValue="usd" type="text" ref="currency" /> 
+			            	</div>
+			            	
+			            	<div className="input-group col-sm-7" key="units">
+			            	Units <input className="form-control" placeholder="select" list="units" ref="units"/>
+				            	<datalist id="units">
+								    <option value="WEEKLY"/>
+								    <option value="MONTHLY"/>
+								    <option value="YEARLY"/>
+								  </datalist>
+			            	</div>
+			            </div>
+			            </label>
+			            <br/>
 			            <label for="tags">
 				            Tags
 				           <div className="form-group">
@@ -269,7 +237,7 @@ var sampleData = require('./samplePlan.json');
 				                       var nameref = "creds_name_" + index;
 				                       var valueref = "creds_value_" + index;
 				                       return (
-				                           <div className="input-group" key={index}>
+				                           <div className="input-group"  key={index}>
 				                                <input type="text" placeholder="Enter name" value={input.name} ref={nameref} aria-describedby={nameref}  />
 				                                <input type="text" placeholder="Enter value" value={input.value} ref={valueref} aria-describedby={valueref} />
 				                                <span className="input-group-addon" onClick={this.removeCredsInputField.bind(this, index)} id={nameref} ><i className="fa fa-times"></i></span>
@@ -297,7 +265,7 @@ var sampleData = require('./samplePlan.json');
 
 } );
 
-module.exports = AddPlan;
+module.exports = TestPlan;
 
 }());
 

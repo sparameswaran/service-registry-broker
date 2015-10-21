@@ -6,6 +6,7 @@ var Divider = require('pui-react-dividers').Divider;
 var BaseCollapse = require('pui-react-collapse').BaseCollapse;
 var Label = require('pui-react-labels').Label;
 var InlineList = require('pui-react-lists').InlineList;
+var GroupList = require('pui-react-lists').GroupList;
 var ListItem = require('pui-react-lists').ListItem;
 var Credentials = require('./credentials.jsx');
 var RegistryServices = require('../shared/registryServices.jsx');
@@ -51,6 +52,14 @@ var Router = require('react-router');
 	    this.refs.modal.close();
 	  },
 	  
+    onEditPlan: function() {
+    
+        console.log("Got Edit Plan event!...", this.props);
+	    var router = Router.create({});
+	    router.transitionTo('/editPlan/' + this.props.id);
+	},
+    
+    
     componentDidMount: function() {
     
         console.log("Checking for credentials of plan: ", this.props.id);
@@ -76,6 +85,8 @@ var Router = require('react-router');
     	    <div className="media-body media-middle txt-r">
 	            <div className="btn-group" role="group" aria-label="...">
                   
+                  
+                  <DefaultButton id='openDeleteButton' className="btn btn-default" onClick={this.onEditPlan}>Edit Plan</DefaultButton>
                   <DefaultButton id='openDeleteButton' className="btn btn-default type-error-4" onClick={this._openDeleteModal}>Delete Plan</DefaultButton>
 			        <Modal title='Delete Service!' isOpen={this._openModal} onRequestClose={this._cancelModal} ref='modal' className='optional-custom-class'>
 			          <ModalBody>  Confirm deletion of Plan: { this.props.name } </ModalBody>
@@ -102,8 +113,13 @@ var Router = require('react-router');
           <p className="type-dark-4 mvn type-sm mtl">
             <span className="mrl em-alt">
               Categories:
-              <InlineList spacing="l">
-                <ListItem>{ this.props.metadata.bullets }</ListItem>
+              <InlineList divider>
+              
+                {
+		          this.props.metadata.bullets.map(function(bullet) {
+		            return <ListItem> {bullet}</ListItem>
+		          })
+		        }
               </InlineList>
             </span>
           </p>

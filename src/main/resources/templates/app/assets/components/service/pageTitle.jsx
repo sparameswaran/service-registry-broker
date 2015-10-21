@@ -45,6 +45,10 @@ var RegistryServices = require('../shared/registryServices.jsx');
     render: function() {
        
       console.log("Incoming page title ..., this.props contains: ", this.props);
+      
+      if ( typeof(this.props.serviceEntry.name) == "undefined" )
+      return <div/>;
+      
       return (
         <div className="page-title bg-neutral-11 pvxl">
           <div className="container">          

@@ -80,6 +80,22 @@ var $ = require('jquery');
 			dataType: 'json',    
 			data:  planPayload });
         },
+        editPlan: function(planId, planPayload) {
+            return $.ajax( { 
+            url: baseURL + "/plans/" + planId, 
+            type: "PATCH",
+            async: false, 
+            headers: { 
+			        'Accept': 'application/json',
+			        'Content-Type': 'application/json' 
+			    },
+			dataType: 'json',    
+			data:  planPayload,     
+			success: function() {
+		        console.log("Finished updating plan...");
+		    }
+		    });
+        },        
         deletePlan: function(planId) {
             return $.ajax( { 
             url: baseURL + "/plans/" + planId, 
@@ -90,7 +106,7 @@ var $ = require('jquery');
 			        'Content-Type': 'application/json' 
 			    },
 			success: function() {
-		        console.log("Finished deleting...");
+		        console.log("Finished deleting plan...");
 		    }
 			
 			});

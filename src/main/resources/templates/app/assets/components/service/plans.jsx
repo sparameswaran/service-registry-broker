@@ -28,7 +28,7 @@ var _ = require('lodash');
     
     render: function() {
     console.log("Inside render plans: ", this.state, " and this contains: ", this );
-      var plans = _.map(this.props.serviceEntry.plans, function(data) {  console.log("Inside map of plan data: ", data ); return React.createElement(Plan, data);  } );
+      var plans = _.map(this.props.serviceEntry.plans, function(data) { console.log("Inside map of plan data: ", data ); return React.createElement(Plan, data);  } );
       
       
       

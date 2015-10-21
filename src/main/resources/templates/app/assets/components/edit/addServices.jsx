@@ -77,7 +77,7 @@ var sampleData = require('./sampleServices.json');
 		          <div className="container">
 		            <div className="media">
 		              <div className="media-body">
-			          	<h4 class="aligner txt-c" className="media-heading em-default txt-m type-dark-1">Add Service definitions</h4>
+			          	<h4 class="aligner txt-c" className="media-heading em-default txt-m type-dark-1">Add one or more Service definitions</h4>
 			          	
 			          	
 		                <p className='mvn type-sm em-default type-dark-5'>Modify the JSON template below...!!</p>
