@@ -162,15 +162,17 @@ var TagsEditor = require('./tagsEditor.jsx');
           <div className="container">          
               <div className="media-body">
 			          
-              
+                    <p className='h1 type-dark-1 mvn em-low'>Plan Editor</p>
+                    
  			        <form id="outerForm" role="form">
 			          
 			          
-			            <label for="name">Name</label>
+			            <label for="name"><h4>Plan Name</h4></label>
 			            <input className="form-control"  type="text" ref="name" placeholder="Enter Plan Name" defaultValue={this.state.planName} />
-			            <label for="description">Description</label>
+			            <br/>
+			            <label for="description"><h4>Plan Description</h4></label>
 			            <input className="form-control"  type="text" ref="description" placeholder="Enter Plan Description" defaultValue={this.state.planDescrp} />
-			            
+			            <br/>
 			            <label>
 			                <div>
 			            	<input className="form-control"  type="checkbox" ref="free" /> 
@@ -180,21 +182,21 @@ var TagsEditor = require('./tagsEditor.jsx');
 			            	
 			            <br/><br/>
 			            <label for="costs" >
-			            Costs 
+			            <h4>Costs </h4>
 			            <div align="left">
 			            
 			                <div className="input-group " key="amount">
-			                Amount (in double)
+			                <h5>Amount (in double)</h5>
 			                <input className="form-control" defaultValue={this.state.cost} type="double" ref="cost" />			                
 			            	</div>
 			            	
 			            	<div className="input-group" key="currency">
-			            	<label> Currency </label>
+			            	<label> <h5> Currency</h5> </label>
 			            	<input className="form-control" defaultValue={this.state.currency} type="text" ref="currency" /> 
 			            	</div>
 			            	
 			            	<div className="input-group" key="units">
-			            	Units <input className="form-control" placeholder="select"  defaultValue={this.state.units}  list="units" ref="units"/>
+			            	<h5> Units </h5> <input className="form-control" placeholder="select"  defaultValue={this.state.units}  list="units" ref="units"/>
 				            	<datalist id="units">
 								    <option value="WEEKLY"/>
 								    <option value="MONTHLY"/>
@@ -213,7 +215,7 @@ var TagsEditor = require('./tagsEditor.jsx');
 			            <br/>
 			            
 			        <div align="left">	
-			        <button id="submit" class="btn btn-default" onClick={this.handleSubmit} >Submit</button> 
+			        <button id="submit" className="btn btn-primary" onClick={this.handleSubmit} >Submit</button> 
 			        </div>
 			        				            
 			        </form>

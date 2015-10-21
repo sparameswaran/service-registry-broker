@@ -94,7 +94,7 @@ var RegistryServices = require('../shared/registryServices.jsx');
           });
           return ( 
             <div>
-              <label for="credentials">Credentials</label>
+              <label for="credentials"><h4>Credentials</h4></label>
               <table className="table table-striped">
                 <thead><tr><th>Name</th><th>Value</th><th>Action</th></tr></thead>
                 <tbody>{credentialEntries}</tbody>

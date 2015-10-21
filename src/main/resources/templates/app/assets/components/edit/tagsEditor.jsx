@@ -73,7 +73,7 @@ var React = require('react');
           });
           return ( 
             <div>
-              <label for="tags">Tags</label>
+              <label for="tags"><h4>Tags</h4></label>
               <table className="table table-striped">
                 <thead><tr><th>Name</th><th>Action</th></tr></thead>
                 <tbody>{tagEntries}</tbody>
