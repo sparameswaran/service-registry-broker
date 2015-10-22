@@ -21,11 +21,8 @@ var TagsEditor = require('./tagsEditor.jsx');
 	    
 	    var planId = this.props.params.planId;
 	    
-	    console.log("Current props includes: ", this.props);
-   	    console.log("Current state includes: ", this.state);
-   	    
-	    this.setState({ planId : this.props.params['planId'] });
-	    
+	    console.log("EditPlan, Current props includes: ", this.props);
+   	    console.log("EditPlan, Current state includes: ", this.state);
    	     
    	    var planName = '';
    	    var planDescrp = '';         
@@ -40,7 +37,8 @@ var TagsEditor = require('./tagsEditor.jsx');
         // then use the available data...
         if (  (typeof(planId) != "undefined") &&  (typeof(this.props.services) != "undefined") ) {
         
-        
+          this.setState({ planId : this.props.params['planId'] });
+	    
 
 		  var serviceEntry = _.filter(this.props.services, {plans: [ { id : planId } ]  })[0];
  	      serviceId = serviceEntry.id;
@@ -199,9 +197,11 @@ var TagsEditor = require('./tagsEditor.jsx');
 	    
 	    console.log("Inside render: Current state includes: ", this.state);
 	    
-	    if ( typeof(this.state.planName) == "undefined" || this.state.planName == '') {
+	    if ( (this.state.planId != undefined) && (typeof(this.state.planName) == "undefined" || this.state.planName == '')) {
 	    	return null;
 	    }
+	    
+	    console.log('Plan name is already filled or planId is undefined...');
          
       return (
             

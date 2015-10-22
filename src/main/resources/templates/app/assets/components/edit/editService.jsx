@@ -47,12 +47,12 @@ var TagsEditor = require('./tagsEditor.jsx');
 		    
    	    var name = serviceEntry.name;
    	    var description = serviceEntry.description;
-   	    var longDescription = serviceEntry.longDescription;
-   	    var imageUrl = serviceEntry.imageUrl;
-   	    var displayName = serviceEntry.displayName;
-   	    var providerDisplayName = serviceEntry.providerDisplayName;
-   	    var documentationUrl = serviceEntry.documentationUrl;
-   	    var supportUrl = serviceEntry.supportUrl;	   	   
+   	    var longDescription = serviceEntry.metadata.longDescription;
+   	    var imageUrl = serviceEntry.metadata.imageUrl;
+   	    var displayName = serviceEntry.metadata.displayName;
+   	    var providerDisplayName = serviceEntry.metadata.providerDisplayName;
+   	    var documentationUrl = serviceEntry.metadata.documentationUrl;
+   	    var supportUrl = serviceEntry.metadata.supportUrl;	   	   
 	      
 			 
 			 	this.setState(

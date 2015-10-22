@@ -24,6 +24,9 @@ var Image = require('pui-react-images');
           <ClickableAltPanel className="mvn" onClick={this.transitionTo.bind(this, '/service/' + this.props.id, this.props.services, null)}>
             <div className="media">
               <div className="media-left media-middle">
+              
+                { this.props.metadata.imageUrl != undefined ? <img src={this.props.metadata.imageUrl} height='55' width='55' /> :
+                
                 <svg x="0px" y="0px" width="35px" height="30px" viewBox="0 0 33 30" enable-background="new 0 0 33 30">
                   <path id="XMLID_27_" fill-rule="evenodd" clip-rule="evenodd" fill="#7996D0" d="M16.5,27.4L3.6,11h25.9L16.5,27.4z M5.2,2h22.6
                     l2.3,7H2.9L5.2,2z M32.5,10.1C32.5,10.1,32.5,10.1,32.5,10.1c0-0.2,0-0.3,0-0.4c0,0,0,0,0-0.1l-3-9C29.3,0.3,28.9,0,28.5,0h-24
@@ -35,9 +38,12 @@ var Image = require('pui-react-images');
                     c0.1,0,0.1,0,0.2,0c0.2-0.1,0.4-0.3,0.3-0.5c0,0,0,0,0,0L23,10.2z"/>
                   <rect id="XMLID_23_" fill="none" width="33" height="30"/>
                 </svg>
+                
+                }
               </div>
               <div className="media-body">
-                <h4 className="media-heading em-default type-dark-1">{this.props.name}</h4>
+                <h4 className="media-heading em-default type-dark-1">{this.props.name}</h4>  
+                    
                 <p className='mvn type-sm em-default type-dark-5'>{this.props.description}</p> 
               </div>
             </div>

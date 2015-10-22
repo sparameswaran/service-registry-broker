@@ -22,7 +22,14 @@ var ReactRouter = require('react-router');
             </svg>
             <span className="logo-type">Service Registry</span>
           </a>
-        </div>
+          <div className="media-body media-middle txt-r" >
+          <a  href="/logout">
+            
+            <span className="logo-type">Logout</span>
+            <br/>
+          </a>
+          </div>
+        </div>        
       </div>
       );
     }
