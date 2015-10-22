@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 var React = require('react');
 var ReactRouter = require('react-router');
+var $ = require('jquery');
 
 (function () {
   'use strict';
@@ -9,6 +10,11 @@ var ReactRouter = require('react-router');
 
   var Header = React.createClass({
 
+   handleLogout: function() {
+      console.log("Logout not implemented...");
+      $.post("/" ); 
+   },
+   
     render: function() {
       return (
       <div className='global-header'>
@@ -23,8 +29,7 @@ var ReactRouter = require('react-router');
             <span className="logo-type">Service Registry</span>
           </a>
           <div className="media-body media-middle txt-r" >
-          <a  href="/logout">
-            
+          <a onClick="this.handleLogout">            
             <span className="logo-type">Logout</span>
             <br/>
           </a>

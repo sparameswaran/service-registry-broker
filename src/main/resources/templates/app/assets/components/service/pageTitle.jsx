@@ -93,15 +93,19 @@ var RegistryServices = require('../shared/registryServices.jsx');
                    
                     <p className='h1 type-dark-1 mvn em-low'>
                     {this.props.serviceEntry.name}
-                     &nbsp;
-                    <img src={this.props.serviceEntry.metadata.imageUrl} height="55" width="55" />
+                     
+                    { (this.props.serviceEntry.metadata.imageUrl != '') ? <img src={this.props.serviceEntry.metadata.imageUrl} height="55" width="55" /> : '' }
                       </p>
                     <p className="type-sm type-dark-2 mvn">
                       <span>{this.props.serviceEntry.description}</span> 
                     </p>
                     <p className="type-sm type-dark-2 mvn">
-                      <span className="type-dark-6">by</span> <span className="type-dark-2 em-high"> {this.props.serviceEntry.metadata.displayName}</span> <span className="type-dark-5 em-default"> {providerDisplayOutput} </span>
-            		 
+                    { 
+                    	this.props.serviceEntry.metadata.displayName && 
+                      	<span className="type-dark-6">by</span> &&
+                        <span className="type-dark-2 em-high">{this.props.serviceEntry.metadata.displayName}</span> &&
+                        <span className="type-dark-5 em-default"> {providerDisplayOutput} </span> 
+					}				            		 
                     </p>
                   </div>
                 </div>
