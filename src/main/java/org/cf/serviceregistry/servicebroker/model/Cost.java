@@ -19,6 +19,7 @@ package org.cf.serviceregistry.servicebroker.model;
 import org.springframework.util.Assert;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.HashMap;
@@ -34,18 +35,33 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "cost")
-@JsonIgnoreProperties({ "id", "handler", "hibernateLazyInitializer" })
+@JsonIgnoreProperties({ "id", "handler", "hibernateLazyInitializer", "planMetadata", "planmetadata_id"  })
 final class Cost {
 
 	@Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int id;
 	
+	@JsonBackReference
+	@ManyToOne
+	@JoinColumn(name="planmetadata_id", insertable = true, updatable = false)
+	// Mark insertable false for compound keys, shared primary key, cascaded key
+	private PlanMetadata planmetadata;
+	
+	public PlanMetadata getPlanmetadata() {
+		return planmetadata;
+	}
+
+	public void setPlanmetadata(PlanMetadata planmetadata) {
+		this.planmetadata = planmetadata;
+	}
+
 	// any "other" tags/key-value pairs    
 	@ElementCollection(fetch = FetchType.LAZY)
 	@MapKeyColumn(name="currency")
@@ -68,12 +84,12 @@ final class Cost {
 	}
 
 	public Map<String, Double> getAmount() {
-        Assert.notEmpty(this.amount, "Costs must specify at least one amount");
+        Assert.notEmpty(this.amount, "Cost must specify at least one amount");
         return this.amount;
     }
 
 	public String getUnit() {
-        Assert.notNull(this.unit, "Costs must specify a unit");
+        Assert.notNull(this.unit, "Cost must specify a unit");
         return this.unit;
     }
 
@@ -89,5 +105,47 @@ final class Cost {
     void setUnit(String unit) {
         this.unit = unit;
     }
+    
+    public void update(Cost from) {
+		if (from == null)
+			return;
+		
+		if (from.amount != null) {
+			for(String key: amount.keySet()) {
+				this.set(key, amount.get(key));
+			}
+		}
+		
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cost other = (Cost) obj;
+		if (id != other.id)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Cost [id=" + id + ", planmetadata=" + planmetadata
+				+ ", amount in usd=" + amount.get("usd") + ", unit=" + unit + "]";
+	}
+
+    
 
 }

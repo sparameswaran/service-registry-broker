@@ -53,6 +53,22 @@ var $ = require('jquery');
 			dataType: 'json',    
 			data:  servicesPayload });
         },
+        editService: function(serviceId, servicePayload) {
+            return $.ajax( { 
+            url: baseURL + "/services/" + serviceId, 
+            type: "PATCH",
+            async: false, 
+            headers: { 
+			        'Accept': 'application/json',
+			        'Content-Type': 'application/json' 
+			    },
+			dataType: 'json',    
+			data:  servicePayload,     
+			success: function() {
+		        console.log("Finished updating service...");
+		    }
+		    });
+        },
         deleteService: function(serviceId) {
             return $.ajax( { 
             url: baseURL + "/services/" + serviceId, 

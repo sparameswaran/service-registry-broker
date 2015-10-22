@@ -1,6 +1,6 @@
 /** @jsx React.DOM */
 var React = require('react');
-
+var DefaultButton = require('pui-react-buttons').DefaultButton;
 
 (function () {
   'use strict';
@@ -92,7 +92,7 @@ var React = require('react');
           return (
             <tr>
               <td>{this.props.tagEntry}</td>
-              <td><input type="button"  className="btn btn-primary" value="Remove" onClick={this.handleRemoveTagsEntry}/></td>
+              <td><DefaultButton type="button"  className="btn btn-primary  type-error-4" onClick={this.handleRemoveTagsEntry}> Remove </DefaultButton></td>
             </tr>
             );
         }
@@ -116,7 +116,7 @@ var React = require('react');
                 <input type="text"  className="form-control col-md-8" placeholder="Tag" ref="cvalue"/>
               </div>
               <div className="input-group input-group-lg" style={inputStyle}>
-                <input type="submit"  className="btn btn-primary" value="Add Tags" onClick={this.handleSubmit}/>
+                <DefaultButton type="submit"  className="btn btn-primary" onClick={this.handleSubmit}> Add Tags </DefaultButton>
               </div>
             </div>
             );

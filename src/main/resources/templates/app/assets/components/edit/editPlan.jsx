@@ -2,6 +2,7 @@
 var React = require('react');
 var Router = require('react-router');
 var _ = require('lodash');
+var DefaultButton = require('pui-react-buttons').DefaultButton;
 
 var RegistryServices = require('../shared/registryServices.jsx');
 var CredentialsEditor = require('./credentialsEditor.jsx');
@@ -39,6 +40,7 @@ var TagsEditor = require('./tagsEditor.jsx');
         // then use the available data...
         if (  (typeof(planId) != "undefined") &&  (typeof(this.props.services) != "undefined") ) {
         
+        
 
 		  var serviceEntry = _.filter(this.props.services, {plans: [ { id : planId } ]  })[0];
  	      serviceId = serviceEntry.id;
@@ -47,39 +49,20 @@ var TagsEditor = require('./tagsEditor.jsx');
 		  console.log("Found matching service Entry: ", serviceEntry.plans);
 		  var planEntry = _.filter(serviceEntry.plans,  { id : planId })[0];		    
 		  console.log("Found matching plan Entry: ", planEntry);
-          
-          this.setState( { plan : planEntry });
-          
-	   	  planName = planEntry.name;
-	   	  planDescrp = planEntry.description;
-	       
-	      for (var key in planEntry.metadata.cost.amount) {
-	      	currency = key;
-	      }
-	      
-	      units = planEntry.metadata.cost.unit;
-	      cost = parseFloat(planEntry.metadata.cost.amount[currency]);
-	      rawTagList = planEntry.metadata.bullets;
-	      
-	      console.log("Edit Plan, currency: " , currency, " and cost is: ", cost);	
-	      
-          if ( typeof(rawTagList) != "undefined" ) {
-        	tagList = [ ];
-		        for(var i = 0; i < rawTagList.length; i++) {
-	    			tagList.push( { cvalue: rawTagList[i] } );
-			    }
-	      }						    
-			 console.log("Updated tag list: " ,  tagList);					        
         
+        
+          // The Plan might have changed compared to whatever is saved in the this.props.services.
+          // So reload the state...
+          
+          RegistryServices.findPlanById(planId).done(this.reloadPlan);
+          
         } else {
         
           // This means this is for a brand new plan..
           // Grab the service id so we can use that for submission later..
           serviceId = this.props.params['serviceId'];
    		  this.setState({ serviceId : serviceId });	 
-        }
-	    
-	    
+        }	    
 	    
 	    return {	planId: planId, 
 	    			serviceId : serviceId, 
@@ -91,6 +74,63 @@ var TagsEditor = require('./tagsEditor.jsx');
 	    			tagList : tagList  
 	    		}; 
 	  },
+	  
+	  reloadPlan: function(planEntry) {
+		
+		var planId = planEntry.id;  
+		var planName = planEntry.name;
+		var planDescrp = planEntry.description; 
+		    
+		var cost = 0.0;
+		var units = 'MONTHLY';
+		var currency = 'usd';         
+		var rawTagList = [];
+		var tagList = [];          
+	   	   
+	      
+	      if ( typeof(planEntry.metadata.costs[0]) != "undefined" ) {
+	        console.info("Costs is ", planEntry.metadata.costs);
+	        console.info("Costs[0] is ", planEntry.metadata.costs[0]);
+	        for (var key in planEntry.metadata.costs[0].amount) {
+	      		currency = key;
+	      	}
+	      	
+	        units = planEntry.metadata.costs[0].unit;
+	        cost = parseFloat(planEntry.metadata.costs[0].amount[currency]);
+	      }
+	      rawTagList = planEntry.metadata.bullets;
+	      
+	      console.log("Edit Plan, currency: " , currency, " and cost is: ", cost);	
+	      
+          if ( typeof(rawTagList) != "undefined" ) {
+        	tagList = [ ];
+		        for(var i = 0; i < rawTagList.length; i++) {
+	    			tagList.push( { cvalue: rawTagList[i] } );
+			    }
+	      	}						    
+			 console.log("Updated tag list: " ,  tagList);
+			 
+			 /*
+			 this.setState({ plan : planEntry });
+				this.setState({ planId: planEntry.id}); 
+			    this.setState({ planName: planName }); 
+			    this.setState({ planDescrp: planDescrp }); 
+			    this.setState({ cost: cost }); 
+			    this.setState({ units: units }); 
+			    this.setState({ currency: currency });
+			    this.setState({ tagList : tagList});
+			 */   
+			 
+			 	this.setState({ plan : planEntry ,
+			 			planId: planEntry.id, 
+		    			planName: planName , 
+		    			 planDescrp: planDescrp , 
+		    			 cost: cost , 
+		    			 units: units , 
+		    			 currency: currency ,
+		    			 tagList : tagList}
+	    			);  		
+        },
 	  
 	  handleSubmit: function(event) {
 	    
@@ -114,10 +154,13 @@ var TagsEditor = require('./tagsEditor.jsx');
         }
         
         planPayload['metadata'] =  {  
-                                cost: { 
+                                costs: [
+                                   { 
                                      amount, 
                                      unit: units 
-                                 } 
+                                    
+                                   }
+                                ]
                              };   
                                   
 	    planPayload['credentials'] = this.refs.credentials.toString() ;
@@ -155,6 +198,10 @@ var TagsEditor = require('./tagsEditor.jsx');
 	    var space = '  ';
 	    
 	    console.log("Inside render: Current state includes: ", this.state);
+	    
+	    if ( typeof(this.state.planName) == "undefined" || this.state.planName == '') {
+	    	return null;
+	    }
          
       return (
             
@@ -187,7 +234,14 @@ var TagsEditor = require('./tagsEditor.jsx');
 			            
 			                <div className="input-group " key="amount">
 			                <h5>Amount (in double)</h5>
-			                <input className="form-control" defaultValue={this.state.cost} type="double" ref="cost" />			                
+			                <input className="form-control" defaultValue={this.state.cost} type="double" ref="cost" />
+			                <br/><br/>
+			                <h5>
+			                <b>
+			                	Note: PCF Console (Apps Manager) will not show the plan in Marketplace for an Organization, 
+			                    <br/>  if cost is set to non-zero amount until the org quota is modified to allow access to non-basic (free) services
+			                </b>
+			                </h5>			                
 			            	</div>
 			            	
 			            	<div className="input-group" key="currency">
@@ -215,7 +269,7 @@ var TagsEditor = require('./tagsEditor.jsx');
 			            <br/>
 			            
 			        <div align="left">	
-			        <button id="submit" className="btn btn-primary" onClick={this.handleSubmit} >Submit</button> 
+			        <DefaultButton id="submit" className="btn btn-primary" onClick={this.handleSubmit}> Submit </DefaultButton> 
 			        </div>
 			        				            
 			        </form>

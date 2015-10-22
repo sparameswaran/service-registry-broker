@@ -38,6 +38,9 @@ public class ServiceMetadata {
 	@Column(nullable = true)
     private URI documentationUrl;
 
+	@Column(nullable = true)
+    private URI supportUrl;
+
 	public String getDisplayName() {
 		return displayName;
 	}
@@ -85,9 +88,6 @@ public class ServiceMetadata {
 	public void setSupportUrl(URI supportUrl) {
 		this.supportUrl = supportUrl;
 	}
-
-	@Column(nullable = true)
-    private URI supportUrl;
 
 	public int getId() {
 		return id;

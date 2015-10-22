@@ -27,7 +27,7 @@ var _ = require('lodash');
 		this.setState({ serviceEntry : service});
 		console.log("Saved state on entering hte service to: ", this.state);
     },
-  
+
     componentDidMount: function() {
     
     

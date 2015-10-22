@@ -1,6 +1,6 @@
 /** @jsx React.DOM */
 var React = require('react');
-
+var DefaultButton = require('pui-react-buttons').DefaultButton;
 var RegistryServices = require('../shared/registryServices.jsx');
 
 (function () {
@@ -40,22 +40,16 @@ var RegistryServices = require('../shared/registryServices.jsx');
           this.setState( {credentialEntrylist: this.state.credentialEntrylist} );
         },
         toString: function() {
-	            //var output = '{';
 	            var output = { };
 			    console.log("Incoming Credentials editor state: " , this.state);
 			    for (var i = 0; i < this.state.credentialEntrylist.length; i++) { 
 			      var entry = this.state.credentialEntrylist[i];
-			      
-		        //if (output != '{')
-		        //  output = output + ',';
 		           
 		           var name = entry['cname'];
 		           var val = entry['cvalue'];
 		           console.log("Incoming Credentials editor current entry: " , entry);
-			       //output +=  '"' + name  + '" : "' +  val + '"';
 			       output[name] = val;
 			    }
-			    //output += '}';
 			    console.log("Credentials editor state: " , output);
 			    return output;
 			
@@ -114,7 +108,7 @@ var RegistryServices = require('../shared/registryServices.jsx');
             <tr>
               <td>{this.props.credentialEntry.cname}</td>
               <td>{this.props.credentialEntry.cvalue}</td>
-              <td><input type="button"  className="btn btn-primary" value="Remove" onClick={this.handleRemoveCredentialEntry}/></td>
+              <td><DefaultButton  className="btn btn-primary  type-error-4" onClick={this.handleRemoveCredentialEntry}> Remove </DefaultButton></td>
             </tr>
             );
         }
@@ -143,7 +137,7 @@ var RegistryServices = require('../shared/registryServices.jsx');
                 <input type="text"  className="form-control col-md-8" placeholder="Value" ref="cvalue"/>
               </div>
               <div className="input-group input-group-lg" style={inputStyle}>
-                <input type="submit"  className="btn btn-primary" value="Add Entry" onClick={this.handleSubmit}/>
+                <DefaultButton type="submit"  className="btn btn-primary" onClick={this.handleSubmit}>Add Entry </DefaultButton>
               </div>
             
             </div>

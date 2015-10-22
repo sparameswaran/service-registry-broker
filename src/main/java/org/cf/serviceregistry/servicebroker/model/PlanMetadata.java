@@ -12,8 +12,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -35,9 +39,11 @@ public class PlanMetadata {
 	@JsonDeserialize(as = ArrayList.class, contentAs = String.class)
 	private List<String>bullets = new ArrayList<String>();
 
-	@JsonProperty("cost")
-	@OneToOne(optional = true, orphanRemoval = true, fetch=FetchType.LAZY, cascade = CascadeType.ALL)
-	private Cost cost;
+	// Dont miss the mappedBy tag - persistence of the owned relationship will falter...
+	@OneToMany(mappedBy="planmetadata", orphanRemoval = true, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	private Set<Cost> costs = new HashSet<Cost>();
+
+	private static final Log log = LogFactory.getLog(PlanMetadata.class);
 
 	public List<String> getBullets() {
 		return bullets;
@@ -64,18 +70,23 @@ public class PlanMetadata {
 		this.id = id;
 	}
 	
-	public Cost getCost() {
-		
-		if (cost == null) {
-			cost = new Cost();
+	public Set<Cost> getCosts() {
+		if (costs.size() == 0) {
+			Cost cost = new Cost();
 			cost.setAmount("usd", 0.0);
-			cost.setUnit("MONTHLY");
+			costs.add(cost);
 		}
-		return cost;
+		return costs;
 	}
 
-	public void setCost(Cost cost) {
-		this.cost = cost;
+	public void setCosts(Set<Cost> fromCosts) {
+		this.costs.clear();
+		this.costs.addAll(fromCosts);
+		
+		for(Cost cost: this.costs.toArray(new Cost[] {} )) {
+			cost.setPlanmetadata(this);
+			//log.info("Added cost: " + cost);
+		}
 	}
 
 	public void update(PlanMetadata from) {
@@ -86,8 +97,15 @@ public class PlanMetadata {
 			this.bullets = from.bullets;
 		}
 		
-		if (from.cost != null) {
-			this.cost = from.cost;
+		if (from.costs != null) {
+			this.costs.clear();
+			
+			this.costs.addAll(from.costs);
+			for(Cost cost: this.costs.toArray(new Cost[] {} )) {
+				cost.setPlanmetadata(this);
+				//log.info("Added cost: " + cost);
+			}
+			
 		}
 	}
 	

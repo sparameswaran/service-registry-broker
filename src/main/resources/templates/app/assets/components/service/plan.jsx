@@ -73,8 +73,16 @@ var Router = require('react-router');
     render: function() {
       // Cost comes as a map of one entry: { "usd" : 0 }
       // Remove the quotes, and reorder the amount and currency
-      var costPrice = JSON.stringify(this.props.metadata.cost.amount).replace(/\"/g, '');
-      costPrice = costPrice.substr(1, costPrice.length - 2).split(':').reverse().join(' ').toUpperCase();
+      
+      var costPrice = '0.0 USD';
+      var unit = 'MONTHLY';
+      if ( typeof(this.props.metadata.costs[0]) != "undefined" ) {
+      
+      	unit      = this.props.metadata.costs[0].unit;
+      	costPrice = JSON.stringify(this.props.metadata.costs[0].amount).replace(/\"/g, '');
+        costPrice = costPrice.substr(1, costPrice.length - 2).split(':').reverse().join(' ').toUpperCase();
+        
+      }
       
       return (
         <div className="plan paxl">
@@ -86,7 +94,7 @@ var Router = require('react-router');
 	            <div className="btn-group" role="group" aria-label="...">
                   
                   
-                  <DefaultButton id='openDeleteButton' className="btn btn-default" onClick={this.onEditPlan}>Edit Plan</DefaultButton>
+                  <DefaultButton id='openEditButton' className="btn btn-default" onClick={this.onEditPlan}>Edit Plan</DefaultButton>
                   <DefaultButton id='openDeleteButton' className="btn btn-default type-error-4" onClick={this._openDeleteModal}>Delete Plan</DefaultButton>
 			        <Modal title='Delete Service!' isOpen={this._openModal} onRequestClose={this._cancelModal} ref='modal' className='optional-custom-class'>
 			          <ModalBody>  Confirm deletion of Plan: { this.props.name } </ModalBody>
@@ -106,7 +114,7 @@ var Router = require('react-router');
 	          Free Plan: {this.props.free? "true" : "false"}
 	        </p>
 	        <p className="type-dark-4  mvn type-sm mtl">            
-              Cost : { costPrice }, charged {this.props.metadata.cost.unit }
+              Cost : { costPrice }, charged {unit }
           	</p>
           </p>
           

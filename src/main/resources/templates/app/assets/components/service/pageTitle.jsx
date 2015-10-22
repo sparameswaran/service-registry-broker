@@ -42,12 +42,28 @@ var RegistryServices = require('../shared/registryServices.jsx');
     this.refs.modal.close();
   },
       
+          
+    onEditService: function() {
+    
+        console.log("Got Edit Service event!...", this.props);
+	    var router = Router.create({});
+	    router.transitionTo('/editService/' + this.props.serviceEntry.id);
+	},
+  
+  
     render: function() {
        
       console.log("Incoming page title ..., this.props contains: ", this.props);
       
       if ( typeof(this.props.serviceEntry.name) == "undefined" )
       return <div/>;
+      
+      
+      var providerDisplayOutput = '';
+      if ( typeof(this.props.serviceEntry.metadata.providerDisplayName) != 'undefined' 
+      		&& this.props.serviceEntry.metadata.providerDisplayName != '') {
+      	providerDisplayOutput = '(' + this.props.serviceEntry.metadata.providerDisplayName + ')'
+      }
       
       return (
         <div className="page-title bg-neutral-11 pvxl">
@@ -79,13 +95,19 @@ var RegistryServices = require('../shared/registryServices.jsx');
                       <span>{this.props.serviceEntry.description}</span> 
                     </p>
                     <p className="type-sm type-dark-2 mvn">
-                      <span className="type-dark-6">by</span> <span className="type-dark-2 em-high"> {this.props.serviceEntry.metadata.displayName}</span> <span className="type-dark-5 em-default">( {this.props.serviceEntry.metadata.providerDisplayName} )</span>
+                      <span className="type-dark-6">by</span> <span className="type-dark-2 em-high"> {this.props.serviceEntry.metadata.displayName}</span> <span className="type-dark-5 em-default"> {providerDisplayOutput} </span>
+            		 
                     </p>
                   </div>
                 </div>
               </div>
               <div className="media-body media-middle txt-r">
                 <div className="btn-group" role="group" aria-label="...">
+                  
+                  
+                  
+                  <DefaultButton id='openEditButton' className="btn btn-default" onClick={this.onEditService}>Edit Service</DefaultButton>
+                  
                   
                   <DefaultButton id='openDeleteButton' className="btn btn-default type-error-4" onClick={this._openDeleteModal}>Delete Service</DefaultButton>
 			        <Modal title='Delete Service!' isOpen={this._openModal} onRequestClose={this._cancelModal} ref='modal' className='optional-custom-class'>

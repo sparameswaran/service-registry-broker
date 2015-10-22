@@ -14,6 +14,7 @@ var Home = require('./home/home.jsx');
 var Header = require('./shared/header.jsx');
 var About = require('./about/about.jsx');
 var Service = require('./service/service.jsx');
+var EditService = require('./edit/editService.jsx');
 var AddServices = require('./edit/addServices.jsx');
 var EditPlan = require('./edit/editPlan.jsx');
 var TestPlan = require('./edit/testPlan.jsx');
@@ -51,6 +52,7 @@ var routes = (
     <DefaultRoute handler={Home} />
     <Route name="/about" handler={About}/>
     <Route name="/addServices" handler={AddServices}/>
+    <Route name="/editService/:serviceId" handler={EditService}/>
     <Route name="/addPlan/:serviceId" handler={EditPlan}/>
     <Route name="/editPlan/:planId" handler={EditPlan}/>
     <Route name="/testPlan" handler={TestPlan}/>

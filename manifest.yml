@@ -6,6 +6,7 @@ applications:
   path: target/service-registry-broker-0.0.1-SNAPSHOT.jar
   services: [ mysql-service ]
   buildpack: java_buildpack
+  timeout: 180
   env:
     SPRING_JPA_SHOW_SQL: true
 
