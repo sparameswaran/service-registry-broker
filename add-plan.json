@@ -4,11 +4,13 @@
             "name": "CUSTOMIZED",
             "metadata": {
               "bullets": [ "TestCreds Content", "Free service" ],
-              "cost": {
-                "amount": {
-                  "usd": 0
-                },
-                "unit": "MONTHLY"
-              }
+              "costs": [
+                  {
+                    "amount": {
+                      "usd": 0
+                    },
+                    "unit": "MONTHLY"
+                  }
+              ]
             }
         }

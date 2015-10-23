@@ -2,8 +2,8 @@ var $ = require('jquery');
 
 (function () {
 
-    var baseURL = "http://localhost:8080";
-    //var baseURL = "";
+    //var baseURL = "http://localhost:8080";
+    var baseURL = "";
 
     var user   = "testuser";
     var passwd = "testuser";

@@ -25,7 +25,8 @@ gulp.task('build', ['clean', 'assets'], function(){});
 gulp.task('assets', [
   'sass',
   'react',
-  'images'
+  'images',
+  'buildCss'
 ]);
 
 gulp.task('images', function () {
@@ -45,7 +46,7 @@ gulp.task('sass', function(){
     .pipe(reload({stream:true}));
 });
 
-gulp.task('buildPuiCss', function(done) {
+gulp.task('buildCss', function(done) {
   del('buildDrF/**/*', function() {
     drFrankenstyle()
       .pipe(gulp.dest('../public/css'))
