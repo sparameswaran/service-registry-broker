@@ -16,12 +16,14 @@
             "free": true,
             "metadata": {
               "bullets": [ "Dev plan for some service", "Service Type", "Free service" ],
-              "cost": {
-                "amount": {
-                  "usd": 0
-                },
-                "unit": "MONTHLY"
-              }
+              "costs": [ 
+                 {
+                    "amount": {
+                      "usd": 0
+                    },
+                    "unit": "MONTHLY"
+                 }
+              ]
             },
             "credentials": {
               "uri": "http://dev-service.services1.xyz.com:8080",
@@ -39,12 +41,14 @@
             "free": false,
             "metadata": {
               "bullets": [ "Prod Plan for some service", "Service Type", "Premium service" ],
-              "cost": {
-                "amount": {
-                  "usd": 0
-                },
-                "unit": "MONTHLY"
-              }
+              "costs": [ 
+                 {
+                    "amount": {
+                      "usd": 0
+                    },
+                    "unit": "MONTHLY"
+                 }
+              ]
             },
             "credentials": {
               "uri": "http://prod-service.services.xyz.com:8080",
@@ -77,12 +81,14 @@
             "free": true,
             "metadata": {
               "bullets": [ "Dev plan for some service", "Service Type", "Free service" ],
-              "cost": {
-                "amount": {
-                  "usd": 0
-                },
-                "unit": "MONTHLY"
-              }
+              "costs": [ 
+                 {
+                    "amount": {
+                      "usd": 0
+                    },
+                    "unit": "MONTHLY"
+                 }
+               ]            
             },
             "credentials": {
               "uri": "http://dev-service.services2.xyz.com:8080",
@@ -100,12 +106,14 @@
             "free": false,
             "metadata": {
               "bullets": [ "Prod Plan for some service", "Service Type", "Premium service" ],
-              "cost": {
-                "amount": {
-                  "usd": 0
-                },
-                "unit": "MONTHLY"
-              }
+              "costs": [ 
+                 {
+                    "amount": {
+                      "usd": 0
+                    },
+                    "unit": "MONTHLY"
+                 }
+              ]
             },
             "credentials": {
                "uri": "http://prod-service.services.xyz.com:8080",
