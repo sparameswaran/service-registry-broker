@@ -12,7 +12,7 @@ var $ = require('jquery');
 
    handleLogout: function() {
       console.log("Logout not implemented...");
-      $.post("/" ); 
+      $.post("/logout" ); 
    },
    
     render: function() {
@@ -28,12 +28,6 @@ var $ = require('jquery');
             </svg>
             <span className="logo-type">Service Registry</span>
           </a>
-          <div className="media-body media-middle txt-r" >
-          <a onClick={this.handleLogout}>            
-            <span className="logo-type">Logout</span>
-            <br/>
-          </a>
-          </div>
         </div>        
       </div>
       );
