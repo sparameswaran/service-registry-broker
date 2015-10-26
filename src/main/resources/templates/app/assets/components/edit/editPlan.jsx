@@ -220,14 +220,13 @@ var TagsEditor = require('./tagsEditor.jsx');
 			            <label for="description"><h4>Plan Description</h4></label>
 			            <input className="form-control"  type="text" ref="description" placeholder="Enter Plan Description" defaultValue={this.state.planDescrp} />
 			            <br/>
-			            <label>
-			                <div>
-			            	<input className="form-control"  type="checkbox" ref="free" /> 
-			            	</div>
-			            	Free Plan 
-			            </label>
-			            	
-			            <br/><br/>
+			            <div>
+			            
+			            <label for="freePlan" class="mrs" >	<h4>Free Plan &nbsp; </h4> </label>
+			                <input type="checkbox" ref="free" />
+			             
+			            </div>	
+			            <br/>
 			            <label for="costs" >
 			            <h4>Costs </h4>
 			            <div align="left">
@@ -253,6 +252,7 @@ var TagsEditor = require('./tagsEditor.jsx');
 			            	<h5> Units </h5> <input className="form-control" placeholder="select"  defaultValue={this.state.units}  list="units" ref="units"/>
 				            	<datalist id="units">
 								    <option value="WEEKLY"/>
+								    <option value="BIWEEKLY"/>
 								    <option value="MONTHLY"/>
 								    <option value="YEARLY"/>
 								  </datalist>

@@ -116,9 +116,7 @@ var RegistryServices = require('../shared/registryServices.jsx');
                   
                   
                   <DefaultButton id='openEditButton' className="btn btn-default" onClick={this.onEditService}>Edit Service</DefaultButton>
-                  
-                  
-                  <DefaultButton id='openDeleteButton' className="btn btn-default type-error-4" onClick={this._openDeleteModal}>Delete Service</DefaultButton>
+                  <DefaultButton id='openDeleteButton' className="btn btn-default type-error-4 mls" onClick={this._openDeleteModal}>Delete Service</DefaultButton>
 			        <Modal title='Delete Service!' isOpen={this._openModal} onRequestClose={this._cancelModal} ref='modal' className='optional-custom-class'>
 			          <ModalBody>  Confirm deletion of Service: { this.props.serviceEntry.name } </ModalBody>
 			          <ModalFooter>

@@ -18,6 +18,7 @@ package org.cf.serviceregistry.servicebroker.catalog;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,7 +34,7 @@ public final class PlanMetadataTest extends AbstractSerializationTest<PlanMetada
     @Override
     protected void assertContents(Map m) {    	
         assertEquals(getBullets(), m.get("bullets"));
-        assertNull(m.get("costs"));
+        assertNotNull(m.get("costs"));
     }
 
     @Override

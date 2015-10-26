@@ -95,7 +95,7 @@ var Router = require('react-router');
                   
                   
                   <DefaultButton id='openEditButton' className="btn btn-default" onClick={this.onEditPlan}>Edit Plan</DefaultButton>
-                  <DefaultButton id='openDeleteButton' className="btn btn-default type-error-4" onClick={this._openDeleteModal}>Delete Plan</DefaultButton>
+                  <DefaultButton id='openDeleteButton' className="btn btn-default type-error-4  mls" onClick={this._openDeleteModal}>Delete Plan</DefaultButton>
 			        <Modal title='Delete Service!' isOpen={this._openModal} onRequestClose={this._cancelModal} ref='modal' className='optional-custom-class'>
 			          <ModalBody>  Confirm deletion of Plan: { this.props.name } </ModalBody>
 			          <ModalFooter>
