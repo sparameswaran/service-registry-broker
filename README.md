@@ -46,6 +46,17 @@ After a new service has been registered or after updates on the service registry
 cf update-service-broker service-registry-broker testuser somethingsecure http://service-registry-broker.xyz.com/
 ```
 
+After any addition of a service or an underlying plan, enable access for that service or plan via cf enable-service-acess call.
+
+```
+cf enable-service-access NewService
+cf enable-service-access ExistingService -p NewPlan
+```
+
+# Using the Service Registry Web UI
+
+Access the web interface of the Service Registry to view current set of services registered in the Registry as well as to add/edit services or plans. After each new addition/deletion or update of service or plan, ensure the Cloud Foundry Controller version of the service registry catalog is refreshed by running the cf update-service-broker call as well as cf emable-service-access call.
+
 # Using the Service Registry REST interface
 * List Services
 To list services, use GET against /services
@@ -107,10 +118,12 @@ Example:
 ```
 # Delete a service
 curl -v -u testuser:testuser http://test-service-registry.xyz.com/services/test-service -X DELETE
+Caution: Attempt to delete a service currently in use can lead to violation of integrity constraints.
 
 # Delete a plan
 # This wont delete the underlying credential as it may be in use...
 curl -v -u testuser:testuser http://test-service-registry.xyz.com/services/test-service/plans/test-plan -X DELETE
+Caution: Attempt to delete a plan currently in use can lead to violation of integrity constraints.
 
 # Delete credential associated with a plan
 curl -v -u testuser:testuser http://test-service-registry.xyz.com/services/test-service/plans/test-plan/creds  -X DELETE
@@ -147,3 +160,8 @@ Either make the change in the application.properties or via env variable passed 
 * Credentials
 Atleast one attribute needs to be passed in during creation of credentials : **`uri`**. username, password and other attributes can be null.
 There can be any number of additional attributes (like username, password, certFile, certLocation, certType, otherTags...) that can be passed in during creation of the credentials entry. Check the add-creds.json file for some sample input. These would be then passed along to the apps consuming the instantiated services.
+
+* Limitations
+  * There is no support for logout, only login via the user supplied credentials at time of app push.
+  * There is no tie-up with UAA or Login services
+  * The provided code is experimental and subject to change and not supported officially.
