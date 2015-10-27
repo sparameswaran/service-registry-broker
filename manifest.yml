@@ -8,10 +8,5 @@ applications:
   buildpack: java_buildpack
   timeout: 180
   env:
-    SPRING_JPA_SHOW_SQL: true
-
-    SPRING_JPA_HIBERNATE_DDL_AUTO: create        # Use this to create the tables automatically
-    #SPRING_JPA_HIBERNATE_DDL_AUTO: none         # Use this once the tables are created
-
     SECURITY_USER_NAME:     testuser
     SECURITY_USER_PASSWORD: testuser
