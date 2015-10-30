@@ -26,7 +26,7 @@ var $ = require('jquery');
                 c0,2.4-1.3,3.9-4.8,3.9c-0.3,0-0.9-0.1-0.9-0.1V28c0,0,0.5,0,0.9,0c5.1,0,8.7-2,8.7-7.1c0-0.1,0-0.2,0-0.3
                 C33.1,15.4,29.2,13.5,23.5,13.5z"/>
             </svg>
-            <span className="logo-type">Service Registry</span>
+            <span className="logo-type">Service Registry Broker</span>
           </a>
         </div>        
       </div>
