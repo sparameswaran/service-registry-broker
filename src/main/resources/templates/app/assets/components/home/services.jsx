@@ -15,42 +15,46 @@ var Service = require('./service.jsx');
 var RegistryServices = require('../shared/registryServices.jsx');
 
 (function () {
-  'use strict';
+    'use strict';
 
-  var Services = React.createClass({
+    var Services = React.createClass({
 
-	getInitialState: function() {
-	console.log("Entering into Services page, state contains: " , this.props);
-    return {
+        getInitialState: function () {
+            console.log("Entering into Services page, state contains: ", this.props);
+            return {
 
-      services :  []
-    };
-  },
-  
-   
-    render: function() { 
-    console.log(this.state)
-    console.log("Inside render in Services page, props contains: " , this.props, " and state contains: " , this.state);
-    
-	var services = _.map(this.props.services, function(data) { console.log("Inside map against create Service Element, data : ", data);
-	
-												return React.createElement(Service, data); 
-						} );
-       
-      return (
-        <div className="pvxl">
-          <div className="container">
-            <TileLayout columns={{xs: 1, sm: 2, md: 3}}>
+                services: []
+            };
+        },
 
-                {services}          
+        render: function () {
+            console.log(this.state)
+            console.log("Inside render in Services page, props contains: ", this.props, " and state contains: ", this.state);
 
-            </TileLayout>
-          </div>
-        </div>
-      );
-    }
-  });
+            var services = _.map(this.props.services, function (data) {
+                console.log("Inside map against create Service Element, data : ", data);
 
-  module.exports = Services;
+                return React.createElement(Service, data);
+            });
+
+            return (
+                <div className="pvxl">
+                    <div className="container">
+                        <TileLayout columns={{
+                            xs: 1,
+                            sm: 2,
+                            md: 3
+                        }}>
+
+                            {services}
+
+                        </TileLayout>
+                    </div>
+                </div>
+            );
+        }
+    });
+
+    module.exports = Services;
 
 }());

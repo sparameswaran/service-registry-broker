@@ -9,9 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.cf.serviceregistry.repository.CredentialsRepository;
 import org.cf.serviceregistry.repository.PlanRepository;
 import org.cf.serviceregistry.repository.ServiceRepository;
+
 import org.cf.serviceregistry.servicebroker.model.Credentials;
 import org.cf.serviceregistry.servicebroker.model.Plan;
 import org.cf.serviceregistry.servicebroker.model.Service;
@@ -151,6 +153,23 @@ public class ServiceRegistryController {
 	public ResponseEntity<Object> services() {
 		return new ResponseEntity<>(serviceRepo.findAll(), HttpStatus.OK);	
 	}
+	
+	/*
+	@RequestMapping("/brokers")
+	public ResponseEntity<Object> brokers() {
+		
+        String target = "https://api.bosh-lite.com";
+        String user = "admin";
+        String password = "admin";
+        String serviceBrokerUri = "srb";
+
+        String[] args =  { target, user, password, serviceBrokerUri };
+        System.out.println("Got request to /serviceBrokers: " + args);
+        CFInvoker.main(args);
+		
+		return new ResponseEntity<>("{}", HttpStatus.OK);	
+	}
+	*/
 
 	// Bulk creation of service defns
 	@RequestMapping(value = "/services", method = RequestMethod.POST)
@@ -213,7 +232,7 @@ public class ServiceRegistryController {
 		
 		Optional<Service> services = serviceRepo.findByServiceIdOrName(serviceIdOrName);
 		if (!services.isPresent()) {
-			return new ResponseEntity<>("{}", HttpStatus.GONE);			
+			return new ResponseEntity<>("{Error: Service not found or already removed}", HttpStatus.GONE);			
 		}
 		
 		Service existingService = services.get();;
@@ -221,6 +240,13 @@ public class ServiceRegistryController {
 		// Clean up associated plans
 		planRepo.delete(existingService.getPlans());
 		serviceRepo.delete(existingService.getId());
+		
+		services = serviceRepo.findByServiceIdOrName(serviceIdOrName);
+		if (services.isPresent()) {
+			return new ResponseEntity<>("{Error: Service " + serviceIdOrName + " cannot be deleted, probably in use by applications,"
+					+ " unbind and delete service instances before deleting}", HttpStatus.PRECONDITION_FAILED);			
+		}
+		
 		return new ResponseEntity<>("{}", HttpStatus.OK);
 	}
 	
@@ -354,7 +380,7 @@ public class ServiceRegistryController {
 	
 		Plan existingPlan = planRepo.findOne(planId);
 		if (existingPlan == null) {
-			return new ResponseEntity<>("{}", HttpStatus.GONE);
+			return new ResponseEntity<>("{Plan not found or already deleted }", HttpStatus.GONE);
 		}
 		
 		// Remove from associated service
@@ -362,6 +388,12 @@ public class ServiceRegistryController {
 		
 		service.removePlan(existingPlan);
 		planRepo.delete(planId);
+		
+		existingPlan = planRepo.findOne(planId);
+		if (existingPlan != null) {
+			return new ResponseEntity<>("{Error: Plan " + planId + " cannot be deleted, probably in use by applications,"
+					+ " unbind and delete service instances using the plan before deleting}", HttpStatus.PRECONDITION_FAILED);			
+		}
 		
 		return new ResponseEntity<>("{}", HttpStatus.OK);
 	}

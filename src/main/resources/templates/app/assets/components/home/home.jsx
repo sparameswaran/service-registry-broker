@@ -13,56 +13,57 @@ var Services = require('./services.jsx');
 var PageTitle = require('./pageTitle.jsx');
 
 (function () {
-  'use strict';
+    'use strict';
 
-  var updateComponent = false;
-  
-  var Home = React.createClass({
+    var updateComponent = false;
 
-  getInitialState: function() {
-    return {
-      services: []
-    };
-  },
-  
-    componentWillMount: function() {
-      console.log("Entered componentWillMount");
-      
-      RegistryServices.findAllServices().done(this._updateState);
-	   updateComponent = true;
-    },
-    
-    _updateState: function(services) {
-		this.setState({ services });
-    },
+    var Home = React.createClass({
 
-    
-    render: function() {
-        	
-      return (
-        <div>
-	        <div className="page-title bg-neutral-11 pvxl">
-	          <div className="container">
-	            <div className="media">
-	              <div className="media-body media-middle">
-	                <p className='h1 type-dark-1 mvn em-low'>Services</p>
-	              </div>
-	              <div className="media-body media-right">                            
-	                <p> <Search services={this.state.services} /> </p>
-	                <a class="btn" href="/#/addServices">Add Services</a>
-	              </div>
-	            </div>
-	          </div>      
-	        </div>
-	        
-          	<Services services={this.state.services} />
-          
-        </div>
-      );
-    }
-  });
+        getInitialState: function () {
+            return {
+                services: []
+            };
+        },
 
-  
-  module.exports = Home;
+        componentWillMount: function () {
+            console.log("Entered componentWillMount");
+
+            RegistryServices.findAllServices()
+                .done(this._updateState);
+            updateComponent = true;
+        },
+
+        _updateState: function (services) {
+            this.setState({services});
+        },
+
+        render: function () {
+
+            return (
+                <div>
+                    <div className="page-title bg-neutral-11 pvxl">
+                        <div className="container">
+                            <div className="media">
+                                <div className="media-body media-middle">
+                                    <p className='h1 type-dark-1 mvn em-low'>Services</p>
+                                </div>
+                                <div className="media-body media-right">
+                                    <p>
+                                        <Search services={this.state.services}/>
+                                    </p>
+                                    <a class="btn" href="/#/addServices">Add Services</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <Services services={this.state.services}/>
+
+                </div>
+            );
+        }
+    });
+
+    module.exports = Home;
 
 }());

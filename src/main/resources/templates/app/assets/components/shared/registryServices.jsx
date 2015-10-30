@@ -80,7 +80,10 @@ var $ = require('jquery');
 			    },
 			success: function() {
 		        console.log("Finished deleting...");
-		    }
+		    },
+		    error: function(xhr, status, error) {
+		      console.info ("Got error on delete, xhr: ", xhr, 'status: ', status, 'error: ', error);
+			}
 			
 			});
         },
@@ -123,7 +126,10 @@ var $ = require('jquery');
 			    },
 			success: function() {
 		        console.log("Finished deleting plan...");
-		    }
+		    },
+		    error: function(xhr, status, error) {
+		      console.info ("Got error on delete, xhr: ", xhr, 'status: ', status, 'error: ', error);
+			}
 			
 			});
         }

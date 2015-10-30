@@ -1,106 +1,111 @@
-[  {
-    "name": "ServiceName1",
-    "description": "Sample Description 1",
-    "bindable": true,
-    "metadata": {
-          "displayName": "Short display name..",
-          "imageUrl": "http://urlToImage...",
-          "longDescription": "... Long description....",
-          "providerDisplayName": "...Eng team or Org .....",
-          "supportUrl": "http://CompanyUrl..."
-         },
-    "plans": [
-        {
-            "description": "Description of Plan.....",
-            "name": "SomeSampleQAPlan1",
-            "free": true,
-            "metadata": {
-              "bullets": [ "Dev plan for some service", "Service Type", "Free service" ],
-              "costs": [ 
-                 {
-                    "amount": {
-                      "usd": 0
-                    },
-                    "unit": "MONTHLY"
-                 }
-              ]
-            },
-            "credentials": {
-              "uri": "http://dev-service.services1.xyz.com:8080",
-              "username": "testuser",
-              "password": "testpassword",
-              "certLocation" : "http://certLocation.xyz.com/......",
-              "certFormat" : "pem",
-              "additionaltag1" : "additionalval1",
-              "additionaltag2" : "additionalval2"
-            }
+[
+    {
+        "name": "ServiceName1",
+        "description": "Sample Description 1",
+        "bindable": true,
+        "metadata": {
+            "displayName": "Short display name..",
+            "imageUrl": "/images/pivotal-img.png",
+            "longDescription": "... Long description....",
+            "providerDisplayName": "...Eng team or Org .....",
+            "supportUrl": "http://CompanyUrl..."
         },
-        {
-            "description": "Description of Additional Plan like Premium, SIT, Prod....",
-            "name": "SomeSampleSITPlan",
-            "free": false,
-            "metadata": {
-              "bullets": [ "Prod Plan for some service", "Service Type", "Premium service" ],
-              "costs": [ 
-                 {
-                    "amount": {
-                      "usd": 0
-                    },
-                    "unit": "MONTHLY"
-                 }
-              ]
-            },
-            "credentials": {
-              "uri": "http://prod-service.services.xyz.com:8080",
-              "username": "testProdUser",
-              "password": "testProdPassword",
-              "wsdlLocation": "http://prod-testservice1.xyz.com/services/.......?WSDL",
-              "certFormat" : "pem",
-              "certLocation" : "http://certLocation....",
-              "additionaltag1" : "additionalval1",
-              "additionaltag2" : "additionalval2"
+        "plans": [
+            {
+                "description": "Description of Plan.....",
+                "name": "SomeSampleQAPlan1",
+                "free": true,
+                "metadata": {
+                    "bullets": [
+                        "Dev plan for some service", "Service Type", "Free service"
+                    ],
+                    "costs": [
+                        {
+                            "amount": {
+                                "usd": 0
+                            },
+                            "unit": "MONTHLY"
+                        }
+                    ]
+                },
+                "credentials": {
+                    "uri": "http://dev-service.services1.xyz.com:8080",
+                    "username": "testuser",
+                    "password": "testpassword",
+                    "certLocation": "http://certLocation.xyz.com/......",
+                    "certFormat": "pem",
+                    "additionaltag1": "additionalval1",
+                    "additionaltag2": "additionalval2"
+                }
+            }, {
+                "description": "Description of Additional Plan like Premium, SIT, Prod....",
+                "name": "SomeSampleSITPlan",
+                "free": false,
+                "metadata": {
+                    "bullets": [
+                        "Prod Plan for some service", "Service Type", "Premium service"
+                    ],
+                    "costs": [
+                        {
+                            "amount": {
+                                "usd": 0
+                            },
+                            "unit": "MONTHLY"
+                        }
+                    ]
+                },
+                "credentials": {
+                    "uri": "http://prod-service.services.xyz.com:8080",
+                    "username": "testProdUser",
+                    "password": "testProdPassword",
+                    "wsdlLocation": "http://prod-testservice1.xyz.com/services/.......?WSDL",
+                    "certFormat": "pem",
+                    "certLocation": "http://certLocation....",
+                    "additionaltag1": "additionalval1",
+                    "additionaltag2": "additionalval2"
+                }
             }
-        }
-    ]
-},
-{
-    "name": "ServiceName2",
-    "description": "Sample 2 Description.....",
-    "bindable": true,
-    "metadata": {
-          "displayName": "Short display name....",
-          "imageUrl": "http://urlToImage...",
-          "longDescription": "... Long description....",
-          "providerDisplayName": "...Eng team or Org .....",
-          "supportUrl": "http://CompanyUrl..."
-         },
-    "plans": [
-        {
-            "description": "... Description of Plan.....",
-            "name": "SomeSamplePlan1",
-            "free": true,
-            "metadata": {
-              "bullets": [ "Dev plan for some service", "Service Type", "Free service" ],
-              "costs": [ 
-                 {
-                    "amount": {
-                      "usd": 0
-                    },
-                    "unit": "MONTHLY"
-                 }
-               ]            
-            },
-            "credentials": {
-              "uri": "http://dev-service.services2.xyz.com:8080",
-              "username": "testuser",
-              "password": "testpassword",
-              "certLocation" : "http://certLocation.xyz.com/......",
-              "certFormat" : "pem",
-              "additionaltag1" : "additionalval1",
-              "additionaltag2" : "additionalval2"
+        ]
+    }, {
+        "name": "ServiceName2",
+        "description": "Sample 2 Description.....",
+        "bindable": true,
+        "metadata": {
+            "displayName": "Short display name....",
+            "imageUrl": "/images/pivotal-img.png",
+            "longDescription": "... Long description....",
+            "providerDisplayName": "...Eng team or Org .....",
+            "supportUrl": "http://CompanyUrl..."
+        },
+        "plans": [
+            {
+                "description": "... Description of Plan.....",
+                "name": "SomeSamplePlan1",
+                "free": true,
+                "metadata": {
+                    "bullets": [
+                        "Dev plan for some service", "Service Type", "Free service"
+                    ],
+                    "costs": [
+                        {
+                            "amount": {
+                                "usd": 0
+                            },
+                            "unit": "MONTHLY"
+                        }
+                    ]
+                },
+                "credentials": {
+                    "uri": "http://dev-service.services2.xyz.com:8080",
+                    "username": "testuser",
+                    "password": "testpassword",
+                    "certLocation": "http://certLocation.xyz.com/......",
+                    "certFormat": "pem",
+                    "additionaltag1": "additionalval1",
+                    "additionaltag2": "additionalval2"
+                }
             }
-        }
-    ]
-} 
+        ]
+    }
 
 ]
