@@ -27,7 +27,7 @@ public class ServiceMetadata {
     private String displayName;
 
 	@Column(nullable = true)
-    private URI imageUrl;
+    private String imageUrl;
 
 	@Column(nullable = true)
     private String longDescription;
@@ -36,10 +36,10 @@ public class ServiceMetadata {
     private String providerDisplayName;
 
 	@Column(nullable = true)
-    private URI documentationUrl;
+    private String documentationUrl;
 
 	@Column(nullable = true)
-    private URI supportUrl;
+    private String supportUrl;
 
 	public String getDisplayName() {
 		return displayName;
@@ -49,11 +49,12 @@ public class ServiceMetadata {
 		this.displayName = displayName;
 	}
 
-	public URI getImageUrl() {
+	public String getImageUrl() {
 		return imageUrl;
 	}
 
-	public void setImageUrl(URI imageUrl) {
+	public void setImageUrl(String imageUrl) {
+		System.out.println("Image url being set to: " + imageUrl);
 		this.imageUrl = imageUrl;
 	}
 
@@ -73,19 +74,19 @@ public class ServiceMetadata {
 		this.providerDisplayName = providerDisplayName;
 	}
 
-	public URI getDocumentationUrl() {
+	public String getDocumentationUrl() {
 		return documentationUrl;
 	}
 
-	public void setDocumentationUrl(URI documentationUrl) {
+	public void setDocumentationUrl(String documentationUrl) {
 		this.documentationUrl = documentationUrl;
 	}
 
-	public URI getSupportUrl() {
+	public String getSupportUrl() {
 		return supportUrl;
 	}
 
-	public void setSupportUrl(URI supportUrl) {
+	public void setSupportUrl(String supportUrl) {
 		this.supportUrl = supportUrl;
 	}
 
@@ -109,7 +110,7 @@ public class ServiceMetadata {
 			this.providerDisplayName = from.providerDisplayName;
 		}
 		
-		if (from.imageUrl != null) {
+		if (from.imageUrl != null && !from.imageUrl.contains("%")) {
 			this.imageUrl = from.imageUrl;
 		}
 		

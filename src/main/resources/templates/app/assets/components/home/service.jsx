@@ -25,7 +25,7 @@ var Image = require('pui-react-images');
             <div className="media">
               <div className="media-left media-middle">
               
-                { this.props.metadata.imageUrl != undefined ? <img src={this.props.metadata.imageUrl} height='55' width='55' /> :
+                { (this.props.metadata.imageUrl != undefined && this.props.metadata.imageUrl != '') ? <img src={this.props.metadata.imageUrl} height='55' width='55' /> :
                 
                 <svg x="0px" y="0px" width="35px" height="30px" viewBox="0 0 33 30" enable-background="new 0 0 33 30">
                   <path id="XMLID_27_" fill-rule="evenodd" clip-rule="evenodd" fill="#7996D0" d="M16.5,27.4L3.6,11h25.9L16.5,27.4z M5.2,2h22.6

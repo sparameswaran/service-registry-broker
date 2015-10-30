@@ -1,6 +1,6 @@
 {
-    "description": "... Description of Plan.....",
-    "name": "... Some sample plan name, ex: Basic, Dev, QA",
+    "description": "Description of Plan.....",
+    "name": "SamplePlanName",
     "free": true,
     "metadata": {
       "bullets": [ "Dev plan for some service", "Service Type", "Free service" ],

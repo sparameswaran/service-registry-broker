@@ -1,9 +1,9 @@
 [  {
-    "name": "......Service Name 1 .....",
-    "description": ".....Sample Description 1.....",
+    "name": "ServiceName1",
+    "description": "Sample Description 1",
     "bindable": true,
     "metadata": {
-          "displayName": "..Short display name....",
+          "displayName": "Short display name..",
           "imageUrl": "http://urlToImage...",
           "longDescription": "... Long description....",
           "providerDisplayName": "...Eng team or Org .....",
@@ -11,8 +11,8 @@
          },
     "plans": [
         {
-            "description": "... Description of Plan.....",
-            "name": "... Some sample plan name, ex: Basic, Dev, QA",
+            "description": "Description of Plan.....",
+            "name": "SomeSampleQAPlan1",
             "free": true,
             "metadata": {
               "bullets": [ "Dev plan for some service", "Service Type", "Free service" ],
@@ -36,8 +36,8 @@
             }
         },
         {
-            "description": ".... Description of Additional Plan....",
-            "name": "... Some sample plan name, ex: Premium, SIT, Prod",
+            "description": "Description of Additional Plan like Premium, SIT, Prod....",
+            "name": "SomeSampleSITPlan",
             "free": false,
             "metadata": {
               "bullets": [ "Prod Plan for some service", "Service Type", "Premium service" ],
@@ -64,11 +64,11 @@
     ]
 },
 {
-    "name": "......Service Name 2 .....",
-    "description": ".....Sample 2 Description.....",
+    "name": "ServiceName2",
+    "description": "Sample 2 Description.....",
     "bindable": true,
     "metadata": {
-          "displayName": "..Short display name....",
+          "displayName": "Short display name....",
           "imageUrl": "http://urlToImage...",
           "longDescription": "... Long description....",
           "providerDisplayName": "...Eng team or Org .....",
@@ -77,7 +77,7 @@
     "plans": [
         {
             "description": "... Description of Plan.....",
-            "name": "... Some sample plan name, ex: Basic, Dev, QA",
+            "name": "SomeSamplePlan1",
             "free": true,
             "metadata": {
               "bullets": [ "Dev plan for some service", "Service Type", "Free service" ],
@@ -96,32 +96,6 @@
               "password": "testpassword",
               "certLocation" : "http://certLocation.xyz.com/......",
               "certFormat" : "pem",
-              "additionaltag1" : "additionalval1",
-              "additionaltag2" : "additionalval2"
-            }
-        },
-        {
-            "description": ".... Description of Additional Plan....",
-            "name": "... Some sample plan name, ex: Premium, SIT, Prod",
-            "free": false,
-            "metadata": {
-              "bullets": [ "Prod Plan for some service", "Service Type", "Premium service" ],
-              "costs": [ 
-                 {
-                    "amount": {
-                      "usd": 0
-                    },
-                    "unit": "MONTHLY"
-                 }
-              ]
-            },
-            "credentials": {
-               "uri": "http://prod-service.services.xyz.com:8080",
-              "username": "testProdUser",
-              "password": "testProdPassword",
-              "wsdlLocation": "http://prod-testservice2.xyz.com/services/.......?WSDL",
-              "certFormat" : "pem",
-              "certLocation" : "http://certLocation....",
               "additionaltag1" : "additionalval1",
               "additionaltag2" : "additionalval2"
             }
