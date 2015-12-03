@@ -31,7 +31,7 @@ public class ServiceBrokerController {
 	Log log = LogFactory.getLog(ServiceBrokerController.class);
 
 	@Autowired
-	ServiceRepository serviceRepoBen;
+	ServiceRepository serviceRepo;
 
 	@Autowired
 	PlanRepository planRepo;
@@ -48,7 +48,7 @@ public class ServiceBrokerController {
 	@RequestMapping("/v2/catalog")
 	public Map<String, Iterable<Service>> catalog() {
 		Map<String, Iterable<Service>> wrapper = new HashMap<>();
-		wrapper.put("services", serviceRepoBen.findAll());
+		wrapper.put("services", serviceRepo.findAll());
 
 		log.debug("Catalog content: " + wrapper);
 		return wrapper;
@@ -57,7 +57,7 @@ public class ServiceBrokerController {
 	@RequestMapping(value = "/v2/service_instances/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<String> create(@PathVariable("id") String id,
 			@RequestBody ServiceInstance serviceInstance) {
-
+		log.info("PUT: /v2/service_instances/" + id + " with payload: " + serviceInstance);
 		serviceInstance.setId(id);
 
 		boolean exists = serviceInstanceRepo.exists(id);
@@ -72,7 +72,39 @@ public class ServiceBrokerController {
 			serviceInstanceRepo.save(serviceInstance);
 			return new ResponseEntity<>("{}", HttpStatus.OK);
 		}
+	}
+	
+	@RequestMapping(value = "/v2/service_instances/{id}", method = RequestMethod.PATCH)
+	public ResponseEntity<String> update(@PathVariable("id") String id,
+			@RequestBody ServiceInstance serviceInstance) {
+		log.info("PATCH: /v2/service_instances/" + id + " with payload: " + serviceInstance);	
+		serviceInstance.setId(id);
 
+		boolean exists = serviceInstanceRepo.exists(id);
+		if (!exists)
+			return new ResponseEntity<>("{ Service instance not found, Create first !!}", HttpStatus.NOT_FOUND);
+	
+		serviceInstanceRepo.save(serviceInstance);
+		return new ResponseEntity<>("{}", HttpStatus.OK);
+	
+	}
+
+	@RequestMapping(value = "/v2/service_instances/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<String> delete(@PathVariable("id") String id,
+			@RequestParam("service_id") String serviceId,
+			@RequestParam("plan_id") String planId) {
+		
+		log.info("DELETE: /v2/service_instances/" + id + " with request params, service_id: " + serviceId + " and plan_id: " + planId);
+		
+		boolean exists = serviceInstanceRepo.exists(id);
+
+		if (exists) {
+			serviceInstanceRepo.delete(id);
+			// Actualservice.delete(id);
+			return new ResponseEntity<>("{}", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>("{}", HttpStatus.GONE);
+		}
 	}
 
 	@RequestMapping(value = "/v2/service_instances/{instanceId}/service_bindings/{id}", method = RequestMethod.PUT)
@@ -80,8 +112,8 @@ public class ServiceBrokerController {
 			@PathVariable("instanceId") String instanceId,
 			@PathVariable("id") String id,
 			@RequestBody ServiceBinding serviceBinding) {
-
-		log.info("Incoming request for service id : " + instanceId + ", binding instance id: " + id);
+		log.info("PUT: /v2/service_instances/" + instanceId + "/service_bindings/" + id + " with payload: " + serviceBinding);
+		
 		if (!serviceInstanceRepo.exists(instanceId)) {
 			System.out.println("Instance does not exists..");
 			return new ResponseEntity<Object>(
@@ -92,7 +124,7 @@ public class ServiceBrokerController {
 		}
 		
 		ServiceInstance serviceInstance = serviceInstanceRepo.findOne(instanceId);		
-		Service underlyingService = serviceRepoBen.findOne(serviceInstance.getServiceId());		
+		Service underlyingService = serviceRepo.findOne(serviceInstance.getServiceId());		
 		Plan underlyingPlan = planRepo.findOne(serviceInstance.getPlanId());
 		
 		serviceBinding.setId(id);
@@ -125,25 +157,12 @@ public class ServiceBrokerController {
 			@PathVariable("id") String id,
 			@RequestParam("service_id") String serviceId,
 			@RequestParam("plan_id") String planId) {
+		log.info("DELETE: /v2/service_instances/" + instanceId + "/service_bindings/" + id + " with request params, service_id: " + serviceId + " and plan_id: " + planId);
+		
 		boolean exists = serviceBindingRepo.exists(id);
-
+		
 		if (exists) {
 			serviceBindingRepo.delete(id);
-			return new ResponseEntity<>("{}", HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>("{}", HttpStatus.GONE);
-		}
-	}
-
-	@RequestMapping(value = "/v2/service_instances/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<String> delete(@PathVariable("id") String id,
-			@RequestParam("service_id") String serviceId,
-			@RequestParam("plan_id") String planId) {
-		boolean exists = serviceRepoBen.exists(id);
-
-		if (exists) {
-			serviceRepoBen.delete(id);
-			// Actualservice.delete(id);
 			return new ResponseEntity<>("{}", HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>("{}", HttpStatus.GONE);

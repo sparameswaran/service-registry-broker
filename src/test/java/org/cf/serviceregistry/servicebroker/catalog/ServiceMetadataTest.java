@@ -40,11 +40,14 @@ public final class ServiceMetadataTest extends AbstractSerializationTest<Service
     protected ServiceMetadata getInstance() {
         ServiceMetadata svcM = new ServiceMetadata();
         svcM.setDisplayName("test-display-name");
-        svcM.setImageUrl(URI.create("http://test.image.url"));
+        //svcM.setImageUrl(URI.create("http://test.image.url"));
+        svcM.setImageUrl("http://test.image.url");
         svcM.setLongDescription("test-long-description");
         svcM.setProviderDisplayName("test-provider-display-name");
-        svcM.setDocumentationUrl(URI.create("http://test.documentation.url"));
-        svcM.setSupportUrl(URI.create("http://test.support.url"));
+        //svcM.setDocumentationUrl(URI.create("http://test.documentation.url"));
+        //svcM.setSupportUrl(URI.create("http://test.support.url"));
+        svcM.setDocumentationUrl("http://test.documentation.url");
+        svcM.setSupportUrl("http://test.support.url");
 
         return svcM;
     }
