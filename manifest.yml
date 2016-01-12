@@ -1,11 +1,12 @@
 ---
 applications:
 - name: service-registry-broker
-  memory: 512M
+  memory: 1024M
+  disk: 2048M
   instances: 1
   path: target/service-registry-broker-0.0.1-SNAPSHOT.jar
   services: [ mysql-service ]
-  buildpack: java_buildpack
+  buildpack: java_buildpack_offline
   timeout: 180
   env:
     SECURITY_USER_NAME:     testuser

@@ -25,10 +25,10 @@ var $ = require('jquery');
             return $.ajax(baseURL + "/services/" + serviceId);
         },
         findServiceByName: function(searchKey) {
-            return $.ajax({url: baseURL + "/searchService?", data: {name: searchKey}});
+            return $.ajax({url: baseURL + "/searchByName?", data: {name: searchKey}});
         },        
         findServiceByProviderName: function(searchKey) {
-            return $.ajax({url: baseURL + "/searchServiceByProvider?", data: {name: searchKey}});
+            return $.ajax({url: baseURL + "/searchByProvider?", data: {name: searchKey} });
         },
         getPlansForService: function(serviceId) {
             return $.ajax({url: baseURL + "/services/" + serviceId + "/plans"});
@@ -37,7 +37,8 @@ var $ = require('jquery');
             return $.ajax(baseURL + "/plans/" + planId);
         },
         getCredentialsForPlans: function(planId) {
-            return $.ajax({url: baseURL + "/credentialsForPlan",  data: {planId: planId}});
+            return $.ajax({url: baseURL + "/credentials",  data: {planId: planId}});
+
         },
         findCredentialsById: function(credId) {
             return $.ajax(baseURL + "/credentials/" + credId);
