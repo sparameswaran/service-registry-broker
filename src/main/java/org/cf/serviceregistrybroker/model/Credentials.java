@@ -180,10 +180,16 @@ public class Credentials {
 		Map<String, String> map = new HashMap<String, String>();
 		for(String key:this.other.keySet()) {
 			map.put(key, this.other.get(key) );
-		}
-		map.put("uri", this.uri);
-		map.put("username", this.username);
-		map.put("password", this.password);
+		}		
+		
+		if (uri != null)
+			map.put("uri", this.uri);
+		
+		if (this.username != null)
+			map.put("username", this.username);
+		
+		if (this.username != null)
+			map.put("password", this.password);
 		
 		return map;
 	}
