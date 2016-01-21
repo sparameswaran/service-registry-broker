@@ -181,15 +181,12 @@ var Router = require('react-router');
                     <p className="type-dark-4 mvn">{this.props.description}</p>
                     <p className="type-dark-4 mvn type-sm mtl">
                         <p className="mvn type-dark-4 type-xs em-alt em-default label-alt">
-                            Free Plan:
-                            {this.props.free
+                            Free Plan : {this.props.free
                                 ? "true"
                                 : "false"}
                         </p>
                         <p className="type-dark-4  mvn type-sm mtl">
-                            Cost :
-                            {costPrice}, charged
-                            {unit}
+                            Cost : {costPrice}, charged {unit}
                         </p>
                     </p>
 

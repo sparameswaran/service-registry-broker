@@ -40,6 +40,7 @@ public class ServiceRegistryCredentialsService implements CredentialsService {
 		Plan associatedPlan = null;
 		boolean isPlanNew = false;
 		Credentials newCreds = (Credentials)item;
+		/*
 		if (planId != null) {
 			try {
 				associatedPlan = (Plan)planService.find(planId);
@@ -49,14 +50,17 @@ public class ServiceRegistryCredentialsService implements CredentialsService {
 			
 			} catch(ResourceDoesNotExistException e) { isPlanNew = true; }
 		}
+		*/
 		newCreds.generateAndSetId();
 		credentialsRepository.save(newCreds);
 		
+		/*
 		if ((planId != null) && !isPlanNew) {
 			associatedPlan = (Plan)planService.find(planId);
 			associatedPlan.setCredentials(newCreds);
 			planService.update(associatedPlan);
 		}
+		*/
 		return newCreds;		
 	}
 

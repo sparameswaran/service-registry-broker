@@ -25,8 +25,8 @@ gulp.task('build', ['clean', 'assets'], function(){});
 gulp.task('assets', [
   'sass',
   'react',
-  'images',
-  'buildCss'
+  'images'
+  , 'buildCss'
 ]);
 
 gulp.task('images', function () {
