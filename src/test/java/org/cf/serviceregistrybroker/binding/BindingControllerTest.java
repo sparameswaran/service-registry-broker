@@ -18,6 +18,7 @@ package org.cf.serviceregistrybroker.binding;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,6 +42,7 @@ public final class BindingControllerTest extends AbstractControllerTest {
     	 this.mockMvc.perform(put("/v2/service_instances/test-service-instance-id/service_bindings/test-service-binding-instance-id")
     			.content(bindingInstancePayload())
     			.contentType(MediaType.APPLICATION_JSON))
+    	 		.andDo(print())
     			.andExpect(status().isOk())
     			.andExpect(jsonPath("$.credentials.uri").exists());
     }

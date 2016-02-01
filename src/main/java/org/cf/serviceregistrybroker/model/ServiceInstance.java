@@ -104,8 +104,12 @@ public class ServiceInstance {
 		this.parameters = convertToJSON(parameters);
 	}
 
+	/*
 	@SuppressWarnings("unchecked")
 	static Map<String, String> convertToMap(String content) {
+		if (content == null)
+			return null;
+		
 		HashMap<String, String> content_map = null;
 		try {
 			content_map = (HashMap<String, String>) (new JSONParser().parse(content));
@@ -114,9 +118,13 @@ public class ServiceInstance {
 			e.printStackTrace();
 		}
 		return content_map;
-	}	
+	}
+	*/	
 
 	static Map<String, Object> convertJsonStringToMap(String jsonContent) {
+		if (jsonContent == null)
+			return null;
+		
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Double.class,  new JsonSerializer<Double>() {
 
@@ -133,6 +141,9 @@ public class ServiceInstance {
 	}
 	
 	static String convertToJSON(Map<String, Object> map) {
+		if (map == null)
+			return null;
+		
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Double.class,  new JsonSerializer<Double>() {
 
@@ -148,6 +159,9 @@ public class ServiceInstance {
 	}
 
 	static Map<String, Object> convertToObjectMap(Map<String, String> srcMap) {
+		if (srcMap == null)
+			return null;
+		
 		HashMap<String, Object> targetMap = new HashMap<String, Object>();
 		for(String key: srcMap.keySet()) {
 			String val = srcMap.get(key);

@@ -91,7 +91,14 @@ public class DatabaseInitialiser  {
         // Initialize your database here: create schema, use DBUnit to load data, etc.
 		serviceRepo.save(service());
 		serviceInstanceRepo.save(serviceInstance());
-		serviceInstanceBindingRepo.save(serviceBinding());
+		/*
+		System.out.println("Done loading db with service instance...");
+		try {
+			ServiceInstance si = serviceInstanceRepo.findOne("test-service-instance-id");
+			if (si != null)
+				System.out.println("Got service instance..." + si.getId());
+		} catch(Exception e) { e.printStackTrace(); }
+		*/
     }
 
 

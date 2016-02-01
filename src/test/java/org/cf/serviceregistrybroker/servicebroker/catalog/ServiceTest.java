@@ -36,7 +36,7 @@ public final class ServiceTest extends AbstractSerializationTest<ServiceDefiniti
         assertEquals(getId().toString(), m.get("id"));
         assertEquals("test-description", m.get("description"));
         assertTrue((Boolean) m.get("bindable"));
-        assertNull(m.get("tags"));
+        assertEquals(new ArrayList(),m.get("tags"));
         assertNull(m.get("metadata"));
         assertNull(m.get("requires"));
         assertEquals(new ArrayList(), m.get("plans"));
