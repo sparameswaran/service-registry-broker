@@ -144,6 +144,8 @@ or the cf env during app push (or via manifest.yml)
    cf set-env <appName> SECURITIY_USER_PASSWORD <UserPassword>
 ```
 
+* Servce instance creation can consume additional set of parameters using "-c <parameter.json>" syntax during `cf create-service` invocation. These additional parameters would be surfaced in the credentials map when a consumer application binds to the specific service instance, along with any other credentials associated with the service plan. This allows users to override credentials on per service instance basis.
+
 * There can be multiple set of services, each with unlimited plans.
 
 * Each plan in any service would be associated with one and only credentials row.
