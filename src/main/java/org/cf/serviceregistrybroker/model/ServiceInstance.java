@@ -1,13 +1,27 @@
 package org.cf.serviceregistrybroker.model;
 
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
 @Entity
 @Table(name = "service_instances")
@@ -36,6 +50,11 @@ public class ServiceInstance {
 	@JsonProperty("space_guid")
 	@Column(nullable = false)
 	private String spaceGuid;
+
+	@JsonSerialize
+	@JsonProperty("parameters")
+	@Column(nullable = true,  length = 512)
+	private String parameters;
 
 	public String getId() {
 		return id;
@@ -76,7 +95,80 @@ public class ServiceInstance {
 	public void setSpaceGuid(String spaceGuid) {
 		this.spaceGuid = spaceGuid;
 	}
+	
+	public Map<String, Object> getParameters() {
+		return convertJsonStringToMap(parameters);
+	}
 
+	public void setParameters(Map<String, Object> parameters) {
+		this.parameters = convertToJSON(parameters);
+	}
+
+	@SuppressWarnings("unchecked")
+	static Map<String, String> convertToMap(String content) {
+		HashMap<String, String> content_map = null;
+		try {
+			content_map = (HashMap<String, String>) (new JSONParser().parse(content));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return content_map;
+	}	
+
+	static Map<String, Object> convertJsonStringToMap(String jsonContent) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Double.class,  new JsonSerializer<Double>() {
+
+              public JsonElement serialize(Double src, Type typeOfSrc,
+                                JsonSerializationContext context) {
+                            Integer value = (int)Math.round(src);
+                                        return new JsonPrimitive(value);
+                                                }
+                  });
+
+        Gson gson = gsonBuilder.create();
+        HashMap<String, Object> map = gson.fromJson(jsonContent, HashMap.class);
+        return map;
+	}
+	
+	static String convertToJSON(Map<String, Object> map) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Double.class,  new JsonSerializer<Double>() {
+
+              public JsonElement serialize(Double src, Type typeOfSrc,
+                                JsonSerializationContext context) {
+                            Integer value = (int)Math.round(src);
+                                        return new JsonPrimitive(value);
+                                                }
+                  });
+
+        Gson gson = gsonBuilder.create();
+        return gson.toJson(map);
+	}
+
+	static Map<String, Object> convertToObjectMap(Map<String, String> srcMap) {
+		HashMap<String, Object> targetMap = new HashMap<String, Object>();
+		for(String key: srcMap.keySet()) {
+			String val = srcMap.get(key);
+			Object nativeVal = val;
+			try {
+				nativeVal = Double.valueOf(val);
+				Double double1 = (Double)nativeVal;
+				if (double1.doubleValue() == double1.intValue()) {
+					nativeVal = new Integer(double1.intValue());
+				}				
+			} catch(NumberFormatException ipe) {
+				String lowerVal = val.trim().toLowerCase();				
+				if (lowerVal.equals("true") || lowerVal.equals("false")) {
+					nativeVal = Boolean.valueOf(val);
+				} 
+			}
+			targetMap.put(key, nativeVal);
+		}
+		return targetMap;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

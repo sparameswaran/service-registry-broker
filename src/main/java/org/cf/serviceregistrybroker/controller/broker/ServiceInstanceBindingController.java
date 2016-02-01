@@ -11,9 +11,9 @@ import org.cf.serviceregistrybroker.exception.ServiceInstanceDoesNotExistExcepti
 import org.cf.serviceregistrybroker.model.ErrorMessage;
 import org.cf.serviceregistrybroker.model.ServiceInstance;
 import org.cf.serviceregistrybroker.model.ServiceInstanceBinding;
+import org.cf.serviceregistrybroker.model.ServiceInstanceBindingResponse;
 import org.cf.serviceregistrybroker.model.dto.CreateServiceInstanceBindingRequest;
 import org.cf.serviceregistrybroker.model.dto.DeleteServiceInstanceBindingRequest;
-import org.cf.serviceregistrybroker.model.dto.ServiceInstanceBindingResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

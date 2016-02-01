@@ -34,6 +34,8 @@ var TagsEditor = require('./tagsEditor.jsx');
             var providerDisplayName = '';
             var docUrl = '';
             var supportUrl = '';
+            var rawTagList = [];
+            var tagList = [];
 
             RegistryServices.findServiceById(serviceId)
                 .done(this.reloadService);
@@ -53,6 +55,17 @@ var TagsEditor = require('./tagsEditor.jsx');
             var providerDisplayName = serviceEntry.metadata.providerDisplayName;
             var documentationUrl = serviceEntry.metadata.documentationUrl;
             var supportUrl = serviceEntry.metadata.supportUrl;
+            var tagList = [];
+
+            var rawTagList = serviceEntry.tags;
+            if (typeof(rawTagList) != "undefined") {
+                tagList = [];
+                for (var i = 0; i < rawTagList.length; i++) {
+                    tagList.push({
+                        cvalue: rawTagList[i]
+                    });
+                }
+            }
 
             this.setState({
                 service: serviceEntry,
@@ -63,7 +76,8 @@ var TagsEditor = require('./tagsEditor.jsx');
                 displayName: displayName,
                 providerDisplayName: providerDisplayName,
                 documentationUrl: documentationUrl,
-                supportUrl: supportUrl
+                supportUrl: supportUrl,
+                tagList: tagList
             });
         },
 
@@ -104,11 +118,16 @@ var TagsEditor = require('./tagsEditor.jsx');
                 .getDOMNode()
                 .value;
 
+            var tagList = this.refs
+                .tags
+                .toString();    
+
             var servicePayload = {
                 id: this.state.serviceId,
                 bindable: true,
                 description: description,
                 name: name,
+                tags: tagList,
                 metadata: {
                     displayName: displayName,
                     imageUrl: imageUrl,
@@ -192,6 +211,10 @@ var TagsEditor = require('./tagsEditor.jsx');
                                 </label>
                                 <input className="form-control" type="text" ref="supportUrl" placeholder="Enter Support Url" defaultValue={this.state.supportUrl}/>
                                 <br/>
+
+                                <TagsEditor tags={this.state.tagList} ref="tags"/>
+                                <br/>
+
 
                                 <div align="left">
                                     <DefaultButton id="submit" className="btn btn-primary" onClick={this.handleSubmit}>

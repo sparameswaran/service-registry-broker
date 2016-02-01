@@ -7,6 +7,9 @@ var MarketingH2 = require('pui-react-typography').MarketingH2;
 var SearchInput = require('pui-react-search-input').SearchInput;
 var DefaultAltButton = require('pui-react-buttons').DefaultAltButton;
 var DefaultButton = require('pui-react-buttons').DefaultButton;
+var InlineList = require('pui-react-lists').InlineList;
+var GroupList = require('pui-react-lists').GroupList;
+var ListItem = require('pui-react-lists').ListItem;
 var Modal = require('pui-react-modals').Modal;
 var ModalBody = require('pui-react-modals').ModalBody;
 var ModalFooter = require('pui-react-modals').ModalFooter;
@@ -159,6 +162,24 @@ var RegistryServices = require('../shared/registryServices.jsx');
                                             </span>
 }
                                         </p>
+
+                                        <p className="type-dark-4 mvn type-sm mtl">
+                                            <span className="mrl em-alt">
+                                                Tags:
+                                                <InlineList divider>
+                                                    {this
+                                                        .props
+                                                        .serviceEntry
+                                                        .tags
+                                                        .map(function (tag) {
+                                                            return <ListItem>
+                                                                {tag}</ListItem>
+                                                        })
+                    }
+                                                </InlineList>
+                                            </span>
+                                        </p>
+
                                     </div>
                                 </div>
                             </div>

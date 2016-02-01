@@ -1,6 +1,7 @@
 package org.cf.serviceregistrybroker.model;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.CollectionTable;
@@ -45,6 +46,12 @@ public class ServiceInstanceBinding {
 	@JsonProperty("app_guid")
 	@Column(nullable = false)
 	private String appGuid;
+	
+	@JsonSerialize
+	@JsonProperty("tags")
+	@Column(nullable = true, length = 512)
+	private String tags;
+
 
 	@ElementCollection(fetch = FetchType.LAZY)
 	@MapKeyColumn(name="name")
@@ -63,6 +70,7 @@ public class ServiceInstanceBinding {
 			String serviceInstanceId,
 			String serviceId,
 			String planId,
+			List<String> bullets,
 			Map<String,String> credentials,
 			String syslogDrainUrl, String appGuid) {
 		this.id = id;
@@ -71,7 +79,7 @@ public class ServiceInstanceBinding {
 		this.instanceId = serviceInstanceId;
 		this.syslogDrainUrl = syslogDrainUrl;
 		this.appGuid = appGuid;
-		
+		this.tags = bullets.toString();
 		this.credentials = credentials;
 	}
 
@@ -81,6 +89,14 @@ public class ServiceInstanceBinding {
 
 	public void setSyslogDrainUrl(String syslogDrainUrl) {
 		this.syslogDrainUrl = syslogDrainUrl;
+	}
+
+	public String getTags() {
+		return tags;
+	}
+
+	public void setTags(String tags) {
+		this.tags = tags;
 	}
 
 	@Override
@@ -166,10 +182,11 @@ public class ServiceInstanceBinding {
 	
 	@Override
 	public String toString() {
-		return "ServiceInstanceBinding [id=" + id + ", instanceId="
-				+ instanceId + ", serviceId=" + serviceId + ", planId="
-				+ planId + ", appGuid=" + appGuid + ", credentials="
-				+ credentials + ", syslogDrainUrl=" + syslogDrainUrl + "]";
+		return "ServiceInstanceBinding [id=" + id + ", instanceId=" + instanceId 
+				+ ", serviceId=" + serviceId + ", planId=" + planId 
+				+ ", appGuid=" + appGuid + ", tags=" + tags 
+				+ ", credentials=" + credentials
+				+ ", syslogDrainUrl=" + syslogDrainUrl + "]";
 	}
 
 

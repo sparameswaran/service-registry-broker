@@ -1,23 +1,29 @@
 package org.cf.serviceregistrybroker.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
@@ -40,6 +46,12 @@ public class ServiceDefinition {
 
 	@Column(nullable = false)
 	private boolean bindable = true;
+	
+	@ElementCollection (targetClass=String.class, fetch = FetchType.LAZY)
+	@CollectionTable(name = "service_definition_tags", uniqueConstraints = @UniqueConstraint(columnNames = {
+	        "service_definition_id", "tags" }))
+	@JsonDeserialize(as = ArrayList.class, contentAs = String.class)
+	private List<String> tags = new ArrayList<String>();
 
 	// Dont miss the mappedBy tag - persistence of the owned relationship will falter...
 	@OneToMany(mappedBy="service", orphanRemoval = true, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
@@ -98,11 +110,23 @@ public class ServiceDefinition {
 	public boolean isBindable() {
 		return bindable;
 	}
+	
+	public boolean isPlanUpdateable() {
+		return true;
+	}
 
 	public void setBindable(boolean bindable) {
 		this.bindable = bindable;
 	}
 
+	public List<String> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<String> tags) {
+		this.tags = tags;
+	}
+	
 	public Set<Plan> getPlans() {
 		return plans;
 	}
@@ -196,6 +220,10 @@ public class ServiceDefinition {
 		
 		if (from.bindable != this.bindable ) {
 			this.bindable = from.bindable;
+		}
+		
+		if (from.tags != null ) {
+			this.tags = from.tags;
 		}
 		
 		if (from.metadata != null)

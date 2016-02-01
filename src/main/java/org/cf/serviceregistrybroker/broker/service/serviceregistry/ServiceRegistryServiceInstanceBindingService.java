@@ -64,14 +64,19 @@ public class ServiceRegistryServiceInstanceBindingService implements ServiceInst
 		String planId = serviceInstance.getPlanId();
 		Plan underlyingPlan = planRepository.findOne(planId);
 		
-		Map<String, String> credMap = new HashMap<String, String>();
 		Credentials creds = underlyingPlan.getCredentials();
+		Map<String, String> credMap = creds.getEntries();
+		Map<String, Object> additionalParamMap = serviceInstance.getParameters();
+		for(String additionalKey : additionalParamMap.keySet()) {
+			credMap.put(additionalKey, "" + additionalParamMap.get(additionalKey));
+		}
 		
 		ServiceInstanceBinding binding = new ServiceInstanceBinding(bindingId,
 												serviceInstanceId, 
 												serviceInstance.getServiceId(), 
-												planId, 
-												creds.getEntries(), 
+												planId,
+												underlyingPlan.getMetadata().getBullets(),
+												credMap, 
 												null,
 												request.getAppGuid());
 

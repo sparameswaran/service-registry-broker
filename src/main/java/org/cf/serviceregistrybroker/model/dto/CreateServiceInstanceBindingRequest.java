@@ -1,4 +1,4 @@
-package org.cf.serviceregistrybroker.model.dto;
+	package org.cf.serviceregistrybroker.model.dto;
 
 import java.util.Map;
 import java.util.Objects;

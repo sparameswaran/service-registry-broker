@@ -130,6 +130,7 @@ public class CreateServiceInstanceRequest {
 		instance.setOrgGuid(organizationGuid);
 		instance.setSpaceGuid(spaceGuid);
 		instance.setServiceId(serviceDefinitionId);
+		instance.setParameters(parameters);
 		return instance;
 	}
 	

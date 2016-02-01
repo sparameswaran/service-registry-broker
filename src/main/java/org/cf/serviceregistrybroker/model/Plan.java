@@ -1,5 +1,6 @@
 package org.cf.serviceregistrybroker.model;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -17,9 +18,9 @@ import org.apache.log4j.Logger;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
@@ -125,7 +126,7 @@ public class Plan {
 	public PlanMetadata getMetadata() {
 		return metadata;
 	}
-
+	
 	public void setMetadata(PlanMetadata planMetadata) {
 		this.metadata = planMetadata;
 	}

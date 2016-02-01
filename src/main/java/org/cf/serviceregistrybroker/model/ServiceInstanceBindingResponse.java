@@ -1,9 +1,8 @@
-package org.cf.serviceregistrybroker.model.dto;
+package org.cf.serviceregistrybroker.model;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.cf.serviceregistrybroker.model.ServiceInstanceBinding;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -17,7 +16,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
  * request is successful.
  * 
  * @author sgreenberg@gopivotal.com
- * @author <A href="mailto:josh@joshlong.com">Josh Long</A>
+ * @author josh@joshlong.com
  * @author sparameswaran@pivotal.io
  */
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE)
@@ -38,7 +37,7 @@ public class ServiceInstanceBindingResponse {
 	public Map<String, Object> getCredentials() {
 		return convertToObjectMap(binding.getCredentials());
 	}
-
+	
 	@JsonSerialize
 	@JsonProperty("syslog_drain_url")
 	@JsonInclude(JsonInclude.Include.NON_NULL)

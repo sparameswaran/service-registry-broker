@@ -3,6 +3,9 @@
         "name": "ServiceName1",
         "description": "Sample Description 1",
         "bindable": true,
+        "tags": [
+                        "SomeService1", "Service Type"
+        ],
         "metadata": {
             "displayName": "Short display name..",
             "imageUrl": "/images/pivotal-img.png",
@@ -70,6 +73,9 @@
         "name": "ServiceName2",
         "description": "Sample 2 Description.....",
         "bindable": true,
+        "tags": [
+                        "SomeService2", "Service Type"
+        ],
         "metadata": {
             "displayName": "Short display name....",
             "imageUrl": "/images/pivotal-img.png",
