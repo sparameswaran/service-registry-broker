@@ -53,6 +53,5 @@ public class ServiceRepositoryTest {
 		assertEquals(HttpStatus.OK, resp.getStatusCode());
 		
 		printBeans();
-		System.out.println("Finished ServiceRepo test");
 	}
 }

@@ -54,7 +54,6 @@ public class ServiceMetadata {
 	}
 
 	public void setImageUrl(String imageUrl) {
-		System.out.println("Image url being set to: " + imageUrl);
 		this.imageUrl = imageUrl;
 	}
 

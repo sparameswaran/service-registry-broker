@@ -8,8 +8,10 @@ import org.cf.serviceregistrybroker.model.Plan;
 import org.cf.serviceregistrybroker.model.PlanMetadata;
 import org.cf.serviceregistrybroker.model.ServiceDefinition;
 import org.cf.serviceregistrybroker.model.ServiceInstance;
+import org.cf.serviceregistrybroker.model.ServiceInstanceBinding;
 import org.cf.serviceregistrybroker.model.ServiceMetadata;
 import org.cf.serviceregistrybroker.repository.ServiceDefinitionRepository;
+import org.cf.serviceregistrybroker.repository.ServiceInstanceBindingRepository;
 import org.cf.serviceregistrybroker.repository.ServiceInstanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,6 +24,9 @@ public class DatabaseInitialiser  {
 
 	@Autowired
 	ServiceInstanceRepository serviceInstanceRepo;
+	
+	@Autowired
+	ServiceInstanceBindingRepository serviceInstanceBindingRepo;
 
     private ServiceDefinition service() {
         ServiceDefinition svc = new ServiceDefinition();
@@ -68,7 +73,7 @@ public class DatabaseInitialiser  {
     	return svcI;
     }
 
-    /*
+    
     private ServiceInstanceBinding serviceBinding() {
     	ServiceInstanceBinding svcB = new ServiceInstanceBinding();
     	svcB.setAppGuid("test-app-guid");
@@ -80,13 +85,13 @@ public class DatabaseInitialiser  {
 
     	return svcB;
     }
-	*/
 
     @PostConstruct
     public void load() {
-        // Initialise your database here: create schema, use DBUnit to load data, etc.
+        // Initialize your database here: create schema, use DBUnit to load data, etc.
 		serviceRepo.save(service());
 		serviceInstanceRepo.save(serviceInstance());
+		serviceInstanceBindingRepo.save(serviceBinding());
     }
 
 
