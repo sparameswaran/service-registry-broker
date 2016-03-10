@@ -31,6 +31,7 @@ var TagsEditor = require('./tagsEditor.jsx');
             var serviceLongDescrp = '';
             var imageUrl = '';
             var displayName = '';
+            var visible = false;
             var providerDisplayName = '';
             var docUrl = '';
             var supportUrl = '';
@@ -48,6 +49,7 @@ var TagsEditor = require('./tagsEditor.jsx');
         reloadService: function (serviceEntry) {
 
             var name = serviceEntry.name;
+            var visible = serviceEntry.visible;
             var description = serviceEntry.description;
             var longDescription = serviceEntry.metadata.longDescription;
             var imageUrl = serviceEntry.metadata.imageUrl;

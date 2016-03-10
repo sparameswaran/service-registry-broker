@@ -25,6 +25,8 @@ var TagsEditor = require('./tagsEditor.jsx');
             var planName = '';
             var planDescrp = '';
             var cost = 0.0;
+            var visible = false;
+            var free = true;
             var units = 'MONTHLY';
             var currency = 'usd';
             var rawTagList = [];
@@ -79,6 +81,8 @@ var TagsEditor = require('./tagsEditor.jsx');
                 serviceId: serviceId,
                 planName: planName,
                 planDescrp: planDescrp,
+                free: free,
+                visible: visible,
                 cost: cost,
                 units: units,
                 currency: currency,
@@ -92,6 +96,8 @@ var TagsEditor = require('./tagsEditor.jsx');
             var planName = planEntry.name;
             var planDescrp = planEntry.description;
 
+			var free = planEntry.free;
+			var visible = planEntry.visible;
             var cost = 0.0;
             var units = 'MONTHLY';
             var currency = 'usd';
@@ -138,6 +144,8 @@ var TagsEditor = require('./tagsEditor.jsx');
                 planId: planEntry.id,
                 planName: planName,
                 planDescrp: planDescrp,
+                free: free,
+                visible: visible,
                 cost: cost,
                 units: units,
                 currency: currency,
@@ -145,6 +153,12 @@ var TagsEditor = require('./tagsEditor.jsx');
             });
         },
 
+		handleChange: function(field, e) {
+		    var nextState = {}
+		    nextState[field] = e.target.checked
+		    this.setState(nextState)
+		  },
+		  
         handleSubmit: function (event) {
 
             console.log("Got handleSubmitRow! with state: ", this.state);
@@ -160,9 +174,13 @@ var TagsEditor = require('./tagsEditor.jsx');
                     .getDOMNode()
                     .value,
                 free: this.refs
-                    .free
+                    .freePlan
                     .getDOMNode()
-                    .checked
+                    .checked,
+                visible: this.refs
+                    .visiblePlan
+                    .getDOMNode()
+                    .checked    
             }
 
             var cost = parseInt(this.refs.cost.getDOMNode().value);
@@ -263,7 +281,17 @@ var TagsEditor = require('./tagsEditor.jsx');
                                         <h4>Free Plan &nbsp;
                                         </h4>
                                     </label>
-                                    <input type="checkbox" ref="free"/>
+                                    <input type="checkbox" ref="freePlan" checked={this.state.free} onChange={this.handleChange.bind(this, 'free')}/>
+
+                                </div>
+                                <br/>
+                                <div>
+
+                                    <label for="visiblePlan" class="mrs">
+                                        <h4>Visible in Marketplace &nbsp;
+                                        </h4>
+                                    </label>
+                                    <input type="checkbox" ref="visiblePlan" checked={this.state.visible}  onChange={this.handleChange.bind(this, 'visible')}/>
 
                                 </div>
                                 <br/>

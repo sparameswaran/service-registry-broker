@@ -34,9 +34,16 @@ var RegistryServices = require('../shared/registryServices.jsx');
                 .modal
                 .open();
         },
+        
+         _openVisibleModal: function () {
+            console.log("Got open visible modal event!...");
+            this.refs
+                .visibleModal
+                .open();
+        },
 
-        /*
-    RegistryServices.deleteService(this.props.serviceEntry.id).done(() => {     
+      /*
+      RegistryServices.deleteService(this.props.serviceEntry.id).done(() => {     
             console.log("Done deleting service with id: ", this.props.serviceEntry.id);
       })
       .fail(() => {     
@@ -44,7 +51,7 @@ var RegistryServices = require('../shared/registryServices.jsx');
       }
             
       );
-*/
+      */
 
         openErrorModal: function () {
             console.log("Got open error modal event!...");
@@ -93,11 +100,45 @@ var RegistryServices = require('../shared/registryServices.jsx');
                 });
 
         },
+        
+        _visibleModal: function () {
+            this.refs
+                .visibleModal
+                .close();
+            console.log("Got visible modal event!...");
+            RegistryServices.editServiceVisibility(this.props.serviceEntry.id, true)
+                .then(() => {
+                    console.log("Done changing visibility of service with name: ", this.props.serviceEntry.name);
+
+                    var router = Router.create({});
+                    router.transitionTo('/');
+                }, (error) => {
+                    console.log('Error in changing visibility of Service, error code: ', error.status, ':', error.statusText, ', msg: ', error.responseText);
+
+                    var msg = 'code: ' + error.status + ', status: ' + error.statusText + ', detail: ' + error.responseText;
+                    this.setState({
+                        errorMsg: msg
+                    });
+
+                    this.refs
+                        .errorModal
+                        .open();
+                });
+
+        },
 
         _cancelModal: function () {
             console.log("Got cancel modal event!...");
             this.refs
                 .modal
+                .close();
+                
+        },
+        
+        _cancelVisibleModal: function () {
+            console.log("Got cancel visible modal event!...");
+            this.refs
+                .visibleModal
                 .close();
         },
 
@@ -183,11 +224,24 @@ var RegistryServices = require('../shared/registryServices.jsx');
                                     </div>
                                 </div>
                             </div>
-                            <div className="media-body media-middle txt-r">
+                            <div className="media-body media-middle txt-l">
                                 <div className="btn-group" role="group" aria-label="...">
 
                                     <DefaultButton id='openEditButton' className="btn btn-default" onClick={this.onEditService}>Edit Service</DefaultButton>
-                                    <DefaultButton id='openDeleteButton' className="btn btn-default type-error-4 mls" onClick={this._openModal}>Delete Service</DefaultButton>
+                                    <DefaultButton id='openVisibleButton' className="btn btn-highlight mls" onClick={this._openVisibleModal}>Make Public</DefaultButton>
+                            		<DefaultButton id='openDeleteButton' className="btn btn-default type-error-4 mls" onClick={this._openModal}>Delete Service</DefaultButton>
+
+                                    <Modal title='Change Service Visibility!' isOpen={this._openVisibleModal} onRequestClose={this._cancelModal} ref='visibleModal' className='optional-custom-class media-body media-middle txt-l'>
+                                        <ModalBody class="media-body media-middle txt-l">
+                                            Confirm making the Service and all associated plans public and visible:
+                                            <b>{this.props.serviceEntry.name}</b>
+                                        </ModalBody>
+                                        <ModalFooter>
+                                            <DefaultButton id='cancelVButton' onClick={this._cancelVisibleModal}>Cancel</DefaultButton>
+                                            <DefaultButton id='visibleButton' onClick={this._visibleModal}>Make Service Public</DefaultButton>
+                                        </ModalFooter>
+                                    </Modal>
+
                                     <Modal title='Delete Service!' isOpen={this._openModal} onRequestClose={this._cancelModal} ref='modal' className='optional-custom-class media-body media-middle txt-l'>
                                         <ModalBody class="media-body media-middle txt-l">
                                             Confirm deletion of Service:

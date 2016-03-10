@@ -44,7 +44,7 @@ public class ServiceInstanceBinding {
 
 	@JsonSerialize
 	@JsonProperty("app_guid")
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private String appGuid;
 	
 	@JsonSerialize

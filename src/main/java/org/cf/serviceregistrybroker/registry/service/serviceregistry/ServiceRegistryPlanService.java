@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.cf.serviceregistrybroker.cfutils.CFAppManager;
+import org.cf.serviceregistrybroker.cfutils.ServiceBrokerAppResource;
 import org.cf.serviceregistrybroker.exception.PlanDoesNotExistException;
 import org.cf.serviceregistrybroker.exception.ResourceDoesNotExistException;
 import org.cf.serviceregistrybroker.exception.ResourceExistsException;
@@ -20,6 +22,7 @@ import org.cf.serviceregistrybroker.registry.service.CredentialsService;
 import org.cf.serviceregistrybroker.registry.service.PlanService;
 import org.cf.serviceregistrybroker.repository.PlanRepository;
 import org.cf.serviceregistrybroker.repository.ServiceDefinitionRepository;
+import org.cloudfoundry.client.CloudFoundryClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +39,13 @@ public class ServiceRegistryPlanService implements PlanService {
 	
 	@Autowired
 	CredentialsService credsService;
-
+	
+	@Autowired
+	CloudFoundryClient cfClient;	
+	
+	@Autowired
+	ServiceBrokerAppResource serviceBrokerResource;
+	
 	private Plan findByNameOrId(String nameOrId) throws PlanDoesNotExistException {
 		if (nameOrId == null)
 			throw new PlanDoesNotExistException(null);;
@@ -106,7 +115,8 @@ public class ServiceRegistryPlanService implements PlanService {
 			credsService.add(newPlan.getId(), creds);
 		}
 
-		serviceRepository.save(parentService);				
+		serviceRepository.save(parentService);		
+		serviceBrokerResource.updateServiceBroker(cfClient);
 		return newPlan;
 	}
 
@@ -119,6 +129,7 @@ public class ServiceRegistryPlanService implements PlanService {
 		plan.update(updateTo);
 
 		planRepository.save(plan);
+		serviceBrokerResource.updateServiceBroker(cfClient);
 		return plan;
 	}
 
@@ -129,10 +140,11 @@ public class ServiceRegistryPlanService implements PlanService {
 			Plan plan = findOne(planId);
 			credsService.delete(plan.getCredentials().getId());
 			planRepository.delete(planId);
+			serviceBrokerResource.updateServiceBroker(cfClient);
 			return plan;
 		} catch(Exception e) { 
 			return null; 
-		}		
+		}
 	}
 
 	@Override
@@ -151,23 +163,34 @@ public class ServiceRegistryPlanService implements PlanService {
 					throw new ResourceExistsException(newPlan.getName());
 			}
 			this.add(ownerId, newPlan);
-		}			
+		}
+		serviceBrokerResource.updateServiceBroker(cfClient);
 		return;
 	}
 
 	@Override
-	public Object deleteChild(String ownerId, String childId)
+	public Object deleteChild(String planId, String childId)
 			throws ResourceDoesNotExistException,
 			ResourceNotDeletableException {
 		
-		Plan plan = findOne(ownerId);
+		Plan plan = findOne(planId);
 		Credentials creds = plan.getCredentials();
 		if (creds != null && childId.equals(plan.getCredentials().getId())) {
 			plan.setCredentials(null);
 			credsService.delete(childId);
 			planRepository.save(plan);
 		}
+		serviceBrokerResource.updateServiceBroker(cfClient);
 		return plan;
+	}
+	
+	public void updateServicePlanDefinitionVisibility(String planId, boolean isVisible) 
+			throws ResourceDoesNotExistException {
+		Plan plan = findOne(planId);
+		
+		plan.setVisible(isVisible);
+		planRepository.save(plan);
+		serviceBrokerResource.updatePlanVisibilityOfServiceBroker(cfClient, plan.getService().getName(), plan.getName(), isVisible);
 	}
 
 }

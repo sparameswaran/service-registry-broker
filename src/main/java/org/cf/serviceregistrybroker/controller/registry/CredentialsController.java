@@ -1,8 +1,5 @@
 package org.cf.serviceregistrybroker.controller.registry;
 
-import java.util.Optional;
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 import org.cf.serviceregistrybroker.controller.broker.BaseController;
 import org.cf.serviceregistrybroker.exception.CredentialsDoesNotExistException;
@@ -10,7 +7,6 @@ import org.cf.serviceregistrybroker.exception.ResourceDoesNotExistException;
 import org.cf.serviceregistrybroker.exception.ResourceNotDeletableException;
 import org.cf.serviceregistrybroker.model.Credentials;
 import org.cf.serviceregistrybroker.model.Plan;
-import org.cf.serviceregistrybroker.registry.service.serviceregistry.ServiceRegistryCredentialsService;
 import org.cf.serviceregistrybroker.registry.service.serviceregistry.ServiceRegistryPlanService;
 import org.cf.serviceregistrybroker.repository.CredentialsRepository;
 import org.cf.serviceregistrybroker.repository.PlanRepository;
@@ -24,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.cf.serviceregistrybroker.registry.service.serviceregistry.ServiceRegistryCredentialsService;
 
 @RestController
 public class CredentialsController  extends BaseController {
@@ -44,6 +41,7 @@ public class CredentialsController  extends BaseController {
 	
 	@Autowired
 	ServiceRegistryCredentialsService credsService;
+	
 	
 	private ResponseEntity<Object> planNotFound(String planId) {
 		log.error("Error: Plan not found with id: " + planId);

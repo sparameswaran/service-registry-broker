@@ -37,6 +37,40 @@ var Router = require('react-router');
                 .modal
                 .open();
         },
+        
+        _openVisibleModal: function () {
+            console.log("Got open visible modal event!...");
+            this.refs
+                .visibleModal
+                .open();
+        },
+        
+        _visibleModal: function () {
+            this.refs
+                .visibleModal
+                .close();
+            console.log("Got visible modal event!...");
+            RegistryServices.editPlanVisibility(this.props.id, true)
+                .then(() => {
+                    console.log("Done changing visibility of service plan with name: ", this.props.name);
+
+                    var router = Router.create({});
+                    router.transitionTo('/');
+                }, (error) => {
+                    console.log('Error in changing visibility of Plan, error code: ', error.status, ':', error.statusText, ', msg: ', error.responseText);
+
+                    var msg = 'code: ' + error.status + ', status: ' + error.statusText + ', detail: ' + error.responseText;
+                    this.setState({
+                        errorMsg: msg
+                    });
+
+                    this.refs
+                        .errorModal
+                        .open();
+                });
+
+        },
+        
 
         _deleteModal: function () {
             console.log("Got delete modal event!...");
@@ -93,6 +127,14 @@ var Router = require('react-router');
                 .modal
                 .close();
         },
+        
+        _cancelVisibleModal: function () {
+            console.log("Got cancel visible modal event!...");
+            this.refs
+                .visibleModal
+                .close();
+        },
+        
 
         onEditPlan: function () {
 
@@ -140,7 +182,22 @@ var Router = require('react-router');
                         <div className="btn-group" role="group" aria-label="...">
 
                             <DefaultButton id='openEditButton' className="btn btn-default" onClick={this.onEditPlan}>Edit Plan</DefaultButton>
-                            <DefaultButton id='openDeleteButton' className="btn btn-default type-error-4  mls" onClick={this._openModal}>Delete Plan</DefaultButton>
+                            { !this.props.visible &&
+                            	(<DefaultButton id='openVisibleButton' className="btn btn-highlight mls" onClick={this._openVisibleModal}>Make Public</DefaultButton>)
+                            }
+                            <DefaultButton id='openDeleteButton' className="btn btn-default type-error-4 mls" onClick={this._openModal}>Delete</DefaultButton>
+                            
+                            <Modal title='Change Plan Visibility!' isOpen={this._openVisibleModal} onRequestClose={this._cancelVisibleModal} ref='visibleModal' className='optional-custom-class media-body media-middle txt-l'>
+                                <ModalBody class="media-body media-middle txt-l">
+                                    Confirm making the Plan public and visible:
+                                    <b>{this.props.name}</b>
+                                </ModalBody>
+                                <ModalFooter>
+                                    <DefaultButton id='cancelVButton' onClick={this._cancelVisibleModal}>Cancel</DefaultButton>
+                                    <DefaultButton id='visibleButton' onClick={this._visibleModal}>Make Plan Public</DefaultButton>
+                                </ModalFooter>
+                            </Modal>
+                           
                             <Modal title='Delete Service!' isOpen={this._openModal} onRequestClose={this._cancelModal} ref='modal' className='optional-custom-class media-body media-middle txt-l'>
                                 <ModalBody>
                                     Confirm deletion of Plan:
@@ -187,6 +244,13 @@ var Router = require('react-router');
                         </p>
                         <p className="type-dark-4  mvn type-sm mtl">
                             Cost : {costPrice}, charged {unit}
+                        </p>
+                    </p>
+                    <p className="type-dark-4 mvn type-sm mtl">
+                        <p className="mvn type-dark-4 type-xs em-alt em-default label-alt">
+                            Visible : {this.props.visible
+                                ? "true"
+                                : "false"}
                         </p>
                     </p>
 

@@ -14,6 +14,9 @@ public interface ServiceDefinitionService<ServiceDefinition> extends ServiceRegi
 			throws ServiceDefinitionDoesNotExistException;	
 	
 	Collection findServiceDefinitionByName(String startname)
-			throws ServiceDefinitionDoesNotExistException;	
+			throws ServiceDefinitionDoesNotExistException;
+	
+	void updateServiceDefinitionVisibility(String serviceId, boolean isVisible) 
+			throws ServiceDefinitionDoesNotExistException;
 	
 }

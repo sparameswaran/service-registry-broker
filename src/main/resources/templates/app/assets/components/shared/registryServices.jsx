@@ -70,6 +70,22 @@ var $ = require('jquery');
 		    }
 		    });
         },
+        editServiceVisibility: function(serviceId, visibleStatus) {
+            return $.ajax( { 
+            url: baseURL + "/servicesVisibility/" + serviceId , 
+            type: "PATCH",
+            async: false, 
+            headers: { 
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json' 
+                },
+            dataType: 'json',
+            data: JSON.stringify( { visible : visibleStatus }), 
+            success: function() {
+                console.log("Finished updating service visibility...");
+            }
+            });
+        },
         deleteService: function(serviceId) {
             return $.ajax( { 
             url: baseURL + "/services/" + serviceId, 
@@ -115,6 +131,22 @@ var $ = require('jquery');
 		        console.log("Finished updating plan...");
 		    }
 		    });
+        },
+        editPlanVisibility: function(planId, visibleStatus) {
+            return $.ajax( { 
+            url: baseURL + "/plansVisibility/" + planId , 
+            type: "PATCH",
+            async: false, 
+            headers: { 
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json' 
+                },
+            dataType: 'json',
+            data: JSON.stringify( { visible : visibleStatus } ), 
+            success: function() {
+                console.log("Finished updating plan visibility...");
+            }
+            });
         },        
         deletePlan: function(planId) {
             return $.ajax( { 

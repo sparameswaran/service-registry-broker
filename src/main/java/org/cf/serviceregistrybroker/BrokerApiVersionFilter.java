@@ -30,7 +30,7 @@ final class BrokerApiVersionFilter extends OncePerRequestFilter {
 
     private static final String HEADER = "X-Broker-Api-Version";
 
-    private static final String VALID_VERSIONS = "~2.3";
+    private static final String VALID_VERSIONS = "^2.3";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -42,7 +42,7 @@ final class BrokerApiVersionFilter extends OncePerRequestFilter {
             return;
         }
 
-        Integer[] parsed = parse(header);
+        Integer[] parsed = parse(header);        
         Version version = Version.forIntegers(parsed[0], parsed[1]);
         if (!version.satisfies(VALID_VERSIONS)) {
             response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);

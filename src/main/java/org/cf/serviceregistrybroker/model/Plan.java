@@ -49,6 +49,10 @@ public class Plan {
 	@JsonProperty("free")
 	@Column(nullable = true)
 	private Boolean isFree = Boolean.TRUE;
+	
+	@JsonProperty("visible")
+	@Column(nullable = true)
+	private Boolean isVisible = Boolean.FALSE;
 
 	@OneToOne(orphanRemoval = true, cascade = CascadeType.MERGE, fetch=FetchType.LAZY, optional = true)
 	@JoinColumn(name = "plan_cred_id", insertable=true, updatable=true, nullable=true, unique=true)
@@ -105,6 +109,14 @@ public class Plan {
 		this.name = name; 
 	}
 	
+	public Boolean isVisible() {
+		return isVisible;
+	}
+
+	public void setVisible(Boolean isVisible) {
+		this.isVisible = isVisible;
+	}
+
 	@JsonIgnore
 	public Credentials getCredentials() {
 		return credentials;
@@ -208,6 +220,7 @@ public class Plan {
 		if (updateTo.credentials != null)
 			this.credentials.update(updateTo.credentials);
 		
+		this.isVisible = updateTo.isVisible;
 	}
 	
 	

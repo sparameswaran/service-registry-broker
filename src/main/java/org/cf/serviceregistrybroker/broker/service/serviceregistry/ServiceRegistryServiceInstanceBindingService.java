@@ -68,10 +68,18 @@ public class ServiceRegistryServiceInstanceBindingService implements ServiceInst
 		Map<String, String> credMap = creds.getEntries();
 		Map<String, Object> additionalParamMap = serviceInstance.getParameters();
 		if (additionalParamMap != null) {
-	 		for(String additionalKey : additionalParamMap.keySet()) {
-				credMap.put(additionalKey, "" + additionalParamMap.get(additionalKey));
+	 		for(String key : additionalParamMap.keySet()) {
+				credMap.put(key, "" + additionalParamMap.get(key));
 			}
 		}
+		
+		additionalParamMap = request.getParameters();
+		if (additionalParamMap != null) {
+			for(String key: additionalParamMap.keySet()) {
+				credMap.put(key, "" + additionalParamMap.get(key));
+			}
+		}
+		
 		
 		ServiceInstanceBinding binding = new ServiceInstanceBinding(bindingId,
 												serviceInstanceId, 

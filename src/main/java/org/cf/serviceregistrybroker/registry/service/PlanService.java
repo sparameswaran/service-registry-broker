@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.cf.serviceregistrybroker.exception.PlanDoesNotExistException;
 import org.cf.serviceregistrybroker.exception.PlanExistsException;
+import org.cf.serviceregistrybroker.exception.ResourceDoesNotExistException;
 import org.cf.serviceregistrybroker.exception.ServiceDefinitionDoesNotExistException;
 import org.cf.serviceregistrybroker.model.Plan;
 
@@ -12,5 +13,6 @@ import org.cf.serviceregistrybroker.model.Plan;
  *
  */
 public interface PlanService<Plan> extends ServiceRegistryBaseService {
-	
+	void updateServicePlanDefinitionVisibility(String planId, boolean isVisible) 
+			throws ResourceDoesNotExistException;	
 }

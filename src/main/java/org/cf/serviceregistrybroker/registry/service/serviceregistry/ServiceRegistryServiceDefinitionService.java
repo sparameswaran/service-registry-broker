@@ -2,12 +2,13 @@ package org.cf.serviceregistrybroker.registry.service.serviceregistry;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.cf.serviceregistrybroker.cfutils.CFAppManager;
+import org.cf.serviceregistrybroker.cfutils.ServiceBrokerAppResource;
 import org.cf.serviceregistrybroker.exception.MethodNotSupportedException;
 import org.cf.serviceregistrybroker.exception.ResourceDoesNotExistException;
 import org.cf.serviceregistrybroker.exception.ResourceExistsException;
@@ -22,7 +23,13 @@ import org.cf.serviceregistrybroker.registry.service.PlanService;
 import org.cf.serviceregistrybroker.registry.service.ServiceDefinitionService;
 import org.cf.serviceregistrybroker.repository.PlanRepository;
 import org.cf.serviceregistrybroker.repository.ServiceDefinitionRepository;
+import org.cloudfoundry.client.CloudFoundryClient;
+import org.cloudfoundry.client.v2.servicebrokers.ServiceBrokerResource;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,7 +37,13 @@ public class ServiceRegistryServiceDefinitionService implements
 		ServiceDefinitionService {
 
 	private static final Logger log = Logger.getLogger(ServiceRegistryServiceDefinitionService.class);
-
+	private static final String VCAP_APPLICATION_URI = "application_uris";
+	
+	@Value("${VCAP_APPLICATION}")
+    private static String vcapAppEnv;
+	
+	private static String[] cfAppUris;
+	
 	@Autowired
 	PlanRepository planRepository;
 	
@@ -42,6 +55,12 @@ public class ServiceRegistryServiceDefinitionService implements
 
 	@Autowired
 	CredentialsService credentialsService;
+	
+	@Autowired
+	CloudFoundryClient cfClient;
+	
+	@Autowired
+	ServiceBrokerAppResource serviceBrokerResource;
 	
 	private ServiceDefinition findByNameOrId(String nameOrId) throws ServiceDefinitionDoesNotExistException {
 		if (nameOrId == null)
@@ -60,7 +79,7 @@ public class ServiceRegistryServiceDefinitionService implements
 		
 		return serviceRepository.findOne(id);
 	}
-
+	
 	@Override
 	public Object find(String id) throws ResourceDoesNotExistException {
 		return findByNameOrId(id);
@@ -116,7 +135,8 @@ public class ServiceRegistryServiceDefinitionService implements
 			}
 			serviceRepository.save(newService);			
 		}
-
+		
+		serviceBrokerResource.updateServiceBroker(cfClient);
 		log.debug("Service Definition created: " + newService);		
 		return newService;
 	}
@@ -127,6 +147,8 @@ public class ServiceRegistryServiceDefinitionService implements
 		ServiceDefinition existingService = findOne(updateTo.getId());
 		existingService.update(updateTo);
 		serviceRepository.save(existingService);
+
+		serviceBrokerResource.updateServiceBroker(cfClient);
 		return existingService;
 	}
 
@@ -140,6 +162,7 @@ public class ServiceRegistryServiceDefinitionService implements
 			planService.delete(plan.getId());
 		}
 		serviceRepository.delete(id);
+		serviceBrokerResource.updateServiceBroker(cfClient);
 		return existingService;
 	}
 
@@ -157,6 +180,7 @@ public class ServiceRegistryServiceDefinitionService implements
 		for(Object newService: items) {
 			add(null, newService);
 		}
+		serviceBrokerResource.updateServiceBroker(cfClient);
 	}
 
 	@Override
@@ -174,8 +198,22 @@ public class ServiceRegistryServiceDefinitionService implements
 				return existingService;
 			}
 		}
+		serviceBrokerResource.updateServiceBroker(cfClient);
 		return existingService;
 	}
 
+	public void updateServiceDefinitionVisibility(String serviceId, boolean isVisible) 
+			throws ServiceDefinitionDoesNotExistException {
+		ServiceDefinition serviceDefinition = null;
+		
+		serviceDefinition = findOne(serviceId);
+		log.info("Updating service visibility...");
+		serviceBrokerResource.updateServiceVisibilityOfServiceBroker(cfClient, serviceDefinition.getName(), isVisible);
+		
+		for(Plan plan: serviceDefinition.getPlans()) {
+			plan.setVisible(isVisible);			
+		}
+		serviceRepository.save(serviceDefinition);
+	}
 
 }

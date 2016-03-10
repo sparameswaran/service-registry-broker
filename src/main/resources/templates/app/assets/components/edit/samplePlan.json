@@ -2,6 +2,7 @@
     "description": "Description of Plan.....",
     "name": "SamplePlanName",
     "free": true,
+    "visible": false,
     "metadata": {
         "bullets": [
             "Dev plan for some service", "Service Type", "Free service"

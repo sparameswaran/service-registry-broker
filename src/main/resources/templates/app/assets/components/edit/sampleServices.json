@@ -18,6 +18,7 @@
                 "description": "Description of Plan.....",
                 "name": "SomeSampleQAPlan1",
                 "free": true,
+                "visible": true,
                 "metadata": {
                     "bullets": [
                         "Dev plan for some service", "Service Type", "Free service"
@@ -44,6 +45,7 @@
                 "description": "Description of Additional Plan like Premium, SIT, Prod....",
                 "name": "SomeSampleSITPlan",
                 "free": false,
+                "visible": true,
                 "metadata": {
                     "bullets": [
                         "Prod Plan for some service", "Service Type", "Premium service"
@@ -88,6 +90,7 @@
                 "description": "... Description of Plan.....",
                 "name": "SomeSamplePlan1",
                 "free": true,
+                "visible": true,
                 "metadata": {
                     "bullets": [
                         "Dev plan for some service", "Service Type", "Free service"

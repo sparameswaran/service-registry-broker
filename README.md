@@ -40,13 +40,14 @@ cf create-service EDMSRetreiveInterface basic EDMSRetreiveInterface-basic
 
 # Updating the catalog
 
-After a new service has been registered or after updates on the service registry, update the catalog with the Cloud Foundry controller using update-service-broker api call.
+After a new service has been registered or after updates on the service registry, the catalog with the Cloud Foundry controller would be automatically updated bundled cf-java-client update-service-broker api call. Or it can also be run manually.
 
 ```
 cf update-service-broker service-registry-broker testuser somethingsecure http://service-registry-broker.xyz.com/
 ```
 
-After any addition of a service or an underlying plan, enable access for that service or plan via cf enable-service-acess call.
+After any addition of a service or an underlying plan, enable access for that service or plan via cf enable-service-acess call. 
+Either the entire service and all associated plans can be made public or only a set of plans can be made public.
 
 ```
 cf enable-service-access NewService
@@ -55,7 +56,7 @@ cf enable-service-access ExistingService -p NewPlan
 
 # Using the Service Registry Web UI
 
-Access the web interface of the Service Registry to view current set of services registered in the Registry as well as to add/edit services or plans. After each new addition/deletion or update of service or plan, ensure the Cloud Foundry Controller version of the service registry catalog is refreshed by running the cf update-service-broker call as well as cf emable-service-access call.
+Access the web interface of the Service Registry to view current set of services registered in the Registry as well as to add/edit services or plans. After each new addition/deletion or update of service or plan, changes made via the UI would automatically update the catalog with the Cloud Foundry Controller. Or the same can be achieved by running the cf update-service-broker call as well as cf emable-service-access call.
 
 # Using the Service Registry REST interface
 * List Services

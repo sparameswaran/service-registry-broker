@@ -1,11 +1,11 @@
 package org.cf.serviceregistrybroker.controller.registry;
 
 import java.util.Collection;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.cf.serviceregistrybroker.exception.ResourceDoesNotExistException;
 import org.cf.serviceregistrybroker.exception.ResourceExistsException;
-import org.cf.serviceregistrybroker.exception.ResourceNotDeletableException;
 import org.cf.serviceregistrybroker.model.Credentials;
 import org.cf.serviceregistrybroker.model.Plan;
 import org.cf.serviceregistrybroker.model.ServiceDefinition;
@@ -161,6 +161,21 @@ public class ServicesController {
 			return new ResponseEntity<>(associatedService, HttpStatus.OK);
 		} catch(ResourceDoesNotExistException e) { 
 			return serviceNotFound(serviceIdOrName);
+		}
+	}
+	
+	@RequestMapping(value = "/servicesVisibility/{serviceId}", method = RequestMethod.PATCH)
+	public ResponseEntity<Object> updateServiceVisibility(@PathVariable("serviceId") String serviceId, 
+									@RequestBody Map<String, Boolean> serviceVisibilityMap) {
+
+		ServiceDefinition associatedService = null;
+		try {
+			serviceDefnService.updateServiceDefinitionVisibility(serviceId, serviceVisibilityMap.get("visible"));
+			associatedService = (ServiceDefinition)serviceDefnService.find(serviceId);
+			
+			return new ResponseEntity<>(associatedService, HttpStatus.OK);
+		} catch(ResourceDoesNotExistException e) { 
+			return serviceNotFound(serviceId);
 		}
 	}
 
