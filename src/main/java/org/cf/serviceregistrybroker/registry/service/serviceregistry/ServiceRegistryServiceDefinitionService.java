@@ -137,6 +137,12 @@ public class ServiceRegistryServiceDefinitionService implements
 		}
 		
 		serviceBrokerResource.updateServiceBroker(cfClient);
+		for(Plan newPlan: newService.getPlans()) {
+			if (newPlan.isVisible())
+				serviceBrokerResource.updatePlanVisibilityOfServiceBroker(cfClient, newPlan.getService().getName(), 
+												newPlan.getName(), true);
+		}
+
 		log.debug("Service Definition created: " + newService);		
 		return newService;
 	}
@@ -207,13 +213,15 @@ public class ServiceRegistryServiceDefinitionService implements
 		ServiceDefinition serviceDefinition = null;
 		
 		serviceDefinition = findOne(serviceId);
-		log.info("Updating service visibility...");
-		serviceBrokerResource.updateServiceVisibilityOfServiceBroker(cfClient, serviceDefinition.getName(), isVisible);
-		
 		for(Plan plan: serviceDefinition.getPlans()) {
 			plan.setVisible(isVisible);			
 		}
 		serviceRepository.save(serviceDefinition);
+		
+		log.info("Updating service visibility...");
+		serviceBrokerResource.updateServiceVisibilityOfServiceBroker(cfClient, serviceDefinition.getName(), isVisible);
+		
+		
 	}
 
 }

@@ -117,6 +117,10 @@ public class ServiceRegistryPlanService implements PlanService {
 
 		serviceRepository.save(parentService);		
 		serviceBrokerResource.updateServiceBroker(cfClient);
+		
+		if (newPlan.isVisible()) {
+				serviceBrokerResource.updatePlanVisibilityOfServiceBroker(cfClient, newPlan.getService().getName(), newPlan.getName(), true);
+		}
 		return newPlan;
 	}
 
@@ -165,6 +169,12 @@ public class ServiceRegistryPlanService implements PlanService {
 			this.add(ownerId, newPlan);
 		}
 		serviceBrokerResource.updateServiceBroker(cfClient);
+		for(Plan newPlan: newPlans) {
+			if (newPlan.isVisible()) {
+				serviceBrokerResource.updatePlanVisibilityOfServiceBroker(cfClient, 
+											newPlan.getService().getName(), newPlan.getName(), true);
+			}
+		}
 		return;
 	}
 
@@ -186,8 +196,7 @@ public class ServiceRegistryPlanService implements PlanService {
 	
 	public void updateServicePlanDefinitionVisibility(String planId, boolean isVisible) 
 			throws ResourceDoesNotExistException {
-		Plan plan = findOne(planId);
-		
+		Plan plan = findOne(planId);		
 		plan.setVisible(isVisible);
 		planRepository.save(plan);
 		serviceBrokerResource.updatePlanVisibilityOfServiceBroker(cfClient, plan.getService().getName(), plan.getName(), isVisible);

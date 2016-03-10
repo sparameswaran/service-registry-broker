@@ -232,8 +232,7 @@ public class ServiceBrokerAppResource {
 	
 	public void updateServiceVisibilityOfServiceBroker(CloudFoundryClient cfClient, String targetServiceName, boolean isVisible) {
 		
-		log.info("Enabling ServicePlan visibility for service with name: " + targetServiceName 
-				+ " with appResource: " + this);
+		log.info("Enabling ServicePlan visibility for service with name: " + targetServiceName);
 		
 		// Reload the caches
 		populateManagedServices(cfClient, targetServiceName);
@@ -244,8 +243,10 @@ public class ServiceBrokerAppResource {
 			servicePlanEntry = managedServicePlanMap.get(targetServiceName);
 		}
 	
-		if (servicePlanEntry == null)
+		if (servicePlanEntry == null) {
+			log.error("Unable to find any service associated with service: " + targetServiceName);
 			return;
+		}
 			
 		/*
 		 * This wont work till CC fixes the problem with query thats encoded
@@ -310,7 +311,7 @@ public class ServiceBrokerAppResource {
 		*/
 
 		log.info("Enabling ServicePlan visibility for service with name: " + targetServiceName 
-				+ ", plan name: " + targetPlanName + " and appResource: " + this);
+				+ ", plan name: " + targetPlanName);
 		
 		// Reload the caches
 		populateManagedServices(cfClient, targetServiceName);
@@ -321,13 +322,17 @@ public class ServiceBrokerAppResource {
 			servicePlanEntry = managedServicePlanMap.get(targetServiceName);
 		}
 	
-		if (servicePlanEntry == null)
+		if (servicePlanEntry == null) {
+			log.error("Unable to find any service associated with service: " + targetServiceName);
 			return;
+		}
 		
 		Map<String, String> servicePlanMap = servicePlanEntry.getServicePlanMap();
 		String cfServicePlanId = servicePlanMap.get(targetPlanName);
-		if (cfServicePlanId == null) {
+		if (cfServicePlanId != null) {
 			CFAppManager.requestPublicizeServicePlan(cfClient, cfServicePlanId, isVisible).get();
+		} else {
+			log.error("Unable to find any service plan associated with service: " + targetServiceName + " and plan: " + targetPlanName);
 		}
 
 		log.info("Done with updating visibility of specified service plan");

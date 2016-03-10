@@ -176,11 +176,7 @@ var TagsEditor = require('./tagsEditor.jsx');
                 free: this.refs
                     .freePlan
                     .getDOMNode()
-                    .checked,
-                visible: this.refs
-                    .visiblePlan
-                    .getDOMNode()
-                    .checked    
+                    .checked  
             }
 
             var cost = parseInt(this.refs.cost.getDOMNode().value);
@@ -276,22 +272,11 @@ var TagsEditor = require('./tagsEditor.jsx');
                                 <input className="form-control" type="text" ref="description" placeholder="Enter Plan Description" defaultValue={this.state.planDescrp}/>
                                 <br/>
                                 <div>
-
                                     <label for="freePlan" class="mrs">
                                         <h4>Free Plan &nbsp;
                                         </h4>
                                     </label>
                                     <input type="checkbox" ref="freePlan" checked={this.state.free} onChange={this.handleChange.bind(this, 'free')}/>
-
-                                </div>
-                                <br/>
-                                <div>
-
-                                    <label for="visiblePlan" class="mrs">
-                                        <h4>Visible in Marketplace &nbsp;
-                                        </h4>
-                                    </label>
-                                    <input type="checkbox" ref="visiblePlan" checked={this.state.visible}  onChange={this.handleChange.bind(this, 'visible')}/>
 
                                 </div>
                                 <br/>
