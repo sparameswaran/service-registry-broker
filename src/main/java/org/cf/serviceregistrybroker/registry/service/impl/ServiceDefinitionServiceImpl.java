@@ -1,4 +1,4 @@
-package org.cf.serviceregistrybroker.registry.service.serviceregistry;
+package org.cf.serviceregistrybroker.registry.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,8 +7,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.cf.serviceregistrybroker.cfutils.CFAppManager;
-import org.cf.serviceregistrybroker.cfutils.ServiceBrokerAppResource;
+import org.cf.serviceregistrybroker.cfutils.CFClientManager;
+import org.cf.serviceregistrybroker.cfutils.CFServiceBrokerDelegator;
 import org.cf.serviceregistrybroker.exception.MethodNotSupportedException;
 import org.cf.serviceregistrybroker.exception.ResourceDoesNotExistException;
 import org.cf.serviceregistrybroker.exception.ResourceExistsException;
@@ -33,17 +33,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ServiceRegistryServiceDefinitionService implements
+public class ServiceDefinitionServiceImpl implements
 		ServiceDefinitionService {
 
-	private static final Logger log = Logger.getLogger(ServiceRegistryServiceDefinitionService.class);
-	private static final String VCAP_APPLICATION_URI = "application_uris";
-	
-	@Value("${VCAP_APPLICATION}")
-    private static String vcapAppEnv;
-	
-	private static String[] cfAppUris;
-	
+	private static final Logger log = Logger.getLogger(ServiceDefinitionServiceImpl.class);
+
 	@Autowired
 	PlanRepository planRepository;
 	
@@ -60,7 +54,7 @@ public class ServiceRegistryServiceDefinitionService implements
 	CloudFoundryClient cfClient;
 	
 	@Autowired
-	ServiceBrokerAppResource serviceBrokerResource;
+	CFServiceBrokerDelegator serviceBrokerDelegator;
 	
 	private ServiceDefinition findByNameOrId(String nameOrId) throws ServiceDefinitionDoesNotExistException {
 		if (nameOrId == null)
@@ -136,10 +130,10 @@ public class ServiceRegistryServiceDefinitionService implements
 			serviceRepository.save(newService);			
 		}
 		
-		serviceBrokerResource.updateServiceBroker(cfClient);
+		serviceBrokerDelegator.updateServiceBroker(cfClient);
 		for(Plan newPlan: newService.getPlans()) {
 			if (newPlan.isVisible())
-				serviceBrokerResource.updatePlanVisibilityOfServiceBroker(cfClient, newPlan.getService().getName(), 
+				serviceBrokerDelegator.updatePlanVisibilityOfServiceBroker(cfClient, newPlan.getService().getName(), 
 												newPlan.getName(), true);
 		}
 
@@ -154,7 +148,7 @@ public class ServiceRegistryServiceDefinitionService implements
 		existingService.update(updateTo);
 		serviceRepository.save(existingService);
 
-		serviceBrokerResource.updateServiceBroker(cfClient);
+		serviceBrokerDelegator.updateServiceBroker(cfClient);
 		return existingService;
 	}
 
@@ -168,7 +162,7 @@ public class ServiceRegistryServiceDefinitionService implements
 			planService.delete(plan.getId());
 		}
 		serviceRepository.delete(id);
-		serviceBrokerResource.updateServiceBroker(cfClient);
+		serviceBrokerDelegator.updateServiceBroker(cfClient);
 		return existingService;
 	}
 
@@ -186,7 +180,7 @@ public class ServiceRegistryServiceDefinitionService implements
 		for(Object newService: items) {
 			add(null, newService);
 		}
-		serviceBrokerResource.updateServiceBroker(cfClient);
+		serviceBrokerDelegator.updateServiceBroker(cfClient);
 	}
 
 	@Override
@@ -204,7 +198,7 @@ public class ServiceRegistryServiceDefinitionService implements
 				return existingService;
 			}
 		}
-		serviceBrokerResource.updateServiceBroker(cfClient);
+		serviceBrokerDelegator.updateServiceBroker(cfClient);
 		return existingService;
 	}
 
@@ -219,7 +213,7 @@ public class ServiceRegistryServiceDefinitionService implements
 		serviceRepository.save(serviceDefinition);
 		
 		log.info("Updating service visibility...");
-		serviceBrokerResource.updateServiceVisibilityOfServiceBroker(cfClient, serviceDefinition.getName(), isVisible);
+		serviceBrokerDelegator.updateServiceVisibilityOfServiceBroker(cfClient, serviceDefinition.getName(), isVisible);
 		
 		
 	}

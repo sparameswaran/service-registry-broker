@@ -1,4 +1,4 @@
-package org.cf.serviceregistrybroker.broker.service.serviceregistry;
+package org.cf.serviceregistrybroker.broker.service.impl;
 
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.log4j.Logger;
@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ServiceRegistryCatalogService implements CatalogService {
+public class CatalogServiceImpl implements CatalogService {
 
-	private static final Logger LOG = Logger.getLogger(ServiceRegistryCatalogService.class);
+	private static final Logger LOG = Logger.getLogger(CatalogServiceImpl.class);
 
 	@Autowired
 	ServiceDefinitionRepository serviceRepo;

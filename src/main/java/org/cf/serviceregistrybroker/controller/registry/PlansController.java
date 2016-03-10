@@ -8,7 +8,7 @@ import org.cf.serviceregistrybroker.exception.ResourceDoesNotExistException;
 import org.cf.serviceregistrybroker.exception.ResourceNotDeletableException;
 import org.cf.serviceregistrybroker.model.Plan;
 import org.cf.serviceregistrybroker.registry.service.PlanService;
-import org.cf.serviceregistrybroker.registry.service.serviceregistry.ServiceRegistryServiceDefinitionService;
+import org.cf.serviceregistrybroker.registry.service.impl.ServiceDefinitionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ public class PlansController extends BaseController {
 	private static final Logger log = Logger.getLogger(PlansController.class);
 
 	@Autowired
-	ServiceRegistryServiceDefinitionService serviceDefnService;
+	ServiceDefinitionServiceImpl serviceDefnService;
 	
 	@Autowired
 	PlanService planService;

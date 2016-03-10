@@ -30,9 +30,9 @@ import org.cloudfoundry.client.v2.spaces.ListSpacesRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public class CFAppManager {
+public class CFClientManager {
 
-    private static final Logger log = Logger.getLogger(CFAppManager.class);
+    private static final Logger log = Logger.getLogger(CFClientManager.class);
 
     public static Mono<String> requestDomainId(CloudFoundryClient cloudFoundryClient, String domain) {
     	/*

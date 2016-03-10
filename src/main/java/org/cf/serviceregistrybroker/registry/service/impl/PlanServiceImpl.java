@@ -1,4 +1,4 @@
-package org.cf.serviceregistrybroker.registry.service.serviceregistry;
+package org.cf.serviceregistrybroker.registry.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,8 +8,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.cf.serviceregistrybroker.cfutils.CFAppManager;
-import org.cf.serviceregistrybroker.cfutils.ServiceBrokerAppResource;
+import org.cf.serviceregistrybroker.cfutils.CFClientManager;
+import org.cf.serviceregistrybroker.cfutils.CFServiceBrokerDelegator;
 import org.cf.serviceregistrybroker.exception.PlanDoesNotExistException;
 import org.cf.serviceregistrybroker.exception.ResourceDoesNotExistException;
 import org.cf.serviceregistrybroker.exception.ResourceExistsException;
@@ -27,9 +27,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ServiceRegistryPlanService implements PlanService {
+public class PlanServiceImpl implements PlanService {
 
-	private static final Logger log = Logger.getLogger(ServiceRegistryPlanService.class);
+	private static final Logger log = Logger.getLogger(PlanServiceImpl.class);
 
 	@Autowired
 	ServiceDefinitionRepository serviceRepository;
@@ -44,7 +44,7 @@ public class ServiceRegistryPlanService implements PlanService {
 	CloudFoundryClient cfClient;	
 	
 	@Autowired
-	ServiceBrokerAppResource serviceBrokerResource;
+	CFServiceBrokerDelegator serviceBrokerDelegator;
 	
 	private Plan findByNameOrId(String nameOrId) throws PlanDoesNotExistException {
 		if (nameOrId == null)
@@ -116,10 +116,10 @@ public class ServiceRegistryPlanService implements PlanService {
 		}
 
 		serviceRepository.save(parentService);		
-		serviceBrokerResource.updateServiceBroker(cfClient);
+		serviceBrokerDelegator.updateServiceBroker(cfClient);
 		
 		if (newPlan.isVisible()) {
-				serviceBrokerResource.updatePlanVisibilityOfServiceBroker(cfClient, newPlan.getService().getName(), newPlan.getName(), true);
+			serviceBrokerDelegator.updatePlanVisibilityOfServiceBroker(cfClient, newPlan.getService().getName(), newPlan.getName(), true);
 		}
 		return newPlan;
 	}
@@ -133,7 +133,7 @@ public class ServiceRegistryPlanService implements PlanService {
 		plan.update(updateTo);
 
 		planRepository.save(plan);
-		serviceBrokerResource.updateServiceBroker(cfClient);
+		serviceBrokerDelegator.updateServiceBroker(cfClient);
 		return plan;
 	}
 
@@ -144,7 +144,7 @@ public class ServiceRegistryPlanService implements PlanService {
 			Plan plan = findOne(planId);
 			credsService.delete(plan.getCredentials().getId());
 			planRepository.delete(planId);
-			serviceBrokerResource.updateServiceBroker(cfClient);
+			serviceBrokerDelegator.updateServiceBroker(cfClient);
 			return plan;
 		} catch(Exception e) { 
 			return null; 
@@ -168,10 +168,10 @@ public class ServiceRegistryPlanService implements PlanService {
 			}
 			this.add(ownerId, newPlan);
 		}
-		serviceBrokerResource.updateServiceBroker(cfClient);
+		serviceBrokerDelegator.updateServiceBroker(cfClient);
 		for(Plan newPlan: newPlans) {
 			if (newPlan.isVisible()) {
-				serviceBrokerResource.updatePlanVisibilityOfServiceBroker(cfClient, 
+				serviceBrokerDelegator.updatePlanVisibilityOfServiceBroker(cfClient, 
 											newPlan.getService().getName(), newPlan.getName(), true);
 			}
 		}
@@ -190,7 +190,7 @@ public class ServiceRegistryPlanService implements PlanService {
 			credsService.delete(childId);
 			planRepository.save(plan);
 		}
-		serviceBrokerResource.updateServiceBroker(cfClient);
+		serviceBrokerDelegator.updateServiceBroker(cfClient);
 		return plan;
 	}
 	
@@ -199,7 +199,7 @@ public class ServiceRegistryPlanService implements PlanService {
 		Plan plan = findOne(planId);		
 		plan.setVisible(isVisible);
 		planRepository.save(plan);
-		serviceBrokerResource.updatePlanVisibilityOfServiceBroker(cfClient, plan.getService().getName(), plan.getName(), isVisible);
+		serviceBrokerDelegator.updatePlanVisibilityOfServiceBroker(cfClient, plan.getService().getName(), plan.getName(), isVisible);
 	}
 
 }

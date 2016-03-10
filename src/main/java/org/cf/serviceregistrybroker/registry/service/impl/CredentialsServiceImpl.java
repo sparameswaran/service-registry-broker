@@ -1,4 +1,4 @@
-package org.cf.serviceregistrybroker.registry.service.serviceregistry;
+package org.cf.serviceregistrybroker.registry.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ServiceRegistryCredentialsService implements CredentialsService {
+public class CredentialsServiceImpl implements CredentialsService {
 	
-	private static final Logger log = Logger.getLogger(ServiceRegistryCredentialsService.class);
+	private static final Logger log = Logger.getLogger(CredentialsServiceImpl.class);
 
 	@Autowired
 	PlanService planService;

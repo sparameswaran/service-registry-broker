@@ -24,9 +24,9 @@ import org.springframework.context.annotation.Lazy;
 @Configuration
 @EnableAutoConfiguration
 @Lazy
-public class ServiceBrokerAppResource {
+public class CFServiceBrokerDelegator {
 	private static final String VCAP_APPLICATION_URI = "application_uris";
-	private static final Logger log = Logger.getLogger(ServiceBrokerAppResource.class);
+	private static final Logger log = Logger.getLogger(CFServiceBrokerDelegator.class);
 	
 	private String appName;
 	private String[] appUris;
@@ -46,20 +46,9 @@ public class ServiceBrokerAppResource {
 	
 	private Map<String, ServicePlanEntry> managedServicePlanMap = new HashMap<String, ServicePlanEntry>();
     
-	
-	/*
-	private static ServiceBrokerAppResource theOne = new ServiceBrokerAppResource();
-	
-	public static ServiceBrokerAppResource getInstance() {
-		return theOne;
-	}	
-	
-	private ServiceBrokerAppResource() { }
-	*/
-	
 	@Bean
-	public ServiceBrokerAppResource serviceBrokerResource() {
-		 return new ServiceBrokerAppResource();
+	public CFServiceBrokerDelegator serviceBrokerDelegator() {
+		 return new CFServiceBrokerDelegator();
 	}
 	
 	public String getAppName() {
@@ -89,6 +78,8 @@ public class ServiceBrokerAppResource {
 		try {
 			//log.debug("vcapAppEnv: " +  vcapAppEnv);
 			JSONObject vcapAppEnvJson = (JSONObject) jsonParser.parse(vcapAppEnv);
+			this.setAppName((String)vcapAppEnvJson.get("application_name"));
+			
 			JSONArray jsonArray = (JSONArray)vcapAppEnvJson.get(VCAP_APPLICATION_URI);
 			appUris = new String[jsonArray.size()];
 			for(int i = 0; i < jsonArray.size(); i++) {
@@ -162,12 +153,15 @@ public class ServiceBrokerAppResource {
 	}
 	
 	private synchronized void populateBrokerDetails(CloudFoundryClient cfClient) {
+		// If details were already filled in, just return
 		if (getBrokerName() != null && this.getBrokerUri() != null)
 			return;
 		
 		String serviceBrokerUrl = "";
 		String serviceBrokerName = "";
-		List<ServiceBrokerResource> serviceBrokers = CFAppManager.requestServiceBrokers(cfClient).get();
+		
+		// Look for matching service broker with same app uri as currently running broker instance
+		List<ServiceBrokerResource> serviceBrokers = CFClientManager.requestServiceBrokers(cfClient).get();
 		for(ServiceBrokerResource sbResource: serviceBrokers) {
 			serviceBrokerName = sbResource.getEntity().getName();
 			serviceBrokerUrl = sbResource.getEntity().getBrokerUrl();
@@ -181,12 +175,13 @@ public class ServiceBrokerAppResource {
 			}
 		}
 		
+		// Load all the known services managed by the broker
 		populateManagedServices(cfClient, null);
 	}
 	
 	
 	private void updateServiceBrokerOnCF(CloudFoundryClient cfClient) {
-		CFAppManager.requestUpdateServiceBroker(cfClient, 
+		CFClientManager.requestUpdateServiceBroker(cfClient, 
 												this.brokerName,
 												this.brokerId,
 												this.brokerUsername, 
@@ -204,7 +199,8 @@ public class ServiceBrokerAppResource {
 	private void populateManagedServices(CloudFoundryClient cfClient, String targetServiceName) {
 		this.populateBrokerDetails(cfClient);
 		
-		List<ServiceResource> serviceResources = CFAppManager.requestListServices(cfClient, this.getBrokerId(), targetServiceName).get();
+		List<ServiceResource> serviceResources = CFClientManager.requestListServices(cfClient, this.getBrokerId(), 
+																	targetServiceName).get();
 		for(ServiceResource serviceResource: serviceResources) {	
 			String serviceName = serviceResource.getEntity().getLabel();
 			String cfGeneratedServiceId = serviceResource.getMetadata().getId();
@@ -220,7 +216,7 @@ public class ServiceBrokerAppResource {
 			servicePlanEntry.clearServicePlans();
 			
 			managedServicePlanMap.put(serviceName, servicePlanEntry);
-			List<ServicePlanResource> servicePlanResources = CFAppManager.requestListServiceServicePlans(cfClient, 
+			List<ServicePlanResource> servicePlanResources = CFClientManager.requestListServiceServicePlans(cfClient, 
 					this.getBrokerId(), cfGeneratedServiceId).get();
 			for(ServicePlanResource servicePlanResource: servicePlanResources) {	
 				String servicePlanName = servicePlanResource.getEntity().getName();
@@ -230,9 +226,10 @@ public class ServiceBrokerAppResource {
 		}
 	}
 	
-	public void updateServiceVisibilityOfServiceBroker(CloudFoundryClient cfClient, String targetServiceName, boolean isVisible) {
+	public void updateServiceVisibilityOfServiceBroker(CloudFoundryClient cfClient, String targetServiceName, 
+														boolean isVisible) {
 		
-		log.info("Enabling ServicePlan visibility for service with name: " + targetServiceName);
+		log.info("Enabling ServicePlan visibility for service with label: " + targetServiceName);
 		
 		// Reload the caches
 		populateManagedServices(cfClient, targetServiceName);
@@ -244,7 +241,7 @@ public class ServiceBrokerAppResource {
 		}
 	
 		if (servicePlanEntry == null) {
-			log.error("Unable to find any service associated with service: " + targetServiceName);
+			log.error("Unable to find any service associated with service label: " + targetServiceName);
 			return;
 		}
 			
@@ -268,13 +265,14 @@ public class ServiceBrokerAppResource {
 		Map<String, String> servicePlanMap = servicePlanEntry.getServicePlanMap();
 		for(String servicePlanName: servicePlanMap.keySet()) {
 			String cfServicePlanId = servicePlanMap.get(servicePlanName);
-			CFAppManager.requestPublicizeServicePlan(cfClient, cfServicePlanId, isVisible).get();
+			CFClientManager.requestPublicizeServicePlan(cfClient, cfServicePlanId, isVisible).get();
 		}
 		
 		log.info("Done with updating visibility of service plans");
 	}
 
-	public void updatePlanVisibilityOfServiceBroker(CloudFoundryClient cfClient, String targetServiceName, String targetPlanName, boolean isVisible) {
+	public void updatePlanVisibilityOfServiceBroker(CloudFoundryClient cfClient, String targetServiceName, 
+											String targetPlanName, boolean isVisible) {
 		/*
 		this.populateBrokerDetails(cfClient);
 		log.info("Enabling ServicePlan visibility for service with name: " + targetServiceName 
@@ -310,8 +308,8 @@ public class ServiceBrokerAppResource {
 		}
 		*/
 
-		log.info("Enabling ServicePlan visibility for service with name: " + targetServiceName 
-				+ ", plan name: " + targetPlanName);
+		log.info("Enabling ServicePlan visibility for service with service label: " + targetServiceName 
+				+ " and plan name: " + targetPlanName);
 		
 		// Reload the caches
 		populateManagedServices(cfClient, targetServiceName);
@@ -323,16 +321,17 @@ public class ServiceBrokerAppResource {
 		}
 	
 		if (servicePlanEntry == null) {
-			log.error("Unable to find any service associated with service: " + targetServiceName);
+			log.error("Unable to find any service associated with service label: " + targetServiceName);
 			return;
 		}
 		
 		Map<String, String> servicePlanMap = servicePlanEntry.getServicePlanMap();
 		String cfServicePlanId = servicePlanMap.get(targetPlanName);
 		if (cfServicePlanId != null) {
-			CFAppManager.requestPublicizeServicePlan(cfClient, cfServicePlanId, isVisible).get();
+			CFClientManager.requestPublicizeServicePlan(cfClient, cfServicePlanId, isVisible).get();
 		} else {
-			log.error("Unable to find any service plan associated with service: " + targetServiceName + " and plan: " + targetPlanName);
+			log.error("Unable to find any service plan associated with service label: " 
+						+ targetServiceName + " and plan: " + targetPlanName);
 		}
 
 		log.info("Done with updating visibility of specified service plan");
@@ -340,7 +339,7 @@ public class ServiceBrokerAppResource {
 	
 	@Override
 	public String toString() {
-		return "ServiceBrokerAppResource [appName=" + appName + ", appUris=" + Arrays.toString(appUris)
+		return "CFServiceBrokerDelegator [appName=" + appName + ", appUris=" + Arrays.toString(appUris)
 				+ ", brokerId="+ brokerId + ", brokerUri=" + brokerUri + ", brokerName=" + brokerName 
 				+ ", brokerUsername=" + brokerUsername + ", brokerPassword=" + brokerPassword + "]";
 	}

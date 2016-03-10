@@ -1,4 +1,4 @@
-package org.cf.serviceregistrybroker.broker.service.serviceregistry;
+package org.cf.serviceregistrybroker.broker.service.impl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,10 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ServiceRegistryServiceInstanceBindingService implements ServiceInstanceBindingService {
+public class ServiceInstanceBindingServiceImpl implements ServiceInstanceBindingService {
 
 	private static final Logger log = Logger
-			.getLogger(ServiceRegistryServiceInstanceBindingService.class);
+			.getLogger(ServiceInstanceBindingServiceImpl.class);
 
 	@Autowired
 	ServiceInstanceBindingRepository repository;

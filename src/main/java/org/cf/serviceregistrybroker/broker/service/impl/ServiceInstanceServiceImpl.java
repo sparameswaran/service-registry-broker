@@ -1,4 +1,4 @@
-package org.cf.serviceregistrybroker.broker.service.serviceregistry;
+package org.cf.serviceregistrybroker.broker.service.impl;
 
 import org.apache.log4j.Logger;
 import org.cf.serviceregistrybroker.broker.service.CatalogService;
@@ -16,10 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ServiceRegistryServiceInstanceService implements ServiceInstanceService {
+public class ServiceInstanceServiceImpl implements ServiceInstanceService {
 
 	private static final Logger log = Logger
-			.getLogger(ServiceRegistryServiceInstanceService.class);
+			.getLogger(ServiceInstanceServiceImpl.class);
 
 
 	@Autowired
