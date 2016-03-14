@@ -45,6 +45,13 @@ var Router = require('react-router');
                 .open();
         },
         
+        _openInvisibleModal: function () {
+            console.log("Got open invisible modal event!...");
+            this.refs
+                .invisibleModal
+                .open();
+        },
+        
         _visibleModal: function () {
             this.refs
                 .visibleModal
@@ -58,6 +65,32 @@ var Router = require('react-router');
                     router.transitionTo('/');
                 }, (error) => {
                     console.log('Error in changing visibility of Plan, error code: ', error.status, ':', error.statusText, ', msg: ', error.responseText);
+
+                    var msg = 'code: ' + error.status + ', status: ' + error.statusText + ', detail: ' + error.responseText;
+                    this.setState({
+                        errorMsg: msg
+                    });
+
+                    this.refs
+                        .errorModal
+                        .open();
+                });
+
+        },
+        
+        _invisibleModal: function () {
+            this.refs
+                .invisibleModal
+                .close();
+            console.log("Got invisible modal event!...");
+            RegistryServices.editPlanVisibility(this.props.id, false)
+                .then(() => {
+                    console.log("Done changing invisibility to false of service plan with name: ", this.props.name);
+
+                    var router = Router.create({});
+                    router.transitionTo('/');
+                }, (error) => {
+                    console.log('Error in changing invisibility of Plan, error code: ', error.status, ':', error.statusText, ', msg: ', error.responseText);
 
                     var msg = 'code: ' + error.status + ', status: ' + error.statusText + ', detail: ' + error.responseText;
                     this.setState({
@@ -135,6 +168,13 @@ var Router = require('react-router');
                 .close();
         },
         
+         _cancelInvisibleModal: function () {
+            console.log("Got cancel invisible modal event!...");
+            this.refs
+                .invisibleModal
+                .close();
+        },
+        
 
         onEditPlan: function () {
 
@@ -185,11 +225,14 @@ var Router = require('react-router');
                             { !this.props.visible &&
                             	(<DefaultButton id='openVisibleButton' className="btn btn-highlight mls" onClick={this._openVisibleModal}>Make Public</DefaultButton>)
                             }
+                            { this.props.visible &&
+                            	(<DefaultButton id='openVisibleButton' className="btn btn-highlight mls" onClick={this._openInvisibleModal}>Make Private</DefaultButton>)
+                            }
                             <DefaultButton id='openDeleteButton' className="btn btn-default type-error-4 mls" onClick={this._openModal}>Delete</DefaultButton>
                             
                             <Modal title='Change Plan Visibility!' isOpen={this._openVisibleModal} onRequestClose={this._cancelVisibleModal} ref='visibleModal' className='optional-custom-class media-body media-middle txt-l'>
                                 <ModalBody class="media-body media-middle txt-l">
-                                    Confirm making the Plan public and visible:
+                                    Confirm marking the Plan publicly accessible and visible:&nbsp
                                     <b>{this.props.name}</b>
                                 </ModalBody>
                                 <ModalFooter>
@@ -197,10 +240,21 @@ var Router = require('react-router');
                                     <DefaultButton id='visibleButton' onClick={this._visibleModal}>Make Plan Public</DefaultButton>
                                 </ModalFooter>
                             </Modal>
+                            
+                            <Modal title='Change Plan Visibility!' isOpen={this._openInvisibleModal} onRequestClose={this._cancelInvisibleModal} ref='invisibleModal' className='optional-custom-class media-body media-middle txt-l'>
+                                <ModalBody class="media-body media-middle txt-l">
+                                    Confirm marking the Plan private and invisible:&nbsp
+                                    <b>{this.props.name}</b>
+                                </ModalBody>
+                                <ModalFooter>
+                                    <DefaultButton id='cancelVButton' onClick={this._cancelInvisibleModal}>Cancel</DefaultButton>
+                                    <DefaultButton id='invisibleButton' onClick={this._invisibleModal}>Make Plan Private</DefaultButton>
+                                </ModalFooter>
+                            </Modal>
                            
                             <Modal title='Delete Service!' isOpen={this._openModal} onRequestClose={this._cancelModal} ref='modal' className='optional-custom-class media-body media-middle txt-l'>
                                 <ModalBody>
-                                    Confirm deletion of Plan:
+                                    Confirm deletion of Plan:&nbsp
                                     <b>
                                         {this.props.name}
                                     </b>

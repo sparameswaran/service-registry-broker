@@ -139,8 +139,8 @@ public class CFClientManager {
 							.servicePlanId(servicePlanId1)
 							.spaceId(spaceId1)
 							.build())
-							.map(resource -> resource.getEntity())
-							.log("stream.requestServiceInstance");
+							.map(resource -> resource.getEntity());
+							//.log("stream.requestServiceInstance");
 					}
 				);
 	}
@@ -158,8 +158,8 @@ public class CFClientManager {
 							.servicePlanId(servicePlanId1)
 							.spaceId(spaceId1)
 							.build())
-							.map(resource -> resource.getMetadata().getId())
-							.log("stream.requestServiceInstance");
+							.map(resource -> resource.getMetadata().getId());
+							//.log("stream.requestServiceInstance");
 					}
 				);
 	}
@@ -190,7 +190,7 @@ public class CFClientManager {
 							.get( GetServiceRequest.builder()
 								.serviceId(serviceIdString)
 								.build())
-							.log("stream.requestService")
+							//.log("stream.requestService")
 				);			
 	}
 	
@@ -200,12 +200,11 @@ public class CFClientManager {
 						.label(serviceLabel)
 						.build())
 					.as(Flux::from)
-					.log("stream.requestServiceId")	
 					.flatMap(resource -> Flux.fromIterable(resource.getResources()))
-					.log("stream.requestServiceIdFlatMap")
+					//.log("stream.requestServiceIdFlatMap")
 					.next()
-					.map(resource -> resource.getMetadata().getId())
-					.log("stream.requestServiceIdResourceNext");			
+					.map(resource -> resource.getMetadata().getId());
+					//.log("stream.requestServiceIdResourceNext");			
 	}
 	
 	public static Mono<List<ServiceBrokerResource>> requestServiceBrokers(CloudFoundryClient cloudFoundryClient) {
@@ -213,8 +212,8 @@ public class CFClientManager {
 					.list( ListServiceBrokersRequest.builder()
 						.build())
 					.flatMap(resource -> Flux.fromIterable(resource.getResources()))
-					.toList()
-					.log("stream.requestServiceBrokers");			
+					.toList();
+					//.log("stream.requestServiceBrokers");			
 	}
 	
 	public static Mono<Void> requestUpdateServiceBroker(CloudFoundryClient cloudFoundryClient, String serviceBrokerName,
@@ -228,7 +227,7 @@ public class CFClientManager {
 						.name(serviceBrokerName)
 						.serviceBrokerId(serviceBrokerId)
 						.build())
-					.log("stream.requestUpdateServiceBroker")
+					//.log("stream.requestUpdateServiceBroker")
 					.after();			
 	}
 	
@@ -241,7 +240,7 @@ public class CFClientManager {
 		
 		return cloudFoundryClient.servicePlanVisibilities()
 					.create( builder.build() )
-					.log("stream.requestEnableAccessToServicePlan")
+					//.log("stream.requestEnableAccessToServicePlan")
 					.after();			
 	}
 	
@@ -257,10 +256,10 @@ public class CFClientManager {
 		
 		return cloudFoundryClient.services()
 					.list( listServicesRequestBuilder.build())
-					.log("stream.requestListServices")		
+					//.log("stream.requestListServices")		
 					.flatMap(resource -> Flux.fromIterable(resource.getResources()))
-					.toList()
-					.log("stream.requestListServicesResponse");			
+					.toList();
+					//.log("stream.requestListServicesResponse");			
 	}
 	
 	public static Mono<List<ServicePlanResource>> requestListServicePlans(CloudFoundryClient cloudFoundryClient, 
@@ -270,10 +269,10 @@ public class CFClientManager {
 					.list( ListServicePlansRequest.builder()
 								.serviceBrokerId(serviceBrokerId)
 								.build())
-					.log("stream.requestListServicePlans")		
+					//.log("stream.requestListServicePlans")		
 					.flatMap(resource -> Flux.fromIterable(resource.getResources()))
-					.toList()
-					.log("stream.requestListServicePlansResponse");			
+					.toList();
+					//.log("stream.requestListServicePlansResponse");			
 	}
 	
 	public static Mono<List<ServicePlanResource>> requestListServiceServicePlans(CloudFoundryClient cloudFoundryClient, 
@@ -285,10 +284,10 @@ public class CFClientManager {
 								.serviceId(serviceId) // This does not match the known service id...
 								//.serviceBrokerId(serviceBrokerId)
 								.build())
-					.log("stream.requestListServiceServicePlans")		
+					//.log("stream.requestListServiceServicePlans")		
 					.flatMap(resource -> Flux.fromIterable(resource.getResources()))
-					.toList()
-					.log("stream.requestListServiceServicePlansResponse");			
+					.toList();
+					//.log("stream.requestListServiceServicePlansResponse");			
 	}
 	
 	
@@ -301,7 +300,7 @@ public class CFClientManager {
 								.servicePlanId(servicePlanId)
 								.publiclyVisible(isVisible)
 								.build())
-					.log("stream.requestPublicizeService")
+					//.log("stream.requestPublicizeService")
 					.after();			
 	}
 	

@@ -51,7 +51,7 @@ public class CFClientUtility {
 				.skipSslValidation(skipSslValidation)
 				.build();
 		
-		log.info("SUCCESS!! Created CF client and got domains: " 
+		log.debug("SUCCESS!! Created CF client and got domains: " 
 				+ cfClient.domains().list(ListDomainsRequest.builder().build()).get());
 		return cfClient;
 	}

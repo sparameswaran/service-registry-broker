@@ -233,7 +233,7 @@ var RegistryServices = require('../shared/registryServices.jsx');
 
                                     <Modal title='Change Service Visibility!' isOpen={this._openVisibleModal} onRequestClose={this._cancelModal} ref='visibleModal' className='optional-custom-class media-body media-middle txt-l'>
                                         <ModalBody class="media-body media-middle txt-l">
-                                            Confirm making the Service and all associated plans public and visible:
+                                            Confirm marking the Service and all associated plans publicly accessible and visible:&nbsp;
                                             <b>{this.props.serviceEntry.name}</b>
                                         </ModalBody>
                                         <ModalFooter>
@@ -244,7 +244,7 @@ var RegistryServices = require('../shared/registryServices.jsx');
 
                                     <Modal title='Delete Service!' isOpen={this._openModal} onRequestClose={this._cancelModal} ref='modal' className='optional-custom-class media-body media-middle txt-l'>
                                         <ModalBody class="media-body media-middle txt-l">
-                                            Confirm deletion of Service:
+                                            Confirm deletion of Service:&nbsp;
                                             <b>{this.props.serviceEntry.name}</b>
                                         </ModalBody>
                                         <ModalFooter>
