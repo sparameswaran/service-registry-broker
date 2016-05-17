@@ -232,7 +232,7 @@ var Router = require('react-router');
                             
                             <Modal title='Change Plan Visibility!' isOpen={this._openVisibleModal} onRequestClose={this._cancelVisibleModal} ref='visibleModal' className='optional-custom-class media-body media-middle txt-l'>
                                 <ModalBody class="media-body media-middle txt-l">
-                                    Confirm marking the Plan publicly accessible and visible:&nbsp
+                                    Confirm marking the Plan publicly accessible and visible:&nbsp;
                                     <b>{this.props.name}</b>
                                 </ModalBody>
                                 <ModalFooter>
@@ -243,7 +243,7 @@ var Router = require('react-router');
                             
                             <Modal title='Change Plan Visibility!' isOpen={this._openInvisibleModal} onRequestClose={this._cancelInvisibleModal} ref='invisibleModal' className='optional-custom-class media-body media-middle txt-l'>
                                 <ModalBody class="media-body media-middle txt-l">
-                                    Confirm marking the Plan private and invisible:&nbsp
+                                    Confirm marking the Plan private and invisible:&nbsp;
                                     <b>{this.props.name}</b>
                                 </ModalBody>
                                 <ModalFooter>
@@ -254,7 +254,7 @@ var Router = require('react-router');
                            
                             <Modal title='Delete Service!' isOpen={this._openModal} onRequestClose={this._cancelModal} ref='modal' className='optional-custom-class media-body media-middle txt-l'>
                                 <ModalBody>
-                                    Confirm deletion of Plan:&nbsp
+                                    Confirm deletion of Plan:&nbsp;
                                     <b>
                                         {this.props.name}
                                     </b>

@@ -13,6 +13,7 @@
     "good": "~5.1.0",
     "good-console": "~4.0.0",
     "gulp": "~3.8.10",
+    "gulp-zip": "~3.2.0",    
     "hapi": "~8.0.0",
     "install": "^0.1.8",
     "jade": "^1.8.2",
@@ -65,6 +66,7 @@
     "gulp-nodemon": "~1.0.4",
     "gulp-rename": "~1.2.0",
     "gulp-sass": "^2.0.1",
+    "gulp-zip": "^3.2.0",
     "imagemin-pngquant": "~4.0.0",
     "q": "^1.4.1",
     "react-tools": "~0.12.2"

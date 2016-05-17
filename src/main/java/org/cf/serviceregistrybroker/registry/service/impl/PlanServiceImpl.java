@@ -1,19 +1,16 @@
 package org.cf.serviceregistrybroker.registry.service.impl;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.cf.serviceregistrybroker.cfutils.CFClientManager;
 import org.cf.serviceregistrybroker.cfutils.CFServiceBrokerDelegator;
 import org.cf.serviceregistrybroker.exception.PlanDoesNotExistException;
 import org.cf.serviceregistrybroker.exception.ResourceDoesNotExistException;
 import org.cf.serviceregistrybroker.exception.ResourceExistsException;
 import org.cf.serviceregistrybroker.exception.ResourceNotDeletableException;
+import org.cf.serviceregistrybroker.exception.ServiceBrokerException;
 import org.cf.serviceregistrybroker.exception.ServiceDefinitionDoesNotExistException;
 import org.cf.serviceregistrybroker.model.Credentials;
 import org.cf.serviceregistrybroker.model.Plan;
@@ -95,7 +92,7 @@ public class PlanServiceImpl implements PlanService {
 
 	@Override
 	public Object add(String ownerId, Object plan)
-			throws ResourceExistsException, ResourceDoesNotExistException {
+			throws ResourceExistsException, ResourceDoesNotExistException, ServiceBrokerException {
 		Plan newPlan = (Plan)plan;
 		ServiceDefinition parentService = findService(ownerId);
 		
@@ -125,7 +122,7 @@ public class PlanServiceImpl implements PlanService {
 	}
 
 	@Override
-	public Object update(Object item) throws ResourceDoesNotExistException {
+	public Object update(Object item) throws ResourceDoesNotExistException, ServiceBrokerException {
 		// TODO Auto-generated method stub
 		Plan updateTo = (Plan)item;
 		String planId = updateTo.getId();
@@ -154,7 +151,7 @@ public class PlanServiceImpl implements PlanService {
 	@Override
 	public void add(String ownerId, Object[] items)
 			throws ResourceExistsException,
-			ResourceDoesNotExistException {
+			ResourceDoesNotExistException, ServiceBrokerException {
 		Plan[] newPlans = (Plan[])items;
 		ServiceDefinition parentService = findService(ownerId);
 		
@@ -181,7 +178,7 @@ public class PlanServiceImpl implements PlanService {
 	@Override
 	public Object deleteChild(String planId, String childId)
 			throws ResourceDoesNotExistException,
-			ResourceNotDeletableException {
+			ResourceNotDeletableException, ServiceBrokerException {
 		
 		Plan plan = findOne(planId);
 		Credentials creds = plan.getCredentials();
@@ -195,7 +192,7 @@ public class PlanServiceImpl implements PlanService {
 	}
 	
 	public void updateServicePlanDefinitionVisibility(String planId, boolean isVisible) 
-			throws ResourceDoesNotExistException {
+			throws ResourceDoesNotExistException, ServiceBrokerException {
 		Plan plan = findOne(planId);		
 		plan.setVisible(isVisible);
 		planRepository.save(plan);

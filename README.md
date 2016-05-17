@@ -14,9 +14,15 @@ The Service Registry exposes a REST api interface to create/read/update/delete s
 
 * Deploy the backend or any test/simulation service. A sample simulation service is available at [document-service] (https://github.com/cf-platform-eng/document-service)
 * Edit the input.sql under src/main/resources folder to populate some prebuilt services and associated plans, credentials, endpoints etc.
-* Run maven to build.
-* Push the app to CF using manifest.yml. Edit the manifest to bind to a MySQL Service instance.
+* Run maven to build (use -Dmaven.test.skip=true to avoid the tests connecting to some local CF instance)
+* Create a MySQL service instance. 
+* Edit the manifest to bind the MySQL Service instance. 
+* Push the app to CF using manifest.yml. 
 * Register the app as a service broker (this requires admin privileges on the CF instance) against Cloud Foundry.
+```
+cf create-service-broker service-registry-broker <username> <credential> http://url-to-service-registry-broker
+```
+* Access the web interface: http://service-registry-broker-url-endpoint using the provided username and password in the manifest.yml file
 * Expose the services/plans within a specific org or publicly accessible.
 * Create the service based on the plan.
 * Deploy the client app that would bind to the service and consume the service.

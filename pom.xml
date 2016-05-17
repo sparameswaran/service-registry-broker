@@ -182,6 +182,43 @@
 					</execution>
 				</executions>
 			</plugin>
+			 
+			<plugin>
+	            <artifactId>maven-jar-plugin</artifactId>
+	            <version>3.0.0</version>
+	            <configuration>
+	            	<excludes>
+	                	<exclude>templates/**/*.css</exclude>
+	                	<exclude>templates/**/*.js</exclude>
+	            	</excludes>
+	            </configuration>
+	        </plugin>
+	        <!--
+	        <plugin>
+			  <groupId>net.alchim31.maven</groupId>
+			  <artifactId>yuicompressor-maven-plugin</artifactId>
+			  <version>1.4.0</version>
+			  <executions>
+			    <execution>
+			      <id>compress-js</id>
+			      <phase>process-resources</phase>
+			      <goals>
+			        <goal>compress</goal>
+			      </goals>
+                  <configuration>
+					<linebreakpos>300</linebreakpos>
+	               	<excludes>
+	                 <exclude>**/*-min.js</exclude>
+	                 <exclude>**/*.min.js</exclude>
+	                 <exclude>**/*-min.css</exclude>
+	                 <exclude>**/*.min.css</exclude>
+	               	</excludes>              
+	               <nosuffix>true</nosuffix>
+	            </configuration>
+			    </execution>
+			  </executions>
+			</plugin>
+			 -->
 		</plugins>
 	</build>
 

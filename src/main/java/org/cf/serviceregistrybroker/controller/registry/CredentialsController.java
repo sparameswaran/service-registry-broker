@@ -5,6 +5,7 @@ import org.cf.serviceregistrybroker.controller.broker.BaseController;
 import org.cf.serviceregistrybroker.exception.CredentialsDoesNotExistException;
 import org.cf.serviceregistrybroker.exception.ResourceDoesNotExistException;
 import org.cf.serviceregistrybroker.exception.ResourceNotDeletableException;
+import org.cf.serviceregistrybroker.exception.ServiceBrokerException;
 import org.cf.serviceregistrybroker.model.Credentials;
 import org.cf.serviceregistrybroker.model.Plan;
 import org.cf.serviceregistrybroker.registry.service.impl.CredentialsServiceImpl;
@@ -147,7 +148,7 @@ public class CredentialsController  extends BaseController {
 			
 			planService.deleteChild(planId, cred.getId());
 			return new ResponseEntity<Object>("{}", HttpStatus.OK);
-		} catch (ResourceDoesNotExistException | ResourceNotDeletableException e) {
+		} catch (ResourceDoesNotExistException | ResourceNotDeletableException | ServiceBrokerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return new ResponseEntity<Object>(

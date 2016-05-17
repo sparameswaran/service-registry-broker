@@ -7,12 +7,12 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.cf.serviceregistrybroker.cfutils.CFClientManager;
 import org.cf.serviceregistrybroker.cfutils.CFServiceBrokerDelegator;
 import org.cf.serviceregistrybroker.exception.MethodNotSupportedException;
 import org.cf.serviceregistrybroker.exception.ResourceDoesNotExistException;
 import org.cf.serviceregistrybroker.exception.ResourceExistsException;
 import org.cf.serviceregistrybroker.exception.ResourceNotDeletableException;
+import org.cf.serviceregistrybroker.exception.ServiceBrokerException;
 import org.cf.serviceregistrybroker.exception.ServiceDefinitionDoesNotExistException;
 import org.cf.serviceregistrybroker.exception.ServiceDefinitionExistsException;
 import org.cf.serviceregistrybroker.model.Credentials;
@@ -24,12 +24,7 @@ import org.cf.serviceregistrybroker.registry.service.ServiceDefinitionService;
 import org.cf.serviceregistrybroker.repository.PlanRepository;
 import org.cf.serviceregistrybroker.repository.ServiceDefinitionRepository;
 import org.cloudfoundry.client.CloudFoundryClient;
-import org.cloudfoundry.client.v2.servicebrokers.ServiceBrokerResource;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -100,7 +95,7 @@ public class ServiceDefinitionServiceImpl implements
 	}
 
 	@Override
-	public Object add(String parentId, Object newResource) throws ResourceExistsException {
+	public Object add(String parentId, Object newResource) throws ResourceExistsException, ServiceBrokerException {
 		ServiceDefinition newService = (ServiceDefinition)newResource;
 		try {
 			ServiceDefinition existingService = findByNameOrId(newService.getName());
@@ -142,7 +137,7 @@ public class ServiceDefinitionServiceImpl implements
 	}
 
 	@Override
-	public Object update(Object item) throws ResourceDoesNotExistException {
+	public Object update(Object item) throws ResourceDoesNotExistException, ServiceBrokerException {
 		ServiceDefinition updateTo = (ServiceDefinition)item;
 		ServiceDefinition existingService = findOne(updateTo.getId());
 		existingService.update(updateTo);
@@ -154,7 +149,7 @@ public class ServiceDefinitionServiceImpl implements
 
 	@Override
 	public Object delete(String id) throws ResourceDoesNotExistException,
-			ResourceNotDeletableException {
+			ResourceNotDeletableException, ServiceBrokerException {
 		ServiceDefinition existingService = findOne(id);;
 		
 		// Clean up associated plans
@@ -176,7 +171,7 @@ public class ServiceDefinitionServiceImpl implements
 	@Override
 	public void add(String parentId, Object[] items)
 			throws ResourceExistsException,
-			ResourceDoesNotExistException {
+			ResourceDoesNotExistException, ServiceBrokerException {
 		for(Object newService: items) {
 			add(null, newService);
 		}
@@ -186,7 +181,7 @@ public class ServiceDefinitionServiceImpl implements
 	@Override
 	public Object deleteChild(String ownerId, String childId)
 			throws ResourceDoesNotExistException,
-			ResourceNotDeletableException {
+			ResourceNotDeletableException, ServiceBrokerException {
 		ServiceDefinition existingService = findOne(ownerId);;
 		
 		// Clean up associated plans
@@ -203,7 +198,7 @@ public class ServiceDefinitionServiceImpl implements
 	}
 
 	public void updateServiceDefinitionVisibility(String serviceId, boolean isVisible) 
-			throws ServiceDefinitionDoesNotExistException {
+			throws ServiceDefinitionDoesNotExistException, ServiceBrokerException {
 		ServiceDefinition serviceDefinition = null;
 		
 		serviceDefinition = findOne(serviceId);

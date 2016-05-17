@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.cf.serviceregistrybroker.exception.ServiceBrokerException;
 import org.cloudfoundry.client.CloudFoundryClient;
 import org.cloudfoundry.client.v2.servicebrokers.ServiceBrokerResource;
 import org.cloudfoundry.client.v2.serviceplans.ServicePlanResource;
@@ -152,13 +153,12 @@ public class CFServiceBrokerDelegator {
 		return false;
 	}
 	
-	private synchronized void populateBrokerDetails(CloudFoundryClient cfClient) {
-		// If details were already filled in, just return
-		if (getBrokerName() != null && this.getBrokerUri() != null)
-			return;
-		
+	private void initializeBrokerDetails(CloudFoundryClient cfClient) throws ServiceBrokerException {
 		String serviceBrokerUrl = "";
 		String serviceBrokerName = "";
+		
+		if (getBrokerName() != null && this.getBrokerUri() != null)
+			return;
 		
 		// Look for matching service broker with same app uri as currently running broker instance
 		List<ServiceBrokerResource> serviceBrokers = CFClientManager.requestServiceBrokers(cfClient).get();
@@ -171,9 +171,21 @@ public class CFServiceBrokerDelegator {
 				this.setBrokerUri(serviceBrokerUrl);
 				this.setBrokerId(sbResource.getMetadata().getId());
 				log.debug("Got matching service broker: " + sbResource);
-				return;
+				break;
 			}
 		}
+		
+		if (getBrokerName() == null && this.getBrokerUri() == null) {
+			throw new ServiceBrokerException("ERROR!! Service Registry Broker not registered as a Broker with CF, register it before proceeding!!!");
+		}
+	}
+	
+	private synchronized void populateBrokerDetails(CloudFoundryClient cfClient) throws ServiceBrokerException {
+		// If details were already filled in, just return
+		if (getBrokerName() != null && this.getBrokerUri() != null)
+			return;
+		
+		initializeBrokerDetails(cfClient);
 		
 		// Load all the known services managed by the broker
 		populateManagedServices(cfClient, null);
@@ -191,12 +203,12 @@ public class CFServiceBrokerDelegator {
 	
 	}
 	
-	public void updateServiceBroker(CloudFoundryClient cfClient) {
+	public void updateServiceBroker(CloudFoundryClient cfClient) throws ServiceBrokerException {
 		this.populateBrokerDetails(cfClient);
 		this.updateServiceBrokerOnCF(cfClient);
 	}
 	
-	private void populateManagedServices(CloudFoundryClient cfClient, String targetServiceName) {
+	private void populateManagedServices(CloudFoundryClient cfClient, String targetServiceName) throws ServiceBrokerException {
 		this.populateBrokerDetails(cfClient);
 		
 		List<ServiceResource> serviceResources = CFClientManager.requestListServices(cfClient, this.getBrokerId(), 
@@ -227,7 +239,7 @@ public class CFServiceBrokerDelegator {
 	}
 	
 	public void updateServiceVisibilityOfServiceBroker(CloudFoundryClient cfClient, String targetServiceName, 
-														boolean isVisible) {
+														boolean isVisible) throws ServiceBrokerException {
 		
 		log.info("Enabling ServicePlan visibility for service with label: " + targetServiceName);
 		
@@ -272,7 +284,8 @@ public class CFServiceBrokerDelegator {
 	}
 
 	public void updatePlanVisibilityOfServiceBroker(CloudFoundryClient cfClient, String targetServiceName, 
-											String targetPlanName, boolean isVisible) {
+											String targetPlanName, boolean isVisible) 
+											throws ServiceBrokerException {
 		/*
 		this.populateBrokerDetails(cfClient);
 		log.info("Enabling ServicePlan visibility for service with name: " + targetServiceName 

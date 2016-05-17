@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.cf.serviceregistrybroker.exception.ResourceDoesNotExistException;
 import org.cf.serviceregistrybroker.exception.ResourceExistsException;
+import org.cf.serviceregistrybroker.exception.ServiceBrokerException;
 import org.cf.serviceregistrybroker.model.Credentials;
 import org.cf.serviceregistrybroker.model.Plan;
 import org.cf.serviceregistrybroker.model.ServiceDefinition;
@@ -159,7 +160,7 @@ public class ServicesController {
 			updatedServiceInstance.setId(associatedService.getId());
 			serviceDefnService.update(updatedServiceInstance);			
 			return new ResponseEntity<>(associatedService, HttpStatus.OK);
-		} catch(ResourceDoesNotExistException e) { 
+		} catch(ResourceDoesNotExistException | ServiceBrokerException e) { 
 			return serviceNotFound(serviceIdOrName);
 		}
 	}
@@ -174,7 +175,7 @@ public class ServicesController {
 			associatedService = (ServiceDefinition)serviceDefnService.find(serviceId);
 			
 			return new ResponseEntity<>(associatedService, HttpStatus.OK);
-		} catch(ResourceDoesNotExistException e) { 
+		} catch(ResourceDoesNotExistException | ServiceBrokerException e) { 
 			return serviceNotFound(serviceId);
 		}
 	}
@@ -255,7 +256,7 @@ public class ServicesController {
 			associatedService = (ServiceDefinition)serviceDefnService.find(serviceIdOrName);
 			planService.add(associatedService.getId(), servicePlanInstance);
 			return new ResponseEntity<>("{}", HttpStatus.OK);
-		} catch(ResourceDoesNotExistException e) { 
+		} catch(ResourceDoesNotExistException | ServiceBrokerException e) { 
 			e.printStackTrace();
 			log.error("Unable to find service with id or name: " + serviceIdOrName 
 					+ " for adding a new plan: " + servicePlanInstance);

@@ -2,6 +2,7 @@ package org.cf.serviceregistrybroker.registry.service;
 
 import java.util.Collection;
 
+import org.cf.serviceregistrybroker.exception.ServiceBrokerException;
 import org.cf.serviceregistrybroker.exception.ServiceDefinitionDoesNotExistException;
 
 /**
@@ -17,6 +18,6 @@ public interface ServiceDefinitionService<ServiceDefinition> extends ServiceRegi
 			throws ServiceDefinitionDoesNotExistException;
 	
 	void updateServiceDefinitionVisibility(String serviceId, boolean isVisible) 
-			throws ServiceDefinitionDoesNotExistException;
+			throws ServiceDefinitionDoesNotExistException, ServiceBrokerException;
 	
 }

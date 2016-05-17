@@ -12,6 +12,7 @@ var nodemon = require('gulp-nodemon');
 var imagemin = require('gulp-imagemin');
 var pngquant = require('imagemin-pngquant');
 var drFrankenstyle = require('dr-frankenstyle');
+var zip = require('gulp-zip');
 
 // Restart the server for changes
 gulp.task('default', ['assets'], function() {

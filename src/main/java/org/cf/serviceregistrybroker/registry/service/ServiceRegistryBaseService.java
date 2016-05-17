@@ -6,6 +6,7 @@ import org.cf.serviceregistrybroker.exception.MethodNotSupportedException;
 import org.cf.serviceregistrybroker.exception.ResourceDoesNotExistException;
 import org.cf.serviceregistrybroker.exception.ResourceExistsException;
 import org.cf.serviceregistrybroker.exception.ResourceNotDeletableException;
+import org.cf.serviceregistrybroker.exception.ServiceBrokerException;
 
 public interface ServiceRegistryBaseService<T> {
 
@@ -18,18 +19,18 @@ public interface ServiceRegistryBaseService<T> {
 			throws MethodNotSupportedException, ResourceDoesNotExistException;
 
 	public abstract T add(String parentId, T item)
-			throws ResourceExistsException, ResourceDoesNotExistException;
+			throws ResourceExistsException, ResourceDoesNotExistException, ServiceBrokerException;
 
 	public abstract void add(String parentId, T[] items)
-			throws ResourceExistsException, ResourceDoesNotExistException;
+			throws ResourceExistsException, ResourceDoesNotExistException, ServiceBrokerException;
 
 	public abstract T update(T item)
-			throws ResourceDoesNotExistException;	
+			throws ResourceDoesNotExistException, ServiceBrokerException;	
 	
 	public abstract T delete(String id)
-			throws ResourceDoesNotExistException, ResourceNotDeletableException;
+			throws ResourceDoesNotExistException, ResourceNotDeletableException, ServiceBrokerException;
 	
 	public abstract T deleteChild(String ownerId, String childId)
-			throws ResourceDoesNotExistException, ResourceNotDeletableException;
+			throws ResourceDoesNotExistException, ResourceNotDeletableException, ServiceBrokerException;
 
 }

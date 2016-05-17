@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.cf.serviceregistrybroker.controller.broker.BaseController;
 import org.cf.serviceregistrybroker.exception.ResourceDoesNotExistException;
 import org.cf.serviceregistrybroker.exception.ResourceNotDeletableException;
+import org.cf.serviceregistrybroker.exception.ServiceBrokerException;
 import org.cf.serviceregistrybroker.model.Plan;
 import org.cf.serviceregistrybroker.registry.service.PlanService;
 import org.cf.serviceregistrybroker.registry.service.impl.ServiceDefinitionServiceImpl;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -80,7 +80,7 @@ public class PlansController extends BaseController {
 			planService.updateServicePlanDefinitionVisibility(planId, planVisibilityMap.get("visible"));
 			associatedPlan = (Plan)planService.find(planId);
 			return new ResponseEntity<>(associatedPlan, HttpStatus.OK);
-		} catch(ResourceDoesNotExistException e) { 
+		} catch(ResourceDoesNotExistException | ServiceBrokerException e) { 
 			return planNotFound(planId);
 		}
 	}
@@ -94,7 +94,7 @@ public class PlansController extends BaseController {
 		try {
 			associatedPlan = (Plan)planService.find(planId);
 			serviceDefnService.deleteChild(associatedPlan.getService().getId(), planId);
-		} catch(ResourceNotDeletableException | ResourceDoesNotExistException e) { 
+		} catch(ResourceNotDeletableException | ResourceDoesNotExistException | ServiceBrokerException e) { 
 			log.error("Error: Plan not found or already deleted with id: " + planId);
 			return new ResponseEntity<>("{Plan not found or already deleted }", HttpStatus.GONE);
 		} 
