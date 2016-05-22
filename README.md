@@ -10,13 +10,28 @@ The Service Broker does not create any new set of service instances, or spin off
 
 The Service Registry exposes a REST api interface to create/read/update/delete services, plans and credentials.
 
+The Service Registry Broker would automatically update its catalog and change the service access against the Cloud Controller whenever a user adds or updates existing services or marks a service as public or private.
+
+* Design Model
+
+&nbsp;&nbsp;&nbsp;&nbsp; <img src="./docs/SRB-Model.png" alt="Service Registry Broker" width="500" height="280" border="3" />
+
+
+* Using the Service Registry Broker
+
+&nbsp;&nbsp;&nbsp;&nbsp; <a href="./docs/SRB.mp4" target="_blank"><img src="./docs/SRB-Video.png" 
+alt="Service Registry Broker" width="500" height="280" border="3" /></a>
+
+For more details on building or using the Service Registry Broker, please refer to the (documentation) [docs/ServiceRegistryBroker.pdf] and (Service Registry Broker)[https://github.com/cf-platform-eng/service-registry-broker.git
+
+
 # Steps to deploy the service-registry-broker:
 
 * Deploy the backend or any test/simulation service. A sample simulation service is available at [document-service] (https://github.com/cf-platform-eng/document-service)
 * Edit the input.sql under src/main/resources folder to populate some prebuilt services and associated plans, credentials, endpoints etc.
-* Run maven to build (use -Dmaven.test.skip=true to avoid the tests connecting to some local CF instance)
+* Run maven to build (use -Dmaven.test.skip=true to avoid the tests connecting to some local CF instance) the Service Registry Broker
 * Create a MySQL service instance. 
-* Edit the manifest to bind the MySQL Service instance. 
+* Edit the manifest.yml to bind the MySQL Service instance to SRB
 * Push the app to CF using manifest.yml. 
 * Register the app as a service broker (this requires admin privileges on the CF instance) against Cloud Foundry.
 ```
