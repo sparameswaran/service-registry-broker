@@ -22,7 +22,7 @@ The Service Registry Broker would automatically update its catalog and change th
 &nbsp;&nbsp;&nbsp;&nbsp; <a href="./docs/SRB.mp4" target="_blank"><img src="./docs/SRB-Video.png" 
 alt="Service Registry Broker" width="500" height="280" border="3" /></a>
 
-For more details on building or using the Service Registry Broker, please refer to the (documentation) [docs/ServiceRegistryBroker.pdf] and (Service Registry Broker)[https://github.com/cf-platform-eng/service-registry-broker.git
+For more details on the Service Registry Broker, please refer to [documentation] (docs/ServiceRegistryBroker.pdf) 
 
 
 # Steps to deploy the service-registry-broker:
